@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>solutions</groupId>
+    <artifactId>solutions</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>framework</module>
+        <module>page-objects</module>
+        <module>regression-tests</module>
+        <module>domain-specific-language</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <selenium.version>3.141.59</selenium.version>
+        <webdrivermanager.version>3.0.0</webdrivermanager.version>
+        <java.version>1.8</java.version>
+        <testng.version>6.14.3</testng.version>
+        <extentreports.version>3.1.5</extentreports.version>
+        <log4j.version>1.2.17</log4j.version>
+        <apache.poi.version>4.0.1</apache.poi.version>
+        <apache.poi.ooxml.version>4.0.1</apache.poi.ooxml.version>
+        <google.guava.version>23.3-jre</google.guava.version>
+    </properties>
+
+</project>
