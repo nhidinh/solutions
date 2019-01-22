@@ -1,19 +1,21 @@
 package utilities.helper;
 
+import com.hansencx.solutions.logger.Log;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.Platform;
-import com.hansencx.solutions.logger.Log;
-import org.apache.poi.ss.usermodel.Cell;
 import utilities.configuration.InitialData;
-
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.apache.commons.io.FilenameUtils.separatorsToSystem;
 
@@ -27,40 +29,38 @@ import static org.apache.commons.io.FilenameUtils.separatorsToSystem;
 
 public class ExcelHelper {
 
-    private static Platform platform = InitialData.PLATFORM;
-    private static String testDataExcelPath;
+    private Platform platform = InitialData.PLATFORM;
+    private String testDataExcelPath;
+    private XSSFWorkbook excelWorkBook;
+    private XSSFSheet excelSheet;
+    private XSSFCell cell;
+    private XSSFRow row;
+    private int rowNumber;
+    private int columnNumber;
 
-    private static XSSFWorkbook excelWorkBook;
-    private static XSSFSheet excelSheet;
-    private static XSSFCell cell;
-    private static XSSFRow row;
-
-    private static int rowNumber;
-    private static int columnNumber;
-
-    public static int getRowNumber() {
+    public int getRowNumber() {
         return rowNumber;
     }
-
-    public static void setRowNumber(int rowNumber) {
-        ExcelHelper.rowNumber = rowNumber;
+    public void setRowNumber(int rowNumber) {
+        this.rowNumber = rowNumber;
     }
 
-    public static int getColumnNumber() {
+    public int getColumnNumber() {
         return columnNumber;
     }
-
-    public static void setColumnNumber(int columnNumber) {
-        ExcelHelper.columnNumber = columnNumber;
+    public void setColumnNumber(int columnNumber) {
+        this.columnNumber = columnNumber;
     }
 
-    public static void setDataFileLocation(String dataDirectory, String testDataExcelFileName){
+    DataFormatter formatter = new DataFormatter();
+
+    public void setDataFileLocation(String dataDirectory, String testDataExcelFileName){
         String dataFile = dataDirectory + testDataExcelFileName;
-        testDataExcelPath = separatorsToSystem(dataFile);
+        setTestDataExcelPath(separatorsToSystem(dataFile));
         Log.info("Data File Location: " + testDataExcelPath + "\n");
     }
 
-    public static void setExcelFileSheet(String sheetName){
+    public void setExcelFileSheet(String sheetName){
         try{
             //Open The Excel File:
             Log.info("Opening the data file");
@@ -77,26 +77,22 @@ public class ExcelHelper {
         }
     }
 
-    public static int getNumberOfRow(){
+    public int getNumberOfRow(){
         return excelSheet.getPhysicalNumberOfRows();
     }
 
-    public static String getCellData(int rowNumber, int colNumber){
-        Log.info("Getting Cell Data...");
-        cell = excelSheet.getRow(rowNumber).getCell(colNumber);
-        DataFormatter formatter = new DataFormatter();
-        Log.info("Return Cell Data Value: " + cell);
-        return formatter.formatCellValue(cell);
+    public int getLastRowNum(){
+        return excelSheet.getLastRowNum();
     }
 
-    public static XSSFRow getRowData(int rowNumber) {
+    public XSSFRow getRowData(int rowNumber) {
         Log.info("Getting Row Data...");
         row = excelSheet.getRow(rowNumber);
         Log.info("Return Row data value");
         return row;
     }
 
-    public static void setCellData(String value, int rowNumber, int colNumber){
+    public void setCellData(String value, int rowNumber, int colNumber){
         try{
             row = excelSheet.getRow(rowNumber);
             cell = row.getCell(colNumber);
@@ -123,7 +119,7 @@ public class ExcelHelper {
         }
     }
 
-    public static int getCellIndexByText(String text){
+    public int getCellIndexByText(String text){
         Log.info("Getting cell index by text: " + text);
         DataFormatter formatter = new DataFormatter();
         row = excelSheet.getRow(0);
@@ -147,10 +143,40 @@ public class ExcelHelper {
         return cellIndex;
     }
 
-    public static void setupExcelTestData(String DataDirectory,String testDataExcelName, String ExcelSheetName){
+    public void setupExcelTestData(String DataDirectory,String testDataExcelName, String ExcelSheetName){
         Log.info("Setting up Test Data");
 //        InitialData.getProjectDirectory();
-        ExcelHelper.setDataFileLocation(DataDirectory, testDataExcelName);
-        ExcelHelper.setExcelFileSheet(ExcelSheetName);
+        setDataFileLocation(DataDirectory, testDataExcelName);
+        setExcelFileSheet(ExcelSheetName);
+    }
+
+    public void setTestDataExcelPath(String testDataExcelPath) {
+        this.testDataExcelPath = testDataExcelPath;
+    }
+
+    // Author: Vi
+    public String getCellValue(int rowIndex,  int colIndex){
+        cell = excelSheet.getRow(rowIndex).getCell(colIndex);
+        if (cell.getCellType() == CellType.FORMULA)
+            return cell.getRawValue();
+        else
+            return formatter.formatCellValue(cell);
+    }
+    // Author: Nhi
+    public String getCellData(int rowNumber, int colNumber){
+        Log.info("Getting Cell Data...");
+        cell = excelSheet.getRow(rowNumber).getCell(colNumber);
+        //DataFormatter formatter = new DataFormatter();
+        Log.info("Return Cell Data Value: " + cell);
+        return formatter.formatCellValue(cell);
+    }
+
+    // each step
+    public List<String> getRowValue(int rowIndex){
+        List<String>  listParameters = new ArrayList<>();
+        // fist of arg cell is from cell 3 -> 7 of each row
+        for(int i=3; i<8; i++)
+            listParameters.add(getCellData(rowIndex, i));
+        return listParameters;
     }
 }
