@@ -15,22 +15,19 @@ import org.testng.annotations.Parameters;
  * @since 1/15/2019
  */
 
-
 public class PortalBaseTest extends BaseTest {
-     public PortalPageGenerator Page;
+    public PortalPageGenerator Page;
 
-     @BeforeTest
+    @BeforeTest
     public void SetPage(){
          Page = new PortalPageGenerator(getDriver());
      }
 
-
-     @BeforeClass
+    @BeforeClass
     @Parameters({"username", "encodedPassword"})
     public void LoginBeforeTest(String username, String encodedPassword, ITestContext testContext){
          if(!testContext.getName().contains("Login Test")){
              LoginPage loginPage = Page.Login().goTo();
-//             loginPage.logonWithUsername(username, password);
              loginPage.logonWithEncodedCredential(username, encodedPassword);
          }
      }
