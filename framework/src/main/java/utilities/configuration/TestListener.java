@@ -14,6 +14,8 @@ import org.testng.ITestResult;
 import utilities.helper.screenshot.ScreenCaptor;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.apache.commons.io.FilenameUtils.separatorsToSystem;
 
@@ -31,6 +33,8 @@ public class TestListener implements ITestListener {
     private static String methodDes;
     private static String message;
     private static WebDriver driver;
+    public static List<String> failIDList = new ArrayList<>();
+
     @Override
     public void onStart(ITestContext iTestContext) {
         Log.startLog();
@@ -62,7 +66,11 @@ public class TestListener implements ITestListener {
         test.get().pass(message);
         Log.info(message);
     }
-
+    /**
+     * @author Huong Trinh
+     * @since 1/22/2019
+     * @update: update code to get fail ID test case for Jira
+     */
     @Override
     public synchronized void onTestFailure(ITestResult result) {
         message = setMessage("FAILED", methodDes);
@@ -83,6 +91,8 @@ public class TestListener implements ITestListener {
         Throwable error = result.getThrowable();
         test.get().fail(error.getMessage());
         Log.error(error.toString());
+        //Huong: currently list out failed method name in JIRA Issue, can be changed
+        failIDList.add(result.getMethod().getMethodName());
     }
 
     @Override
@@ -99,4 +109,6 @@ public class TestListener implements ITestListener {
     private String setMessage(String status, String description){
         return  "TEST "+status+": " + description;
     }
+
+
 }
