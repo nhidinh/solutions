@@ -1,7 +1,6 @@
 package utilities.helper.jira;
 
 import okhttp3.*;
-import okhttp3.MediaType;
 import utilities.configuration.InitialData;
 import utilities.helper.StringEncrypt;
 
@@ -36,6 +35,7 @@ public class JiraHelper {
         String title = "Portal Enrollment Search Defect";
         //Get fail test cases, remove the first empty ele
         String failTestIDs = failIDs.toString().replaceAll("[\\]\\[,]","");
+
         // Credentials to log in
         String cred = Credentials.basic(username, password);
         //Create CLIENT
@@ -71,7 +71,7 @@ public class JiraHelper {
             e.printStackTrace();
         }
         data[1] = data[1].replaceAll("[:\"key]","");
-        System.out.println(" data[1]: "+ data[1]);
+        System.out.println(" data[1]: "+ res);
         return data[1];
     }
 
@@ -98,10 +98,11 @@ public class JiraHelper {
 
         try {
             Response response = okHttpClient.newCall(request).execute();
+//            System.out.println(response.code() + " => " + response.body().string());
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        System.out.println(response.code() + " => " + response.body().string());
+
     }
 }
 
