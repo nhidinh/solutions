@@ -5,6 +5,7 @@ import org.testng.Assert;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import oracle.jdbc.driver.OracleDriver;
 
 /**
  * DatabaseHelper class
@@ -17,10 +18,10 @@ import java.util.List;
 public class DatabaseHelper {
 
     private static final String jdbcOracleDriver = "oracle.jdbc.driver.OracleDriver";
-    private static final String dbUrl = "jdbc:oracle:thin:@10.50.172.72:49161:xe";
-
-    private static final String dbUsername = "system";
-    private static final String dbPassword = "oracle";
+    private static final String dbUsername = "nguyenv";
+    private static final String dbPassword = "qr5mkq15";
+    private static final String dbUrl = "jdbc:oracle:thin:" + dbUsername + "/" + dbPassword;
+    private static final String dbAdminFile = "C:\\oracle\\product\\12.2.0\\client_1\\network\\admin";
 
     private Connection connection = null;
     private Statement statement = null;
@@ -36,24 +37,79 @@ public class DatabaseHelper {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-    }
+        System.setProperty("oracle.net.tns_admin",dbAdminFile);
+        try {
+            DriverManager.registerDriver(new OracleDriver());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
+    }
     /**
      * Open the connection to database.
      * @author Huong Trinh
      * @param
-     * @return Nothing.
-     * @since   2019-01-03
+     * @return nothing.
+     * @since   2019-01-22
      * @see
      */
-    public void open(){
+    public void createConnection(String aliasName){
         try {
-            connection= DriverManager.getConnection(dbUrl,dbUsername,dbPassword);
-            statement = connection.createStatement();
+            DriverManager.registerDriver(new OracleDriver());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            connection= DriverManager.getConnection(dbUrl + "@" + aliasName);
+            statement =  connection.createStatement();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    /**
+     * execute Query to database.
+     * @author Huong Trinh
+     * @param
+     * @return ResultSet.
+     * @since   2019-01-22
+     * @see
+     */
+    public ResultSet executeDBQuery( String queryStr){
+        try {
+            resultSet = statement.executeQuery(queryStr);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resultSet;
+    }
+
+    /**
+     * Execute query for multiple data output, give out a list string
+     * @author Vi Nguyen, HuONG tRINH
+     * @param query and numberColumns that would like to get output
+     * @return List<String> of output following column
+     * @since   2019-01-23
+     * @see
+     */
+    public List<String> executeQueryToString(String query, int numberColumns){
+
+        List<String> dbList = new ArrayList<>();
+        try {
+            resultSet = statement.executeQuery(query);
+
+            while (resultSet.next()){
+                for(int i = 1;i<=numberColumns;i++){
+                    dbList.add(resultSet.getString(i));
+                }
+            }
+            System.out.println("resultset: "+ dbList.toString());
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return dbList;
+    }
+
 
     /**
      * close the connection to database.
@@ -63,7 +119,7 @@ public class DatabaseHelper {
      * @since   2019-01-03
      * @see
      */
-    public void close(){
+    public void closeDBConnection(){
         try {
             if(null != resultSet)
                 resultSet.close();
@@ -75,43 +131,4 @@ public class DatabaseHelper {
             e.printStackTrace();
         }
     }
-
-    /**
-     * Execute query. Supported only one field for now.
-     * @author Vi Nguyen
-     * @param query
-     * @return Nothing.
-     * @since   2019-01-03
-     * @see
-     */
-    public void executeQuery(String query){
-        try {
-            resultSet = statement.executeQuery(query);
-
-            while (resultSet.next()){
-                list.add(resultSet.getString(1));
-                System.out.println(resultSet.getString(1));
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Assert Result. Supported only one field for now.
-     * @author Vi Nguyen
-     * @param expectedData
-     * @return Nothing.
-     * @since   2019-01-03
-     * @see
-     */
-    public void assertResult(String expectedData){
-        List<String> expectedList = new ArrayList<String>();
-        expectedList.add(expectedData);
-
-        Assert.assertEquals(expectedList, list);
-        // Temporarily put here, will remove later
-        System.out.println("WIN");
-    }
-
 }
