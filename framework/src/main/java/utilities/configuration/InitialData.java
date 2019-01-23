@@ -26,18 +26,17 @@ public class InitialData {
 
     //LOG DIRECTORY AND FILE PATH
     private static String FILE_NAME_LOG = TIMESTAMP + ".log";
-    public static String LOG_DIR_PATH = PARENT_DIR+"\\solutions\\regression-tests\\logs";
+    public static String LOG_DIR_PATH = PARENT_DIR+"./regression-tests/logs";
     public static String LOG_FILE_PATH = LOG_DIR_PATH + "/" + FILE_NAME_LOG;
-    public static String LOG_CONFIG_FILE_PATH = "./framework/src/main/resources/log4j.xml";
+    public static String LOG_CONFIG_FILE_PATH = "D:\\Users\\trinhh\\Documents\\solutions\\framework/src/main/resources/log4j.xml";
 
     //REPORT DIRECTORY PATH
     public static String FILE_NAME_REPORT = "REPORT-"+TIMESTAMP+".html";
-    public static String REPORT_DIR_PATH = PARENT_DIR+ "\\solutions\\regression-tests\\reports" + "\\Report-"+TIMESTAMP;
+    public static String REPORT_DIR_PATH = PARENT_DIR+ "./regression-tests/reports" + "/Report-"+TIMESTAMP;
     public static String REPORT_FILE_PATH = REPORT_DIR_PATH +"/"+FILE_NAME_REPORT;
 
     //FILE PATH OF extent-config.xml file
-    public static String REPORT_CONFIG_XML_FILE_PATH = PARENT_DIR+"\\solutions\\framework\\src\\main\\java\\com\\hansencx\\solutions\\reporting\\extentreports\\config\\extent-config.xml";
-
+    public static String REPORT_CONFIG_XML_FILE_PATH = PARENT_DIR+"./framework/src/main/resources/extent-config.xml";
     //Get current platform
     private static Platform getCurrentPlatform () {
         if (PLATFORM == null) {
