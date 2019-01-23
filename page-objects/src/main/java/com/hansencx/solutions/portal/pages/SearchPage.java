@@ -1,7 +1,6 @@
 package com.hansencx.solutions.portal.pages;
 
 import com.hansencx.solutions.core.BasePage;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -25,7 +24,6 @@ public class SearchPage extends BasePage {
     @FindBy(id = "Suppliers")
     WebElement lstSupplierName;
 
-
     //METHODS
     public void clickSearchButton(){
         click(btnSearch);
@@ -34,13 +32,16 @@ public class SearchPage extends BasePage {
     public void clickClearButton(){
         click(btnClear);
     }
+
     public void setTextEnrollmentNumber(String enrollNumber){
         setText(txtEnrollmentNumber, enrollNumber);
     }
+
     public void selectEnrollmentNumberFilterOption(String option){
         Select selectEnrollmentNumberFilter = new Select(ddlEnrollmentNumberFilter);
         selectEnrollmentNumberFilter.selectByVisibleText(option);
     }
+
     public void selectSupplierByName(String supplierName){
         Select selectSupplierName = new Select(lstSupplierName);
         selectSupplierName.selectByVisibleText(supplierName);
@@ -51,5 +52,7 @@ public class SearchPage extends BasePage {
         selectEnrollmentNumberFilterOption(option);
         setTextEnrollmentNumber(enrollNumber);
     }
+
+
 
 }

@@ -4,6 +4,7 @@ import com.hansencx.solutions.core.BasePage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.testng.Assert;
 
 import java.util.List;
 
@@ -13,7 +14,6 @@ import java.util.List;
  * @return
  * @since 1/15/2019
  */
-
 
 public class SearchResultPage extends BasePage {
     public SearchResultPage(WebDriver driver){
@@ -28,4 +28,7 @@ public class SearchResultPage extends BasePage {
         return lstResult.size();
     }
 
+    public  void verifySearchResult(String numberOfLine){
+        Assert.assertEquals(Integer.toString(getNumberOfResult()),numberOfLine );
+    }
 }

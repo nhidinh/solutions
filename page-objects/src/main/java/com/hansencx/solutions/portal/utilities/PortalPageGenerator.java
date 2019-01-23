@@ -17,9 +17,8 @@ import org.openqa.selenium.support.PageFactory;
  * @since 1/15/2019
  */
 
-
 public class PortalPageGenerator {
-    public static WebDriver driver;
+    public WebDriver driver;
 
     public PortalPageGenerator(WebDriver driver){
         this.driver = driver;
