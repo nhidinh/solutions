@@ -91,7 +91,7 @@ public class DatabaseHelper {
      * @since   2019-01-23
      * @see
      */
-    public List<String> executeQueryToString(String query, int numberColumns){
+    public List<String> executeQueryToStringColumn(String query, int numberColumns){
 
         List<String> dbList = new ArrayList<>();
         try {
@@ -110,7 +110,37 @@ public class DatabaseHelper {
         return dbList;
     }
 
+    public List<String> executeQueryToStringRow(String query, int columnIndex){
 
+        List<String> dbList = new ArrayList<>();
+        try {
+            resultSet = statement.executeQuery(query);
+
+            while (resultSet.next()){
+                    dbList.add(resultSet.getString(columnIndex));
+            }
+            System.out.println("resultset: "+ dbList.toString());
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return dbList;
+    }
+
+    public List<String> exQueryColumnLable(String query, String columnName){
+        List<String> dbList = new ArrayList<>();
+        try {
+            resultSet = statement.executeQuery(query);
+            while (resultSet.next()){
+                dbList.add(resultSet.getString(columnName));
+            }
+            System.out.println("resultset: "+ dbList.toString());
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return dbList;
+    }
     /**
      * close the connection to database.
      * @author Vi Nguyen
