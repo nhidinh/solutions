@@ -5,8 +5,10 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import com.hansencx.solutions.logger.Log;
+import utilities.configuration.InitialData;
 import utilities.helper.ExcelHelper;
 import utilities.helper.FailureHandling;
+import utilities.helper.StringEncrypt;
 
 /**
  * @param
@@ -21,23 +23,22 @@ public class SearchTests extends PortalBaseTest {
 
     @Test(description = "Search by Enrollment Number With Filter 'in list' ")
     public void searchByEnrollmentNumberInList(){
-
         Page.TopNavigation().clickSearchButton();
         Page.Search().searchByEnrollmentNumberWithFilter("in list", "1");
         Page.Search().clickSearchButton();
         Assert.assertEquals(Page.SearchResult().getNumberOfResult(),2 );
     }
 
-    //@BeforeTest
+    @BeforeTest
     public void setUpTestData(){
-        String DataDirectory = "D:\\Users\\nguyenv\\IdeaProjects\\solutions\\regression-tests\\src\\test\\java\\com\\hansencx\\portal\\datatest\\";
+        String DataDirectory = InitialData.PARENT_DIR +"\\regression-tests\\src\\test\\java\\com\\hansencx\\portal\\datatest\\";
         String DataFileName = "PortalDataTest.xlsx";
         String SheetName = "EnrollmentNumber";
 
         excelHelper.setupExcelTestData(DataDirectory, DataFileName, SheetName);
     }
 
-    //@Test(description = "Search by Enrollment Number with Data File")
+    @Test(description = "Search by Enrollment Number with Data File")
     public void searchByEnrollmentNumberWithDataFile(){
         int countRow = excelHelper.getNumberOfRow();
         String testcaseName;
@@ -70,6 +71,7 @@ public class SearchTests extends PortalBaseTest {
             }
             Log.info("Complete Test case: "+ testcaseName);
             System.out.println("Compete Test case: " + testcaseName);
+
 
         }
     }

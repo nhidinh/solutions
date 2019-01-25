@@ -12,6 +12,7 @@
     <suite-files>
         <suite-file path="SearchTestSuite.xml"/>
         <suite-file path="CancelRebillTestSuite.xml"/>
+        <suite-file path="SearchTestsBYExcelScripting.xml"/>
     </suite-files>
 
 </suite>
