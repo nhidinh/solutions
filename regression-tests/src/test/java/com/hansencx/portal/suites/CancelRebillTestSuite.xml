@@ -9,11 +9,11 @@
         <listener class-name="utilities.configuration.TestListener"/>
     </listeners>
 
-    <test name = "Portal-SearchByEnrollmentNumberInList" enabled="false">
+    <test name = "Portal-Create Cancel Rebill Test">
         <classes>
-            <class name="com.hansencx.portal.tests.SearchTests">
+            <class name="com.hansencx.portal.tests.CancelRebillTests">
                 <methods>
-                    <include name="searchByEnrollmentNumberInList"/>
+                    <include name="testCreateCancelRebill"/>
                 </methods>
             </class>
         </classes>
