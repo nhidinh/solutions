@@ -26,6 +26,7 @@
         <apache.poi.version>4.0.1</apache.poi.version>
         <apache.poi.ooxml.version>4.0.1</apache.poi.ooxml.version>
         <google.guava.version>23.3-jre</google.guava.version>
+        <xmlunit.version>1.6</xmlunit.version>
     </properties>
 
 </project>

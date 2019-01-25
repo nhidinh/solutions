@@ -10,31 +10,29 @@ import java.util.List;
 
 public class SearchTestsByExcelScripting extends BaseTest {
 
+    ExcelHelper excelHelper;
+
     @Test
     public void searchTest(){
-        PortalKeyword keyword = new PortalKeyword(getDriver());
+        excelHelper = new ExcelHelper();
+        excelHelper.setTestDataExcelPath("D:\\Users\\nguyenv\\SearchTests.xlsx");
+        excelHelper.setExcelFileSheet("Sheet1");
+
+        PortalKeyword keyword = new PortalKeyword(getDriver(), excelHelper);
         try {
-            runTestScripts("D:\\Users\\nguyenv\\SearchTests.xlsx","Sheet1", keyword);
+            runTestScripts(keyword);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    public void runTestScripts(String filePath, String sheetName, PortalKeyword keyword) throws FileNotFoundException {
-        ExcelHelper excelHelper = new ExcelHelper();
-        excelHelper.setTestDataExcelPath(filePath);
-        excelHelper.setExcelFileSheet(sheetName);
+    public void runTestScripts(PortalKeyword keyword) throws FileNotFoundException {
 
         List<String> parameters;
 
         for(int i = 0; i<excelHelper.getLastRowNum(); i++){
-            System.out.println(excelHelper.getCellData(0,0));
             parameters = excelHelper.getRowValue(i+1);
-            System.out.println("step: " + excelHelper.getCellValue(i+1, 2));
-            keyword.callKeyword(excelHelper.getCellValue(i+1, 2), parameters);
-            System.out.println("----");
-
+            keyword.callKeyword(i+1,excelHelper.getCellValue(i+1, 2), parameters);
         }
-
     }
 }

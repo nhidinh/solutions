@@ -24,9 +24,8 @@ import static org.apache.commons.io.FilenameUtils.separatorsToSystem;
  * @author Nhi Dinh
  * @return
  * @since 1/15/2019
+ * @update Jan 23, 2019
  */
-
-
 public class ExcelHelper {
 
     private Platform platform = InitialData.PLATFORM;
@@ -157,10 +156,13 @@ public class ExcelHelper {
     // Author: Vi
     public String getCellValue(int rowIndex,  int colIndex){
         cell = excelSheet.getRow(rowIndex).getCell(colIndex);
-        if (cell.getCellType() == CellType.FORMULA)
-            return cell.getRawValue();
-        else
-            return formatter.formatCellValue(cell);
+        if(null != cell){
+            if (cell.getCellType() == CellType.FORMULA)
+                return cell.getRawValue();
+            else
+                return formatter.formatCellValue(cell);
+        }
+        return  "";
     }
     // Author: Nhi
     public String getCellData(int rowNumber, int colNumber){
@@ -171,12 +173,29 @@ public class ExcelHelper {
         return formatter.formatCellValue(cell);
     }
 
-    // each step
+    /**
+     * quit driver after running a test suite
+     * @author Vi Nguyen
+     * @param
+     * @return list of parameters of the specified row(step) of the test script (Excel)
+     * @since 2019-01-23
+     * @see
+     */
     public List<String> getRowValue(int rowIndex){
         List<String>  listParameters = new ArrayList<>();
-        // fist of arg cell is from cell 3 -> 7 of each row
+
+        //argument cell is from cell 3 -> 7 of each row
         for(int i=3; i<8; i++)
-            listParameters.add(getCellData(rowIndex, i));
+            listParameters.add(getCellValue(rowIndex, i));
         return listParameters;
+    }
+
+    public void setCellValue(int rowIndex, int colIndex, String value){
+        row = excelSheet.getRow(rowIndex);
+        cell = row.getCell(colIndex);
+        if(null != cell)
+            cell.setCellValue(value);
+        else
+            row.createCell(colIndex).setCellValue(value);
     }
 }
