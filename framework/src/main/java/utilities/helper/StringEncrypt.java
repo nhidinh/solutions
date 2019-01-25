@@ -33,7 +33,6 @@ public class StringEncrypt {
 
             char[] keys=key.toCharArray();
             char[] mesg=message.toCharArray();
-
             int ml=mesg.length;
             int kl=keys.length;
             char[] newmsg=new char[ml];
@@ -43,10 +42,9 @@ public class StringEncrypt {
             }
             mesg=null;
             keys=null;
-            byte[] bytes = new byte[(int) (new String(newmsg).length())];
-
-            return new String(Base64.encodeBase64(bytes));
-//            return new String(new BASE64Encoder().encodeBuffer(new String(newmsg).getBytes()));
+            byte[] bytes = new String(newmsg).getBytes();
+            byte[] resultByte = Base64.encodeBase64(bytes);
+            return new String(resultByte);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,10 +65,7 @@ public class StringEncrypt {
     public static String decryptXOR(String message, String key){
         try {
             if (message==null || key==null ) return null;
-
-//            BASE64Decoder decoder = new BASE64Decoder();
             char[] keys=key.toCharArray();
-//            char[] mesg=new String(decoder.decodeBuffer(message)).toCharArray();
             char[] mesg=new String(Base64.decodeBase64(message)).toCharArray();
             int ml=mesg.length;
             int kl=keys.length;

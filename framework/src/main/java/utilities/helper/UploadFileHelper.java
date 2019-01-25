@@ -11,7 +11,7 @@ import java.io.File;
  * User: Nhi Dinh
  * Date: 4/01/2019
  */
-public class UploadFile {
+public class UploadFileHelper {
     public void uploadByBrowseButton(String filePath, WebElement browseButton) throws AWTException {
         setClipboardData(filePath);
         browseButton.click();
@@ -43,4 +43,13 @@ public class UploadFile {
         StringSelection stringSelection = new StringSelection(string);
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
     }
+
+    public void uploadFile(String filePath, WebElement inputFile) {
+        File uploadFile = new File(filePath);
+        if(!uploadFile.exists()){
+            throw new WebDriverException("File not found" + filePath);
+        }
+        inputFile.sendKeys(filePath);
+    }
+
 }
