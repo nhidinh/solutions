@@ -83,4 +83,8 @@ public class PortalPageGenerator {
         return GetPage(LeftNavigation.class);
     }
 
+    ////Huong: 28.01.19
+    public BillingTransactionList BillingTransactionList(){
+        return GetPage(BillingTransactionList.class);
+    }
 }

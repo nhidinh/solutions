@@ -13,8 +13,6 @@ public class SearchPage extends BasePage {
         super(driver);
     }
 
-
-
     //ELEMENTS
     @FindBy(id = "SearchButton")
     WebElement btnSearch;
@@ -27,20 +25,7 @@ public class SearchPage extends BasePage {
     WebElement txtEnrollmentNumber;
     @FindBy(id = "Suppliers")
     WebElement lstSupplierName;
-    @FindBy(xpath = "//select[@class=\"NavigationSelect\"]")
-    WebElement EnrollmentView;
-    @FindBy(id = "_ctl0__ctl0_primary_primary_ucPendingTranInfo_btnValidate")
-    WebElement validateButton;
-    @FindBy(id = "_ctl0__ctl0_primary_primary_lblNoErrorsExist")
-    WebElement errorworkList;
-    @FindBy(id = "_ctl0__ctl0_primary_primary_ucBillingAcctInfo_btnBackToPendingTranListing")
-    WebElement backToPendingTranListing;
-    @FindBy(id = "btnAbandon")
-    WebElement abandonButton;
-    @FindBy(id = "_ctl0__ctl0_txtComment")
-    WebElement commentBox;
-    @FindBy(xpath = "//*[@id=\"_ctl0__ctl0_BodyMaster\"]/div[8]/div[3]/div/button[1]/span")
-    WebElement processButton;
+//    WebElement processButton;
     //METHODS
     public void clickSearchButton(){
         click(btnSearch);
@@ -75,36 +60,4 @@ public class SearchPage extends BasePage {
         selectEnrollmentNumberFilterOption(option);
         setTextEnrollmentNumber(enrollNumber);
     }
-    //HUONG:25.01.19: billing transaction interface
-    public void selectViewFromEnrollment(String enrollmentView){
-        Select selectView = new Select(EnrollmentView);
-        selectView.selectByVisibleText(enrollmentView);
-    }
-
-    //HUONG:25.01.19: click on origin and cancel trans
-    public void clickOnTransText(String originTranId){
-        String locator = "//a[@href='PndTranView.aspx?tranID="+ originTranId + "']";
-        click(driver.findElement(By.xpath(locator)));
-    }
-    //HUONG:25.01.19: click on validate button
-    public void clickOnValidateButton(){
-        click(validateButton);
-    }
-    //HUONG:25.01.19: get text on validate button
-    public void clickOnBackBillingTransList(){
-        click(backToPendingTranListing);
-    }
-    //HUONG:25.01.19: get text on validate button
-    public String getTextErrorWorkList(){
-        return getText(errorworkList);
-    }
-    //HUONG:25.01.19: get text on validate button
-    public void clickOnAbandonButton(){
-        click(abandonButton);
-    }
-    public void handlingCommentBox(){
-        setText(commentBox,"QA automation testing");
-        click(processButton);
-    }
-
 }

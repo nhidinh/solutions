@@ -145,7 +145,7 @@ public class CancelRebillTest extends PortalBaseTest {
         }
 
         //4. choose billing transaction interface view
-        Page.Search().selectViewFromEnrollment("Billing Transaction Interface");
+        Page.BillingTransactionList().selectViewFromEnrollment("Billing Transaction Interface");
 
 
         /** 5. click on cancel and original trans
@@ -154,17 +154,17 @@ public class CancelRebillTest extends PortalBaseTest {
         String kyPndSeqCancelTransNumber = querySpecificInfoFollowingKyEnroll("KY_PND_SEQ_TRANS", tranID, cancelTransId);
         String kyPndSeqOriginalTransNumber = querySpecificInfoFollowingKyEnroll("KY_PND_SEQ_TRANS", tranID, originalTransId);
 
-        Page.Search().clickOnTransText(kyPndSeqCancelTransNumber);
-        Page.Search().clickOnValidateButton();
-        Assert.assertEquals(Page.Search().getTextErrorWorkList(), "No errors exist.");
+        Page.BillingTransactionList().clickOnTransText(kyPndSeqCancelTransNumber);
+        Page.BillingTransactionList().clickOnValidateButton();
+        Assert.assertEquals(Page.BillingTransactionList().getTextErrorWorkList(), "No errors exist.");
 
-        Page.Search().clickOnBackBillingTransList();
+        Page.BillingTransactionList().clickOnBackBillingTransList();
 
-        Page.Search().clickOnTransText(kyPndSeqOriginalTransNumber);
-        Page.Search().clickOnValidateButton();
-        Assert.assertEquals(Page.Search().getTextErrorWorkList(), "No errors exist.");
+        Page.BillingTransactionList().clickOnTransText(kyPndSeqOriginalTransNumber);
+        Page.BillingTransactionList().clickOnValidateButton();
+        Assert.assertEquals(Page.BillingTransactionList().getTextErrorWorkList(), "No errors exist.");
 
-        Page.Search().clickOnBackBillingTransList();
+        Page.BillingTransactionList().clickOnBackBillingTransList();
 
         String queryToClean = "select ky_pnd_seq_trans from custpro.cpm_pnd_tran_hdr " +
                 "where ky_enroll in(select ky_enroll " +
@@ -173,8 +173,8 @@ public class CancelRebillTest extends PortalBaseTest {
         List<String> kyPndSeqTrans = db.executeQueryReturnString(queryToClean);
         if(!kyPndSeqTrans.isEmpty()){
             for(String i :kyPndSeqTrans)
-            Page.Search().clickOnTransText(i);
-            Page.Search().clickOnAbandonButton();
+            Page.BillingTransactionList().clickOnTransText(i);
+            Page.BillingTransactionList().clickOnAbandonButton();
         }
     }
     private String querySpecificInfoFollowingKyEnroll(String queryLabel, String tranID, String purposeCode){
