@@ -85,44 +85,37 @@ public class DatabaseHelper  {
     }
 
     /**
-     * Execute query for multiple data output, give out a list string
+     * Execute query for single data type output, give out a list string
      * @author Vi Nguyen, HuONG tRINH
-     * @param query and numberColumns that would like to get output
+     * @param querySingleFieldValue that would like to get output
      * @return List<String> of output following column
      * @since   2019-01-23
      * @see
      */
-    public List<String> executeQueryToStringColumn(String query, int numberColumns){
+    public List<String> executeQueryReturnString(String querySingleFieldValue){
 
         List<String> dbList = new ArrayList<>();
         try {
-            resultSet = statement.executeQuery(query);
+            resultSet = statement.executeQuery(querySingleFieldValue);
 
             while (resultSet.next()){
-                for(int i = 1;i<=numberColumns;i++){
-                    dbList.add(resultSet.getString(i));
-                }
+                dbList.add(resultSet.getString(1));
             }
-//            System.out.println("resultset: "+ dbList.toString());
 
         }catch (Exception e){
             e.printStackTrace();
         }
         return dbList;
     }
-    public List<Integer> executeQueryToIntColumn(String query, int numberColumns){
+    public List<Integer> executeQueryReturnInteger(String querySingleFieldValue){
 
         List<Integer> dbList = new ArrayList<>();
         try {
-            resultSet = statement.executeQuery(query);
+            resultSet = statement.executeQuery(querySingleFieldValue);
 
             while (resultSet.next()){
-                for(int i = 1;i<=numberColumns;i++){
-                    dbList.add(resultSet.getInt(i));
-                }
+                    dbList.add(resultSet.getInt(1));
             }
-//            System.out.println("resultset: "+ dbList.toString());
-
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -161,54 +154,7 @@ public class DatabaseHelper  {
         }
         return outputString;
     }
-    public List<String> executeQueryToStringRow(String query, int columnIndex){
 
-        List<String> dbList = new ArrayList<>();
-        try {
-            resultSet = statement.executeQuery(query);
-
-            while (resultSet.next()){
-                    dbList.add(resultSet.getString(columnIndex));
-            }
-//            System.out.println("resultset: "+ dbList.toString());
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return dbList;
-    }
-
-    public List<String> queryColumnLabel(String query, String columnName){
-        List<String> dbList = new ArrayList<>();
-        try {
-            resultSet = statement.executeQuery(query);
-            while (resultSet.next()){
-                dbList.add(resultSet.getString(columnName));
-            }
-//            System.out.println("resultset: "+ dbList.toString());
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return dbList;
-    }
-
-    public List<String> queryColumnLabelList(String query,String[] columnNameList){
-        List<String> dbList = new ArrayList<>();
-        try {
-            resultSet = statement.executeQuery(query);
-            while (resultSet.next()){
-                for(int i=0;i<columnNameList.length;i++) {
-                    dbList.add(resultSet.getString(columnNameList[i]));
-                }
-            }
-//            System.out.println("resultset: "+ dbList.toString());
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return dbList;
-    }
     /**
      * close the connection to database.
      * @author Vi Nguyen
