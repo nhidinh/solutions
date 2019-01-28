@@ -15,7 +15,7 @@ import oracle.jdbc.driver.OracleDriver;
  * @since   2019-01-03
  * @see
  */
-public class DatabaseHelper {
+public class DatabaseHelper  {
 
     private static final String jdbcOracleDriver = "oracle.jdbc.driver.OracleDriver";
     private static final String dbUsername = "nguyenv";
@@ -26,6 +26,7 @@ public class DatabaseHelper {
     private Connection connection = null;
     private Statement statement = null;
     private ResultSet resultSet = null;
+    private String outputString = null;
     private List<String> list = new ArrayList();
 
     /**
@@ -102,14 +103,64 @@ public class DatabaseHelper {
                     dbList.add(resultSet.getString(i));
                 }
             }
-            System.out.println("resultset: "+ dbList.toString());
+//            System.out.println("resultset: "+ dbList.toString());
 
         }catch (Exception e){
             e.printStackTrace();
         }
         return dbList;
     }
+    public List<Integer> executeQueryToIntColumn(String query, int numberColumns){
 
+        List<Integer> dbList = new ArrayList<>();
+        try {
+            resultSet = statement.executeQuery(query);
+
+            while (resultSet.next()){
+                for(int i = 1;i<=numberColumns;i++){
+                    dbList.add(resultSet.getInt(i));
+                }
+            }
+//            System.out.println("resultset: "+ dbList.toString());
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return dbList;
+    }
+    public String querySpecificInfoFollowingKyEnroll(String queryLabel, String tranID, String purposeCode){
+
+        String queryInput = "select " + queryLabel + " from custpro.cpm_pnd_tran_hdr where ky_enroll in(select ky_enroll " +
+                "from custpro.cpm_pnd_tran_hdr " +
+                "where ky_pnd_seq_trans =" + tranID + ") " +
+                "and cd_tran_status = 28 " +
+                "and cd_purpose = "+ purposeCode;
+        try {
+            resultSet = statement.executeQuery(queryInput);
+            while(resultSet.next()){
+                outputString = resultSet.getString(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return outputString;
+    }
+    public String querySpecificInfoInProcessedTrans(String queryLabel, String tranID){
+
+        String queryInput = "select "+ queryLabel + " from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans ="+ tranID;
+
+        try {
+            resultSet = statement.executeQuery(queryInput);
+            while(resultSet.next()){
+                outputString = resultSet.getString(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return outputString;
+    }
     public List<String> executeQueryToStringRow(String query, int columnIndex){
 
         List<String> dbList = new ArrayList<>();
@@ -119,7 +170,7 @@ public class DatabaseHelper {
             while (resultSet.next()){
                     dbList.add(resultSet.getString(columnIndex));
             }
-            System.out.println("resultset: "+ dbList.toString());
+//            System.out.println("resultset: "+ dbList.toString());
 
         }catch (Exception e){
             e.printStackTrace();
@@ -127,14 +178,31 @@ public class DatabaseHelper {
         return dbList;
     }
 
-    public List<String> exQueryColumnLable(String query, String columnName){
+    public List<String> queryColumnLabel(String query, String columnName){
         List<String> dbList = new ArrayList<>();
         try {
             resultSet = statement.executeQuery(query);
             while (resultSet.next()){
                 dbList.add(resultSet.getString(columnName));
             }
-            System.out.println("resultset: "+ dbList.toString());
+//            System.out.println("resultset: "+ dbList.toString());
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return dbList;
+    }
+
+    public List<String> queryColumnLabelList(String query,String[] columnNameList){
+        List<String> dbList = new ArrayList<>();
+        try {
+            resultSet = statement.executeQuery(query);
+            while (resultSet.next()){
+                for(int i=0;i<columnNameList.length;i++) {
+                    dbList.add(resultSet.getString(columnNameList[i]));
+                }
+            }
+//            System.out.println("resultset: "+ dbList.toString());
 
         }catch (Exception e){
             e.printStackTrace();
