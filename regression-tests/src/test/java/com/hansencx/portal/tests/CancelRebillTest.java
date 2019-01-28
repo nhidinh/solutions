@@ -34,9 +34,9 @@ public class CancelRebillTest extends PortalBaseTest {
                 "where ky_enroll in(select ky_enroll " +
                 "from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans = " + tranID + ") " +
                 "and cd_tran_status = 28";
-        List<Integer> rsCount = db.executeQueryReturnInteger(countLineQuery);
+        List<String> rsCount = db.executeQueryReturnString(countLineQuery);
 
-        Assert.assertEquals(rsCount.get(0).intValue(), 2);
+        Assert.assertEquals(rsCount.get(0), "2");
 
         /**  2. verify that two rounds are returned with value following pair of value (00, 01) or (17,18)
          3. verify that KY_BA, ID_TRANS_REF_NUM_867, ID_TRANS_REF_NUM_810 are the same for process, origin and cancel
