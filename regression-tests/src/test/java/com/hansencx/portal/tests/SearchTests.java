@@ -17,43 +17,37 @@ import utilities.helper.FailureHandling;
 
 
 public class SearchTests extends PortalBaseTest {
-    ExcelHelper excelHelper = new ExcelHelper();
-
     @Test(description = "Search by Enrollment Number With Filter 'in list' ")
     public void searchByEnrollmentNumberInList(){
 
-        Page.TopNavigation().clickSearchButton();
-        Page.Search().searchByEnrollmentNumberWithFilter("in list", "1");
-        Page.Search().clickSearchButton();
         Assert.assertEquals(Page.SearchResult().getNumberOfResult(),2 );
     }
 
-    //@BeforeTest
+    @BeforeTest
     public void setUpTestData(){
-        String DataDirectory = "D:\\Users\\nguyenv\\IdeaProjects\\solutions\\regression-tests\\src\\test\\java\\com\\hansencx\\portal\\datatest\\";
+        String DataDirectory = "D:\\Users\\dinhn\\IdeaProjects\\solutions\\solutions\\regression-tests\\src\\test\\java\\com\\hansencx\\portal\\datatest\\";
         String DataFileName = "PortalDataTest.xlsx";
         String SheetName = "EnrollmentNumber";
-
-        excelHelper.setupExcelTestData(DataDirectory, DataFileName, SheetName);
+        ExcelHelper.setupExcelTestData(DataDirectory, DataFileName, SheetName);
     }
 
-    //@Test(description = "Search by Enrollment Number with Data File")
+    @Test(description = "Search by Enrollment Number with Data File")
     public void searchByEnrollmentNumberWithDataFile(){
-        int countRow = excelHelper.getNumberOfRow();
+        int countRow = ExcelHelper.getNumberOfRow();
         String testcaseName;
         String filterOption;
         String enrollmentNumberValue;
         String result;
-        int filterOptionCell = excelHelper.getCellIndexByText("Filter");
-        int EnrollmentNumberValueCell = excelHelper.getCellIndexByText("Value");
-        int tcNameCell = excelHelper.getCellIndexByText("TestCaseName");
-        int resultCell = excelHelper.getCellIndexByText("Result");
+        int filterOptionCell = ExcelHelper.getCellIndexByText("Filter");
+        int EnrollmentNumberValueCell = ExcelHelper.getCellIndexByText("Value");
+        int tcNameCell = ExcelHelper.getCellIndexByText("TestCaseName");
+        int resultCell = ExcelHelper.getCellIndexByText("Result");
 
         for(int i = 1; i<countRow; i++){
-            filterOption = excelHelper.getCellData(i, filterOptionCell);
-            enrollmentNumberValue = excelHelper.getCellData(i, EnrollmentNumberValueCell);
-            testcaseName = excelHelper.getCellData(i, tcNameCell);
-            result = excelHelper.getCellData(i, resultCell);
+            filterOption = ExcelHelper.getCellData(i, filterOptionCell);
+            enrollmentNumberValue = ExcelHelper.getCellData(i, EnrollmentNumberValueCell);
+            testcaseName = ExcelHelper.getCellData(i, tcNameCell);
+            result = ExcelHelper.getCellData(i, resultCell);
             int resultValue = Integer.parseInt(result);
 
             Page.TopNavigation().clickSearchButton();
@@ -73,5 +67,4 @@ public class SearchTests extends PortalBaseTest {
 
         }
     }
-
 }
