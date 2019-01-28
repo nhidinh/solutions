@@ -10,7 +10,7 @@ import com.hansencx.solutions.logger.Log;
 import utilities.configuration.TestListener;
 import utilities.configuration.driver.DriverType;
 import utilities.helper.Browser;
-import utilities.helper.jira.JiraHelper;
+import utilities.helper.JiraHelper;
 
 import java.net.MalformedURLException;
 
