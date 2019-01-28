@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.testng.Assert;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,8 +28,8 @@ public class CreateCancelRebillPage extends BasePage {
     WebElement lblErrorCountNumber;
     @FindBy(xpath = "//div[contains(@class,'list area worklist')]//div[contains(@class,'row') and not(contains(@data-bind,'service-center-staging-row'))]")
     List<WebElement> lstRecord;
-
-
+    @FindBy(xpath = "//div[2]//div[@class='columnValueValue']//div[contains(@data-bind,'title: value')]")
+    WebElement lblRecordValue;
     //METHODS
     public int getTheErrorCountNumber(){
         String errorCountNo = getText(lblErrorCountNumber);
@@ -43,4 +44,16 @@ public class CreateCancelRebillPage extends BasePage {
     public void clickProcessButton(){
         click(btnProcess);
     }
+
+    public ArrayList<String> getTitle(){
+        ArrayList<String> listOfTransactionId = new ArrayList<>();
+
+        for(WebElement record:lstRecord){
+            String getTextRecord = record.getText().substring(0,8);
+            listOfTransactionId.add(getTextRecord);
+        }
+        System.out.println(listOfTransactionId);
+        return listOfTransactionId;
+    }
+
 }
