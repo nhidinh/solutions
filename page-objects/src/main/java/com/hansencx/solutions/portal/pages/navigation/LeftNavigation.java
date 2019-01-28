@@ -6,22 +6,51 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 public class LeftNavigation extends BasePage {
-    public LeftNavigation(WebDriver driver){
-        super (driver);
+    public LeftNavigation(WebDriver driver) {
+        super(driver);
     }
 
     //ELEMENTS
     @FindBy(id = "menuButton")
-    WebElement btnMenu;
-
-    @FindBy(xpath = "//div[contains(@id,'menuHolder')]//a[text()='Service Center']")
-    WebElement lnkServiceCenter;
+    private WebElement btnMenu;
 
     //METHODS
-    public void clickMenuButton(){
+    public void clickMenuButton() {
         click(btnMenu);
     }
-    public void clickServiceCenter(){
+
+    //============================SERVICE CENTER============================//
+    //ELEMENT OF SERVICE CENTER MENU:
+    @FindBy(xpath = "//div[contains(@id,'menuHolder')]//a[text()='Service Center']")
+    private WebElement lnkServiceCenter;
+    @FindBy(xpath = "//a[text()='Service Center']//parent::li//a[text()='Update']")
+    private WebElement lnkUpdate;
+    @FindBy(xpath = "//a[text()='Service Center']//parent::li//a[text()='History']")
+    private WebElement lnkHistory;
+    @FindBy(xpath = "//a[text()='Service Center']//parent::li//a[text()='Approvals']")
+    private WebElement lnkApproval;
+
+    /////METHODS OF SELECTING SERVICE CENTER MENU
+    public void clickServiceCenter() {
         click(lnkServiceCenter);
+        waitForPageLoad();
     }
+
+    public void clickServiceCenterUpdateMenu() {
+        click(lnkUpdate);
+        waitForPageLoad();
+    }
+
+    public void clickServiceCenterHistoryMenu() {
+        click(lnkHistory);
+        waitForPageLoad();
+    }
+
+    public void clickServiceCenterApprovalsMenu() {
+        click(lnkApproval);
+        waitForPageLoad();
+    }
+    //============================SERVICE CENTER============================//
+
 }
+
