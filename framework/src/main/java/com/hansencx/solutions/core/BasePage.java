@@ -213,6 +213,12 @@ public class BasePage {
         Function<WebDriver, Boolean> function = new Function<WebDriver, Boolean>() {
             @Override
             public Boolean apply(WebDriver driver) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    Log.error(e.getMessage());
+                }
                 return element.isDisplayed() ? true : null;
             }
         };
