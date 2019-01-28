@@ -15,7 +15,7 @@ import oracle.jdbc.driver.OracleDriver;
  * @since   2019-01-03
  * @see
  */
-public class DatabaseHelper {
+public class DatabaseHelper  {
 
     private static final String jdbcOracleDriver = "oracle.jdbc.driver.OracleDriver";
     private static final String dbUsername = "nguyenv";
@@ -26,6 +26,7 @@ public class DatabaseHelper {
     private Connection connection = null;
     private Statement statement = null;
     private ResultSet resultSet = null;
+    private String outputString = null;
     private List<String> list = new ArrayList();
 
     /**
