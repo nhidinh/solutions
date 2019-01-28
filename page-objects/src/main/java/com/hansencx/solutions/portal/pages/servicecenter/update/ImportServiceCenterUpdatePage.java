@@ -1,6 +1,7 @@
 package com.hansencx.solutions.portal.pages.servicecenter.update;
 
 import com.hansencx.solutions.core.BasePage;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import utilities.helper.UploadFileHelper;
@@ -14,6 +15,9 @@ import utilities.helper.UploadFileHelper;
 
 
 public class ImportServiceCenterUpdatePage extends BasePage {
+    public ImportServiceCenterUpdatePage(WebDriver driver){
+        super(driver);
+    }
     //WEB ELEMENTS
     @FindBy(xpath = "//div[@class='add']//a[text()='click here']")
     private WebElement lnkDownloadTemplate;

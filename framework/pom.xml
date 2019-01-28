@@ -20,17 +20,6 @@
                     <target>8</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <configuration>
-                    <file>${project.basedir}/libs/ojdbc7.jar</file>
-                    <groupId>com.oracle</groupId>
-                    <artifactId>ojdbc7</artifactId>
-                    <version>12.1.0</version>
-                    <packaging>jar</packaging>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
     <repositories>
@@ -42,6 +31,13 @@
     </repositories>
 
     <dependencies>
+        <!--Apache Maven Install Plugin-->
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-install-plugin</artifactId>
+            <version>3.0.0-M1</version>
+            <type>maven-plugin</type>
+        </dependency>
         <!-- Selenium dependencies -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>

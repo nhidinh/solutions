@@ -33,18 +33,22 @@ public class LeftNavigation extends BasePage {
     /////METHODS OF SELECTING SERVICE CENTER MENU
     public void clickServiceCenter() {
         click(lnkServiceCenter);
+        waitForPageLoad();
     }
 
     public void clickServiceCenterUpdateMenu() {
         click(lnkUpdate);
+        waitForPageLoad();
     }
 
     public void clickServiceCenterHistoryMenu() {
         click(lnkHistory);
+        waitForPageLoad();
     }
 
     public void clickServiceCenterApprovalsMenu() {
         click(lnkApproval);
+        waitForPageLoad();
     }
     //============================SERVICE CENTER============================//
 

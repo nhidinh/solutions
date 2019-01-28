@@ -24,6 +24,7 @@ public class ServiceCenterUpdatePage extends BasePage {
 
     public void clickAddNewButton(){
         click(btnAddNew);
+        waitForPageLoad();
     }
 
 }
