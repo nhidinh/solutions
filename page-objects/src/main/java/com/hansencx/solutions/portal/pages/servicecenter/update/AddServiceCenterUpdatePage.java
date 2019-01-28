@@ -1,6 +1,7 @@
 package com.hansencx.solutions.portal.pages.servicecenter.update;
 
 import com.hansencx.solutions.core.BasePage;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -13,6 +14,10 @@ import org.openqa.selenium.support.FindBy;
 
 
 public class AddServiceCenterUpdatePage extends BasePage {
+    public AddServiceCenterUpdatePage(WebDriver driver){
+        super(driver);
+    }
+
     /////WEB ELEMENT
     @FindBy(xpath = "//span[text()='Custpro']")
     WebElement lblCustpro;

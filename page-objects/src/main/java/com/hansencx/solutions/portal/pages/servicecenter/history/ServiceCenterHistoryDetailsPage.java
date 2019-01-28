@@ -1,6 +1,7 @@
 package com.hansencx.solutions.portal.pages.servicecenter.history;
 
 import com.hansencx.solutions.core.BasePage;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -15,6 +16,10 @@ import java.util.List;
 
 
 public class ServiceCenterHistoryDetailsPage extends BasePage {
+    public ServiceCenterHistoryDetailsPage(WebDriver driver) {
+        super(driver);
+    }
+
     @FindBy(xpath = "//*[contains(text(),'Queue #')]//parent::div//following-sibling::div")
     private WebElement lblQueue;
     @FindBy(xpath = "//*[contains(text(),'Update')]//parent::div//following-sibling::div")

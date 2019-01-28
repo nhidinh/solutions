@@ -1,6 +1,7 @@
 package com.hansencx.solutions.portal.pages.servicecenter.update;
 
 import com.hansencx.solutions.core.BasePage;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
@@ -14,6 +15,10 @@ import org.openqa.selenium.support.ui.Select;
 
 
 public class EnterReasonForProcessDialog extends BasePage {
+    public EnterReasonForProcessDialog(WebDriver driver) {
+        super(driver);
+    }
+
     //ELEMENTS
     @FindBy(id = "ddlserviceCenterWFG")
     WebElement ddlServiceCenterWFG;

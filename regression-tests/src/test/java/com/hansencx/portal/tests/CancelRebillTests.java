@@ -31,7 +31,7 @@ public class CancelRebillTests extends PortalBaseTest {
         //STEP 2.f.	Click on Add New:
         Page.ServiceCenterUpdate().clickAddNewButton();
         //STEP 2.g.	Scroll down to the Custpro area of Service Center templates
-        //click the checkbox for Create Cancel Rebil
+        //click the checkbox for Create Cancel Rebill
         // and click on the Import button.
         Page.AddServiceCenterUpdate().scrollToCustproArea();
         Page.AddServiceCenterUpdate().checkCreateCancelRebillCheckbox();

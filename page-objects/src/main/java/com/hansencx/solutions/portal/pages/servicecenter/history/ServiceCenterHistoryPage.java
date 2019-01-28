@@ -1,6 +1,7 @@
 package com.hansencx.solutions.portal.pages.servicecenter.history;
 
 import com.hansencx.solutions.core.BasePage;
+import org.openqa.selenium.WebDriver;
 
 /**
  * @param
@@ -11,5 +12,7 @@ import com.hansencx.solutions.core.BasePage;
 
 
 public class ServiceCenterHistoryPage extends BasePage {
-
+    public ServiceCenterHistoryPage(WebDriver driver) {
+        super(driver);
+    }
 }

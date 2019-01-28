@@ -1,6 +1,7 @@
 package com.hansencx.solutions.portal.pages.servicecenter.update;
 
 import com.hansencx.solutions.core.BasePage;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.testng.Assert;
@@ -16,6 +17,9 @@ import java.util.List;
 
 
 public class CreateCancelRebillPage extends BasePage {
+    public CreateCancelRebillPage(WebDriver driver) {
+        super(driver);
+    }
     //WEB ELEMENTS
     @FindBy(xpath = "//input[@value='Process']")
     WebElement btnProcess;
