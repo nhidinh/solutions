@@ -1,8 +1,7 @@
-package utilities.helper.jira;
+package utilities.helper;
 
 import okhttp3.*;
 import utilities.configuration.InitialData;
-import utilities.helper.StringEncrypt;
 
 import java.io.File;
 import java.io.IOException;

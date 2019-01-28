@@ -4,6 +4,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
@@ -63,7 +64,7 @@ public class BasePage {
     }
 
 
-    public void navigateToPage(String url){
+    protected void navigateToPage(String url){
         Log.info("Navigating to " + url);
         try{
             driver.get(url);
@@ -76,7 +77,7 @@ public class BasePage {
     }
 
     //Hover Mouse
-    public void hoverMouseToElement(WebElement element){
+    protected void hoverMouseToElement(WebElement element){
         Actions action = new Actions(driver);
         String elementLocator = getLocatorOfElement(element) ;
         Log.info(setStartMessage("hovering mouse to: ", "",elementLocator,"" ));
@@ -90,7 +91,7 @@ public class BasePage {
     }
 
     // Click with Javascript
-    public void jsClick(WebElement ele) {
+    protected void jsClick(WebElement ele) {
         String elementLocator = getLocatorOfElement(ele) ;
         Log.info(setStartMessage("clicking (JS) to","", elementLocator,""));
         JavascriptExecutor executor = (JavascriptExecutor) driver;
@@ -106,7 +107,7 @@ public class BasePage {
      * @since 2018-12-03
      * @see
      */
-    public void click(WebElement element){
+    protected void click(WebElement element){
         String elementLocator = getLocatorOfElement(element);
         try {
             waitForElementToAppear(element);
@@ -121,7 +122,7 @@ public class BasePage {
     }
 
     // Set Text
-    public void setText(WebElement element, String text){
+    protected void setText(WebElement element, String text){
         String elementLocator = getLocatorOfElement(element) ;
         waitForElementToAppear(element);
         Log.info(setStartMessage("setting text:", text, elementLocator, ""));
@@ -130,7 +131,7 @@ public class BasePage {
     }
 
     // Get Text
-    public String getText(WebElement element) {
+    protected String getText(WebElement element) {
         String elementLocator = getLocatorOfElement(element) ;
         waitForElementToAppear(element);
         Log.info(setStartMessage("getting text of", "", elementLocator, ""));
@@ -139,8 +140,8 @@ public class BasePage {
         return text;
     }
 
-    //Assert Equals
-    public void assertText(WebElement element, String expectedText) {
+    //Assert Equals Text
+    protected void assertText(WebElement element, String expectedText) {
         String elementLocator = getLocatorOfElement(element) ;
         waitForElementToAppear(element);
         Log.info(setStartMessage("asserting text:", expectedText, elementLocator, ""));
@@ -148,8 +149,17 @@ public class BasePage {
         Log.info(setEndMessage("asserting text:", expectedText, elementLocator, ""));
     }
 
+    //Assert Equals Number
+    protected void assertNumber(WebElement element, int expectedNumber) {
+        String elementLocator = getLocatorOfElement(element) ;
+        waitForElementToAppear(element);
+        Log.info(setStartMessage("asserting number:"+expectedNumber,"", elementLocator, ""));
+        Assert.assertEquals(Integer.parseInt(getText(element)), expectedNumber);
+        Log.info(setEndMessage("asserting text:"+ expectedNumber,"", elementLocator, ""));
+    }
+
     // Get Page Title
-    public String getPageTitle(){
+    protected String getPageTitle(){
         Log.info("Start getting page title");
         String title = driver.getTitle();
         Log.info("Return Page Title");
@@ -157,14 +167,14 @@ public class BasePage {
     }
 
     // Back to Previous Page
-    public void backToPreviousPage(){
+    protected void backToPreviousPage(){
         Log.info("Start backing to previous page");
         driver.navigate().back();
         Log.info("End backing to previous page");
     }
 
     //Wait for page load
-    public void waitForPageLoad(){
+    protected void waitForPageLoad(){
         Function<WebDriver, Boolean> functionWaitForPageLoad  = new Function<WebDriver, Boolean>() {
             public Boolean apply( WebDriver driver) {
                 return ((JavascriptExecutor) driver).executeScript("return document.readyState").toString().equals("complete");
@@ -184,7 +194,7 @@ public class BasePage {
      * @param locator the locator.
      * @return Nothing.
      */
-    public WebElement waitForElementToAppear(By locator) {
+    protected WebElement waitForElementToAppear(By locator) {
         Function<WebDriver, WebElement> functionWait = new Function<WebDriver, WebElement>() {
             @Override
             public WebElement apply(WebDriver driver) {
@@ -199,7 +209,7 @@ public class BasePage {
      * @param element the Webelement.
      * @return Nothing.
      */
-    public void waitForElementToAppear(WebElement element){
+    protected void waitForElementToAppear(WebElement element){
         Function<WebDriver, Boolean> function = new Function<WebDriver, Boolean>() {
             @Override
             public Boolean apply(WebDriver driver) {
@@ -216,7 +226,7 @@ public class BasePage {
      * @since 2018-12-03
      * @see
      */
-    public void waitForElementToDisappear(WebElement element){
+    protected void waitForElementToDisappear(WebElement element){
         Function<WebDriver, Boolean> invisibility = new Function<WebDriver, Boolean>() {
             @Override
             public Boolean apply(WebDriver driver) {
@@ -230,7 +240,7 @@ public class BasePage {
         wait.until(invisibility);
     }
 
-    public void verifyElementPresent(WebElement element){
+    protected void verifyElementPresent(WebElement element){
         Assert.assertTrue(element.isDisplayed());
     }
 
@@ -243,7 +253,7 @@ public class BasePage {
      * @since 2018-12-03
      * @see
      */
-    public void waitForElementToBeClickable(WebElement element){
+    protected void waitForElementToBeClickable(WebElement element){
         String elementLocator = getLocatorOfElement(element) ;
         Log.info(setStartMessage("waiting for","", elementLocator, "is clickable"));
 
@@ -262,5 +272,47 @@ public class BasePage {
 
         Log.info(setEndMessage("waiting for","",elementLocator ,"is clickable"));
 
+    }
+
+    /**
+     * @param element
+     * Use to scroll to a visible element
+     */
+    protected void scrollToElement(WebElement element){
+        waitForElementToAppear(element);
+        Actions actions = new Actions(driver);
+        actions.moveToElement(element);
+        actions.perform();
+    }
+
+    /**
+     * @param element
+     * Use to Check a checkbox element
+     */
+    protected void check(WebElement element){
+        if(!element.isSelected()){
+            element.click();
+        }else {
+            Log.warning("Element is already checked");
+            System.out.println("Element is already checked");
+        }
+    }
+
+    /**
+     * @param element
+     * Use to Check a checkbox element
+     */
+    protected void unCheck(WebElement element){
+        if(element.isSelected()){
+            element.click();
+        }else {
+            Log.warning("Element is already unchecked");
+            System.out.println("Element is already unchecked");
+        }
+    }
+
+    protected void selectOptionByText(WebElement ddlElement, String option){
+        Select selectReason = new Select(ddlElement);
+        selectReason.selectByVisibleText(option);
     }
 }

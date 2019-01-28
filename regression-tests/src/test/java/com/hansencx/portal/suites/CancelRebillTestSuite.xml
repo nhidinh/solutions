@@ -8,7 +8,6 @@
     <listeners>
         <listener class-name="utilities.configuration.TestListener"/>
     </listeners>
-
     <test name = "Portal-CancelRebillTest" enabled="true">
         <classes>
             <class name="com.hansencx.portal.tests.CancelRebillTest">
