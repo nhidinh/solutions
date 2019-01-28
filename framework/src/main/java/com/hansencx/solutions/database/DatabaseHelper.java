@@ -85,63 +85,76 @@ public class DatabaseHelper  {
     }
 
     /**
-     * Execute query for multiple data output, give out a list string
+     * Execute query for single data type output, give out a list string
      * @author Vi Nguyen, HuONG tRINH
-     * @param query and numberColumns that would like to get output
+     * @param querySingleFieldValue that would like to get output
      * @return List<String> of output following column
      * @since   2019-01-23
      * @see
      */
-    public List<String> executeQueryToStringColumn(String query, int numberColumns){
+    public List<String> executeQueryReturnString(String querySingleFieldValue){
 
         List<String> dbList = new ArrayList<>();
         try {
-            resultSet = statement.executeQuery(query);
+            resultSet = statement.executeQuery(querySingleFieldValue);
 
             while (resultSet.next()){
-                for(int i = 1;i<=numberColumns;i++){
-                    dbList.add(resultSet.getString(i));
-                }
+                dbList.add(resultSet.getString(1));
             }
-            System.out.println("resultset: "+ dbList.toString());
 
         }catch (Exception e){
             e.printStackTrace();
         }
         return dbList;
     }
+    public List<Integer> executeQueryReturnInteger(String querySingleFieldValue){
 
-    public List<String> executeQueryToStringRow(String query, int columnIndex){
-
-        List<String> dbList = new ArrayList<>();
+        List<Integer> dbList = new ArrayList<>();
         try {
-            resultSet = statement.executeQuery(query);
+            resultSet = statement.executeQuery(querySingleFieldValue);
 
             while (resultSet.next()){
-                    dbList.add(resultSet.getString(columnIndex));
+                    dbList.add(resultSet.getInt(1));
             }
-            System.out.println("resultset: "+ dbList.toString());
-
         }catch (Exception e){
             e.printStackTrace();
         }
         return dbList;
     }
+    public String querySpecificInfoFollowingKyEnroll(String queryLabel, String tranID, String purposeCode){
 
-    public List<String> exQueryColumnLable(String query, String columnName){
-        List<String> dbList = new ArrayList<>();
+        String queryInput = "select " + queryLabel + " from custpro.cpm_pnd_tran_hdr where ky_enroll in(select ky_enroll " +
+                "from custpro.cpm_pnd_tran_hdr " +
+                "where ky_pnd_seq_trans =" + tranID + ") " +
+                "and cd_tran_status = 28 " +
+                "and cd_purpose = "+ purposeCode;
         try {
-            resultSet = statement.executeQuery(query);
-            while (resultSet.next()){
-                dbList.add(resultSet.getString(columnName));
+            resultSet = statement.executeQuery(queryInput);
+            while(resultSet.next()){
+                outputString = resultSet.getString(1);
             }
-            System.out.println("resultset: "+ dbList.toString());
 
-        }catch (Exception e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return dbList;
+        return outputString;
     }
+    public String querySpecificInfoInProcessedTrans(String queryLabel, String tranID){
+
+        String queryInput = "select "+ queryLabel + " from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans ="+ tranID;
+
+        try {
+            resultSet = statement.executeQuery(queryInput);
+            while(resultSet.next()){
+                outputString = resultSet.getString(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return outputString;
+    }
+
     /**
      * close the connection to database.
      * @author Vi Nguyen
