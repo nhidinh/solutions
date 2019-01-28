@@ -26,8 +26,7 @@ public class DatabaseHelper  {
     private Connection connection = null;
     private Statement statement = null;
     private ResultSet resultSet = null;
-    private String outputString = null;
-    private List<String> list = new ArrayList();
+
 
     /**
      * Constructor
@@ -46,6 +45,7 @@ public class DatabaseHelper  {
         }
 
     }
+
     /**
      * Open the connection to database.
      * @author Huong Trinh
@@ -121,39 +121,7 @@ public class DatabaseHelper  {
         }
         return dbList;
     }
-    public String querySpecificInfoFollowingKyEnroll(String queryLabel, String tranID, String purposeCode){
 
-        String queryInput = "select " + queryLabel + " from custpro.cpm_pnd_tran_hdr where ky_enroll in(select ky_enroll " +
-                "from custpro.cpm_pnd_tran_hdr " +
-                "where ky_pnd_seq_trans =" + tranID + ") " +
-                "and cd_tran_status = 28 " +
-                "and cd_purpose = "+ purposeCode;
-        try {
-            resultSet = statement.executeQuery(queryInput);
-            while(resultSet.next()){
-                outputString = resultSet.getString(1);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return outputString;
-    }
-    public String querySpecificInfoInProcessedTrans(String queryLabel, String tranID){
-
-        String queryInput = "select "+ queryLabel + " from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans ="+ tranID;
-
-        try {
-            resultSet = statement.executeQuery(queryInput);
-            while(resultSet.next()){
-                outputString = resultSet.getString(1);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return outputString;
-    }
 
     /**
      * close the connection to database.
@@ -174,5 +142,8 @@ public class DatabaseHelper  {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    public Statement getStatement() {
+        return statement;
     }
 }

@@ -4,11 +4,11 @@ import com.hansencx.solutions.database.DatabaseHelper;
 import com.hansencx.solutions.portal.PortalBaseTest;
 import com.hansencx.solutions.portal.pages.LoginPage;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 public class CancelRebillTest extends PortalBaseTest {
@@ -17,8 +17,7 @@ public class CancelRebillTest extends PortalBaseTest {
     private String tranID = "61761470";
     private String cancelTransId = null;
     private String originalTransId = null;
-    String userGeneric = "QAGENERIC";
-    String pswGeneric = "QA!generic1";
+    private ResultSet resultSet;
     @BeforeTest
     public void startDB(){
         db = new DatabaseHelper();
@@ -50,26 +49,26 @@ public class CancelRebillTest extends PortalBaseTest {
         List<String> rsNewCDPurpose = db.executeQueryReturnString(inputQueryNew);
 
         // process
-        String ky_ba_ProcessedTran = db.querySpecificInfoInProcessedTrans("KY_BA", tranID);
-        String id_trans_ref_867_ProcessedTran = db.querySpecificInfoInProcessedTrans("ID_TRANS_REF_NUM_867", tranID);
-        String id_trans_ref_810_ProcessedTran = db.querySpecificInfoInProcessedTrans("ID_TRANS_REF_NUM_810", tranID);
+        String ky_ba_ProcessedTran = querySpecificInfoInProcessedTrans("KY_BA", tranID);
+        String id_trans_ref_867_ProcessedTran = querySpecificInfoInProcessedTrans("ID_TRANS_REF_NUM_867", tranID);
+        String id_trans_ref_810_ProcessedTran = querySpecificInfoInProcessedTrans("ID_TRANS_REF_NUM_810", tranID);
         // cd_purpose = 00: origin
-        String ky_ba_New00 = db.querySpecificInfoFollowingKyEnroll("KY_BA", tranID, "00");
-        String id_trans_ref_867_New00 = db.querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_867", tranID, "00");
-        String id_trans_ref_810_New00 = db.querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_810", tranID, "00");
+        String ky_ba_New00 = querySpecificInfoFollowingKyEnroll("KY_BA", tranID, "00");
+        String id_trans_ref_867_New00 = querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_867", tranID, "00");
+        String id_trans_ref_810_New00 = querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_810", tranID, "00");
         // cd_purpose = 01: cancel
-        String ky_ba_New01 = db.querySpecificInfoFollowingKyEnroll("KY_BA", tranID, "01");
-        String id_trans_ref_867_New01 = db.querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_867", tranID, "01");
-        String id_trans_ref_810_New01 = db.querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_810", tranID, "01");
+        String ky_ba_New01 = querySpecificInfoFollowingKyEnroll("KY_BA", tranID, "01");
+        String id_trans_ref_867_New01 = querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_867", tranID, "01");
+        String id_trans_ref_810_New01 = querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_810", tranID, "01");
 
         // cd_purpose = 17: origin
-        String ky_ba_New17 = db.querySpecificInfoFollowingKyEnroll("KY_BA", tranID, "17");
-        String id_trans_ref_867_New17 = db.querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_867", tranID, "17");
-        String id_trans_ref_810_New17 = db.querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_810", tranID, "17");
+        String ky_ba_New17 = querySpecificInfoFollowingKyEnroll("KY_BA", tranID, "17");
+        String id_trans_ref_867_New17 = querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_867", tranID, "17");
+        String id_trans_ref_810_New17 = querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_810", tranID, "17");
         // cd_purpose = 18: cancel
-        String ky_ba_New18 = db.querySpecificInfoFollowingKyEnroll("KY_BA", tranID, "18");
-        String id_trans_ref_867_New18 = db.querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_867", tranID, "18");
-        String id_trans_ref_810_New18 = db.querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_810", tranID, "18");
+        String ky_ba_New18 = querySpecificInfoFollowingKyEnroll("KY_BA", tranID, "18");
+        String id_trans_ref_867_New18 = querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_867", tranID, "18");
+        String id_trans_ref_810_New18 = querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_810", tranID, "18");
 
         if (rsNewCDPurpose.contains("01") && rsNewCDPurpose.contains("00")) {
             //verify for appearance of 00 and 01
@@ -113,11 +112,18 @@ public class CancelRebillTest extends PortalBaseTest {
 //step 4:
         //1. get ky_enroll, ky_supplier
         String queryEnroll = "select KY_ENROLL from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans = " + tranID;
-        String ky_enroll = db.executeQueryReturnString(queryEnroll).get(0);
+        String kyEnroll0 = db.executeQueryReturnString(queryEnroll).get(0);
+        String kyEnroll1 = db.executeQueryReturnString(queryEnroll).get(1);
+        //validate whether ky_enroll is the same
+        Boolean enrollCheckFlag = kyEnroll0.equals(kyEnroll1);
+        Assert.assertEquals(kyEnroll0,kyEnroll1);
 
         String querySupplier = "select KY_SUPPLIER from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans = " + tranID;
-        String kySupplier = db.executeQueryReturnString(querySupplier).get(0);
-        System.out.println("ky supplier: "+kySupplier);
+        String kySupplier0 = db.executeQueryReturnString(querySupplier).get(0);
+        String kySupplier1 = db.executeQueryReturnString(querySupplier).get(1);
+        //validate whether KY_SUPPLIER is the same
+        Boolean supplierCheckFlag = kySupplier0.equals(kySupplier1);
+        Assert.assertEquals(kySupplier0,kySupplier1);
         //2. log in PORTAL with acc : generic
         String userGeneric = "QAGENERIC";
         String pswGeneric = "QA!generic1";
@@ -127,10 +133,16 @@ public class CancelRebillTest extends PortalBaseTest {
 
         //3. Search for ky_enroll
         Page.TopNavigation().clickSearchButton();
-        Page.Search().selectSupplierByName("Think Energy2");
-//        Page.Search().selectSupplierByKySupplier(kySupplier);
-        Page.Search().searchByEnrollmentNumberWithFilter("equals", "4583564");
-        Page.Search().clickSearchButton();
+//        Page.Search().selectSupplierByName("Think Energy2");
+        if(enrollCheckFlag.equals(true) && supplierCheckFlag.equals(true)) {
+            Page.Search().selectSupplierByKySupplier(kySupplier0);
+            Page.Search().searchByEnrollmentNumberWithFilter("equals", kyEnroll0);
+            Page.Search().clickSearchButton();
+        }else
+        {
+            Assert.fail("Ky_enroll/ky_supplier is diffeent between cancel and original transaction ! " +
+                    "\n enrollCheckFlag: " + enrollCheckFlag + "\n supplierCheckFlag: " + supplierCheckFlag);
+        }
 
         //4. choose billing transaction interface view
         Page.Search().selectViewFromEnrollment("Billing Transaction Interface");
@@ -139,8 +151,8 @@ public class CancelRebillTest extends PortalBaseTest {
         /** 5. click on cancel and original trans
             6. Click on validate button and verify no error
          **/
-        String kyPndSeqCancelTransNumber = db.querySpecificInfoFollowingKyEnroll("KY_PND_SEQ_TRANS", tranID, cancelTransId);
-        String kyPndSeqOriginalTransNumber = db.querySpecificInfoFollowingKyEnroll("KY_PND_SEQ_TRANS", tranID, originalTransId);
+        String kyPndSeqCancelTransNumber = querySpecificInfoFollowingKyEnroll("KY_PND_SEQ_TRANS", tranID, cancelTransId);
+        String kyPndSeqOriginalTransNumber = querySpecificInfoFollowingKyEnroll("KY_PND_SEQ_TRANS", tranID, originalTransId);
 
         Page.Search().clickOnTransText(kyPndSeqCancelTransNumber);
         Page.Search().clickOnValidateButton();
@@ -164,6 +176,37 @@ public class CancelRebillTest extends PortalBaseTest {
             Page.Search().clickOnTransText(i);
             Page.Search().clickOnAbandonButton();
         }
+    }
+    private String querySpecificInfoFollowingKyEnroll(String queryLabel, String tranID, String purposeCode){
+        String outputString = null;
+        String queryInput = "select " + queryLabel + " from custpro.cpm_pnd_tran_hdr where ky_enroll in(select ky_enroll " +
+                "from custpro.cpm_pnd_tran_hdr " +
+                "where ky_pnd_seq_trans =" + tranID + ") " +
+                "and cd_tran_status = 28 " +
+                "and cd_purpose = "+ purposeCode;
+        try {
+            resultSet = db.getStatement().executeQuery(queryInput);
+            while(resultSet.next()){
+                outputString = resultSet.getString(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return outputString;
+    }
+    private String querySpecificInfoInProcessedTrans(String queryLabel, String tranID){
+        String outputString = null;
+        String queryInput = "select "+ queryLabel + " from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans ="+ tranID;
+        try {
+            resultSet = db.getStatement().executeQuery(queryInput);
+            while(resultSet.next()){
+                outputString = resultSet.getString(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return outputString;
     }
 //    @BeforeTest
 //    public void cleandb(){
