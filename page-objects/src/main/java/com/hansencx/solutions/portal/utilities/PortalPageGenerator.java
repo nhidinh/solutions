@@ -84,7 +84,7 @@ public class PortalPageGenerator {
     }
 
     ////Huong: 28.01.19
-    public BillingTransactionList BillingTransactionList(){
-        return GetPage(BillingTransactionList.class);
+    public BillingTransactionListPage BillingTransactionList(){
+        return GetPage(BillingTransactionListPage.class);
     }
 }

@@ -6,26 +6,86 @@ import com.hansencx.solutions.portal.pages.LoginPage;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import utilities.configuration.InitialData;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
-public class CancelRebillTest extends PortalBaseTest {
-
+public class Merge extends PortalBaseTest{
+    String importedFilePath;
+    static ArrayList<String> listTrans = new ArrayList<String>();
     private DatabaseHelper db;
-    private String tranID = "61761470";
+    private String tranID = null;
     private String cancelTransId = null;
     private String originalTransId = null;
     private ResultSet resultSet;
     @BeforeTest
-    public void startDB(){
+    public void setupDataBeforeTest(){
+        importedFilePath = InitialData.PARENT_DIR + "\\regression-tests\\src\\test\\java\\com\\hansencx\\portal\\datatest\\Create Cancel Rebill - Filled In Template.xlsx";
         db = new DatabaseHelper();
         db.createConnection("PSOLQ");
     }
-
     @Test
+    public void testCreateCancelRebill(){
+        //STEP 2.c.	Click on left navigation menu symbol
+        Page.LeftNavigation().clickMenuButton();
+        //STEP 2.d.	Click on Service Center on the navigation list to expand sub areas of Service Center
+        Page.LeftNavigation().clickServiceCenter();
+        //STEP 2.e.	Click on Update
+        Page.LeftNavigation().clickServiceCenterUpdateMenu();
+        //STEP 2.f.	Click on Add New:
+        Page.ServiceCenterUpdate().clickAddNewButton();
+        //STEP 2.g.	Scroll down to the Custpro area of Service Center templates
+        //click the checkbox for Create Cancel Rebill
+        // and click on the Import button.
+        Page.AddServiceCenterUpdate().scrollToCustproArea();
+        Page.AddServiceCenterUpdate().checkCreateCancelRebillCheckbox();
+        Page.AddServiceCenterUpdate().clickImportButton();
+        //STEP 2.k.	Upload the saved Create Cancel Rebill template.
+        Page.ImportServiceCenterUpdate().uploadCancelRebillFile(importedFilePath);
+        Page.ImportServiceCenterUpdate().clickUploadButton();
+        //STEP 2.l.	Verify the template is uploaded and the data appears on the screen without errors
+        // then click on the Process button
+        Page.CreateCancelRebill().verifyUploadSuccessfullyWithNoError();
+        int numberOfUploadedRecord = Page.CreateCancelRebill().getNumberOfRecord();
+        listTrans = Page.CreateCancelRebill().getTitle();
+
+        Page.CreateCancelRebill().clickProcessButton();
+        //STEP 2.m Select other from the drop down
+        //enter a comment of Regression Testing
+        // and click on Ok
+        Page.EnterReasonForProcess().selectReason("Other");
+        Page.EnterReasonForProcess().setTextComment("Regression Testing");
+        Page.EnterReasonForProcess().clickOkButton();
+        //Waiting for Process Popup message dismiss
+        Page.WaitMessageDialog().waitForMessageDismiss();
+        //Verify the "Update moved to Service Center Approval Queue" message appears
+        Page.PortalDialog().waitForPopupMessageBox();
+        Page.PortalDialog().verifyMessageConfirm("Update moved to Service Center Approval Queue");
+        Page.PortalDialog().clickOkButton();
+
+        //STEP 2.n.	Use the left navigation menu to go back to service center
+        // and then select History to see the pending information
+        Page.LeftNavigation().clickMenuButton();
+        Page.LeftNavigation().clickServiceCenter();
+        Page.LeftNavigation().clickServiceCenterHistoryMenu();
+
+        String userApp = "QAAPPROVER";
+        String pswApp = "QA!approver1";
+
+        LoginPage loginPage = Page.Login().goTo();
+        loginPage.logonWithEncodedCredential(userApp, pswApp);
+        Page.LeftNavigation().clickMenuButton();
+        Page.LeftNavigation().clickServiceCenter();
+        Page.LeftNavigation().clickServiceCenterApprovalsMenu();
+
+    }
+    @Test(dependsOnMethods="testCreateCancelRebill", alwaysRun = true)
     public void test3StepA() {
+        tranID = listTrans.get(1);
+        System.out.println("tranid: "+tranID);
         //0. Check database before doing test
 
         //Verify the result
@@ -149,7 +209,7 @@ public class CancelRebillTest extends PortalBaseTest {
 
 
         /** 5. click on cancel and original trans
-            6. Click on validate button and verify no error
+         6. Click on validate button and verify no error
          **/
         String kyPndSeqCancelTransNumber = querySpecificInfoFollowingKyEnroll("KY_PND_SEQ_TRANS", tranID, cancelTransId);
         String kyPndSeqOriginalTransNumber = querySpecificInfoFollowingKyEnroll("KY_PND_SEQ_TRANS", tranID, originalTransId);
@@ -166,16 +226,16 @@ public class CancelRebillTest extends PortalBaseTest {
 
         Page.BillingTransactionList().clickOnBackBillingTransList();
 
-        String queryToClean = "select ky_pnd_seq_trans from custpro.cpm_pnd_tran_hdr " +
-                "where ky_enroll in(select ky_enroll " +
-                "from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans = " + tranID + ") " +
-                "and cd_tran_status = 28";
-        List<String> kyPndSeqTrans = db.executeQueryReturnString(queryToClean);
-        if(!kyPndSeqTrans.isEmpty()){
-            for(String i :kyPndSeqTrans)
-            Page.BillingTransactionList().clickOnTransText(i);
-            Page.BillingTransactionList().clickOnAbandonButton();
-        }
+//        String queryToClean = "select ky_pnd_seq_trans from custpro.cpm_pnd_tran_hdr " +
+//                "where ky_enroll in(select ky_enroll " +
+//                "from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans = " + tranID + ") " +
+//                "and cd_tran_status = 28";
+//        List<String> kyPndSeqTrans = db.executeQueryReturnString(queryToClean);
+//        if(!kyPndSeqTrans.isEmpty()){
+//            for(String i :kyPndSeqTrans)
+//                Page.BillingTransactionListPage().clickOnTransText(i);
+//            Page.BillingTransactionListPage().clickOnAbandonButton();
+//        }
     }
     private String querySpecificInfoFollowingKyEnroll(String queryLabel, String tranID, String purposeCode){
         String outputString = null;
@@ -208,22 +268,4 @@ public class CancelRebillTest extends PortalBaseTest {
         }
         return outputString;
     }
-//    @BeforeTest
-//    public void cleandb(){
-//        String queryToClean = "select ky_pnd_seq_trans from custpro.cpm_pnd_tran_hdr " +
-//                "where ky_enroll in(select ky_enroll " +
-//                "from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans = " + tranID + ") " +
-//                "and cd_tran_status = 28";
-//        List<String> kyPndSeqTrans = db.executeQueryReturnString(queryToClean);
-//        if(!kyPndSeqTrans.isEmpty()){
-//            for(String i :kyPndSeqTrans){
-//                Page.Search().clickOnTransText(i);
-//                System.out.println("trans: "+i);
-//                Page.Search().clickOnAbandonButton();
-//                Page.Search().handlingCommentBox();
-//                Page.Search().clickOnBackBillingTransList();
-//            }
-//
-//        }
-//    }
 }
