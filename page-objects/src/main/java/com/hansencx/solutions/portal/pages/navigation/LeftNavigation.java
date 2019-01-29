@@ -37,16 +37,22 @@ public class LeftNavigation extends BasePage {
     }
 
     public void clickServiceCenterUpdateMenu() {
+        clickMenuButton();
+        clickServiceCenter();
         click(lnkUpdate);
         waitForPageLoad();
     }
 
     public void clickServiceCenterHistoryMenu() {
+        clickMenuButton();
+        clickServiceCenter();
         click(lnkHistory);
         waitForPageLoad();
     }
 
     public void clickServiceCenterApprovalsMenu() {
+        clickMenuButton();
+        clickServiceCenter();
         click(lnkApproval);
         waitForPageLoad();
     }

@@ -1,6 +1,7 @@
 package com.hansencx.solutions.portal.pages;
 
 import com.hansencx.solutions.core.BasePage;
+import com.hansencx.solutions.portal.utilities.PortalDatabaseSupplierDict;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -45,6 +46,12 @@ public class SearchPage extends BasePage {
 
     public void selectSupplierByName(String supplierName){
         Select selectSupplierName = new Select(lstSupplierName);
+        selectSupplierName.selectByVisibleText(supplierName);
+    }
+    //HUONG:25.01.19:Update method for mapping between database & web present
+    public void selectSupplierByKySupplier(String supplierKyName){
+        Select selectSupplierName = new Select(lstSupplierName);
+        String supplierName = PortalDatabaseSupplierDict.getValue(supplierKyName);
         selectSupplierName.selectByVisibleText(supplierName);
     }
     //ACTIONS

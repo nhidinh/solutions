@@ -6,6 +6,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * @param
  * @author Nhi Dinh
@@ -35,5 +40,14 @@ public class EnterReasonForProcessDialog extends BasePage {
     }
     public void clickOkButton(){
         click(btnOK);
+    }
+    public String getCreatedTime(){
+        String formatPattern = "MM/dd/yyyy hh:mm a";
+        SimpleDateFormat dateFormater = new SimpleDateFormat(formatPattern);
+        Date date = Calendar.getInstance().getTime();
+        TimeZone portalServer = TimeZone.getTimeZone("EST");
+        dateFormater.setTimeZone(portalServer);
+        String currentPortalTime = dateFormater.format(date);
+        return currentPortalTime;
     }
 }

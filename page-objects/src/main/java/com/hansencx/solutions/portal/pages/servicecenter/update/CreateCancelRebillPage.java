@@ -1,11 +1,14 @@
 package com.hansencx.solutions.portal.pages.servicecenter.update;
 
 import com.hansencx.solutions.core.BasePage;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.testng.Assert;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,15 +24,18 @@ public class CreateCancelRebillPage extends BasePage {
     public CreateCancelRebillPage(WebDriver driver) {
         super(driver);
     }
+    // VARIABLE
+    String lstRecordXpath = "//div[contains(@class,'row') and not(contains(@data-bind,'service-center-staging-row'))]";
+
     //WEB ELEMENTS
     @FindBy(xpath = "//input[@value='Process']")
     WebElement btnProcess;
     @FindBy(xpath = "//div[contains(text(),'Error Count')]//span")
     WebElement lblErrorCountNumber;
-    @FindBy(xpath = "//div[contains(@class,'list area worklist')]//div[contains(@class,'row') and not(contains(@data-bind,'service-center-staging-row'))]")
+    @FindBy(xpath = "//div[contains(@class,'row') and not(contains(@data-bind,'service-center-staging-row'))]")
     List<WebElement> lstRecord;
-    @FindBy(xpath = "//div[2]//div[@class='columnValueValue']//div[contains(@data-bind,'title: value')]")
-    WebElement lblRecordValue;
+    @FindBy(xpath = "//div[contains(@class,'row') and not(contains(@data-bind,'service-center-staging-row'))]//div[contains(@class,'columnValue clip')][1]//div[contains(@data-bind,'title: value')]")
+    List<WebElement> lstTransactionID;
     //METHODS
     public int getTheErrorCountNumber(){
         String errorCountNo = getText(lblErrorCountNumber);
@@ -45,14 +51,14 @@ public class CreateCancelRebillPage extends BasePage {
         click(btnProcess);
     }
 
-    public ArrayList<String> getTitle(){
+    public ArrayList<String> getListOfTransactionID(){
         ArrayList<String> listOfTransactionId = new ArrayList<>();
 
-        for(WebElement record:lstRecord){
-            String getTextRecord = record.getText().substring(0,8);
-            listOfTransactionId.add(getTextRecord);
+        for(WebElement record:lstTransactionID){
+            String getTextTitle = getText(record);
+            listOfTransactionId.add(getTextTitle);
         }
-        System.out.println(listOfTransactionId);
+        System.out.println("Transaction ID list 1: "+listOfTransactionId);
         return listOfTransactionId;
     }
 

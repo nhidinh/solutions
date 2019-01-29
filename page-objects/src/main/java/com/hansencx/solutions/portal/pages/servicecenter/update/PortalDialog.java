@@ -22,7 +22,7 @@ public class PortalDialog extends BasePage {
     private WebElement boxMessage;
     @FindBy(id = "MessageBoxMessage")
     private WebElement lblMessage;
-    @FindBy(xpath = "//div[@id='AlertMessageDialog']//following-sibling::div//button")
+    @FindBy(xpath = "//div[@id='PopupMessageBox']//following-sibling::div//button")
     private WebElement btnOK;
 
     public void waitForPopupMessageBox(){
