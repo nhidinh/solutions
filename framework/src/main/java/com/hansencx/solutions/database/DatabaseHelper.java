@@ -175,7 +175,7 @@ public class DatabaseHelper {
      * @see
      * @since 2019-01-03
      */
-    public void closeDatabaseConnection() {
+    public void closeConnection() {
         try {
             if (null != resultSet)
                 resultSet.close();
