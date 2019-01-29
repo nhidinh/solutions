@@ -82,7 +82,7 @@ public class DatabaseHelper {
      * @see
      * @since 2019-01-22
      */
-    public ResultSet executeDBQuery(String queryStr) {
+    public ResultSet executeDatabaseQuery(String queryStr) {
         try {
             resultSet = statement.executeQuery(queryStr);
         } catch (SQLException e) {
@@ -175,7 +175,7 @@ public class DatabaseHelper {
      * @see
      * @since 2019-01-03
      */
-    public void closeDBConnection() {
+    public void closeDatabaseConnection() {
         try {
             if (null != resultSet)
                 resultSet.close();
