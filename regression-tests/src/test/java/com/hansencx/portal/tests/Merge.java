@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Merge extends PortalBaseTest{
+
     String importedFilePath;
     static ArrayList<String> listTrans = new ArrayList<String>();
     private DatabaseHelper db;
@@ -21,6 +22,7 @@ public class Merge extends PortalBaseTest{
     private String cancelTransId = null;
     private String originalTransId = null;
     private ResultSet resultSet;
+
     @BeforeTest
     public void setupDataBeforeTest(){
         importedFilePath = InitialData.PARENT_DIR + "\\regression-tests\\src\\test\\java\\com\\hansencx\\portal\\datatest\\Create Cancel Rebill - Filled In Template.xlsx";
@@ -72,14 +74,14 @@ public class Merge extends PortalBaseTest{
         Page.LeftNavigation().clickServiceCenter();
         Page.LeftNavigation().clickServiceCenterHistoryMenu();
 
-        String userApp = "QAAPPROVER";
-        String pswApp = "QA!approver1";
-
-        LoginPage loginPage = Page.Login().goTo();
-        loginPage.logonWithEncodedCredential(userApp, pswApp);
-        Page.LeftNavigation().clickMenuButton();
-        Page.LeftNavigation().clickServiceCenter();
-        Page.LeftNavigation().clickServiceCenterApprovalsMenu();
+//        String userApp = "QAAPPROVER";
+//        String encodedPswApp = "NC9CDhQVFj8XFgFG";
+//
+//        LoginPage loginPage = Page.Login().goTo();
+//        loginPage.logonWithEncodedCredential(userApp, encodedPswApp);
+//        Page.LeftNavigation().clickMenuButton();
+//        Page.LeftNavigation().clickServiceCenter();
+//        Page.LeftNavigation().clickServiceCenterApprovalsMenu();
 
     }
     @Test(dependsOnMethods="testCreateCancelRebill", alwaysRun = true)
@@ -186,10 +188,10 @@ public class Merge extends PortalBaseTest{
         Assert.assertEquals(kySupplier0,kySupplier1);
         //2. log in PORTAL with acc : generic
         String userGeneric = "QAGENERIC";
-        String pswGeneric = "QA!generic1";
+        String encodedPswGeneric = "NC9CCAELASIIEEI=";
 
         LoginPage loginPage = Page.Login().goTo();
-        loginPage.logonWithEncodedCredential(userGeneric, pswGeneric);
+        loginPage.logonWithEncodedCredential(userGeneric, encodedPswGeneric);
 
         //3. Search for ky_enroll
         Page.TopNavigation().clickSearchButton();
@@ -210,6 +212,8 @@ public class Merge extends PortalBaseTest{
 
         /** 5. click on cancel and original trans
          6. Click on validate button and verify no error
+         NOTE: Validation should perform for Cancel first because of the order processing in Billing run,
+         it should be cancel firstly to have original trans
          **/
         String kyPndSeqCancelTransNumber = querySpecificInfoFollowingKyEnroll("KY_PND_SEQ_TRANS", tranID, cancelTransId);
         String kyPndSeqOriginalTransNumber = querySpecificInfoFollowingKyEnroll("KY_PND_SEQ_TRANS", tranID, originalTransId);
@@ -218,6 +222,12 @@ public class Merge extends PortalBaseTest{
         Page.BillingTransactionList().clickOnValidateButton();
         Assert.assertEquals(Page.BillingTransactionList().getTextErrorWorkList(), "No errors exist.");
 
+        //verify status code in database after validation, should be 65 as sucessful validation
+        String queryInputCancel = "select cd_tran_status from custpro.cpm_pnd_tran_hdr where ky_enroll ="
+                + kyEnroll0 + " and ky_pnd_seq_trans =" + kyPndSeqCancelTransNumber;
+        String cdTranStatusCodeOfCancel = db.returnQueriedStringField(queryInputCancel);
+        Assert.assertEquals(cdTranStatusCodeOfCancel,"65");
+
         Page.BillingTransactionList().clickOnBackBillingTransList();
 
         Page.BillingTransactionList().clickOnTransText(kyPndSeqOriginalTransNumber);
@@ -225,6 +235,14 @@ public class Merge extends PortalBaseTest{
         Assert.assertEquals(Page.BillingTransactionList().getTextErrorWorkList(), "No errors exist.");
 
         Page.BillingTransactionList().clickOnBackBillingTransList();
+
+        //verify status code in database after validation, should be 65 as sucessful validation
+        String queryInputOriginal = "select cd_tran_status from custpro.cpm_pnd_tran_hdr where ky_enroll ="
+                + kyEnroll0+" and ky_pnd_seq_trans =" + kyPndSeqOriginalTransNumber;
+        String cdTranStatusCodeOfOriginal = db.returnQueriedStringField(queryInputOriginal);
+        Assert.assertEquals(cdTranStatusCodeOfOriginal,"65");
+
+
 
 //        String queryToClean = "select ky_pnd_seq_trans from custpro.cpm_pnd_tran_hdr " +
 //                "where ky_enroll in(select ky_enroll " +
@@ -255,6 +273,7 @@ public class Merge extends PortalBaseTest{
         }
         return outputString;
     }
+
     private String querySpecificInfoInProcessedTrans(String queryLabel, String tranID){
         String outputString = null;
         String queryInput = "select "+ queryLabel + " from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans ="+ tranID;
