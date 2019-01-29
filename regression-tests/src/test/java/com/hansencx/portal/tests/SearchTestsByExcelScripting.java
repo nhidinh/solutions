@@ -15,7 +15,7 @@ public class SearchTestsByExcelScripting extends BaseTest {
     @Test
     public void searchTest(){
         excelHelper = new ExcelHelper();
-        excelHelper.setTestDataExcelPath("D:\\Users\\nguyenv\\SearchTests.xlsx");
+        excelHelper.setTestDataExcelPath("D:\\Users\\"+System.getProperty("user.name")+"\\SearchTests.xlsx");
         excelHelper.setExcelFileSheet("Sheet1");
 
         PortalKeyword keyword = new PortalKeyword(getDriver(), excelHelper);
