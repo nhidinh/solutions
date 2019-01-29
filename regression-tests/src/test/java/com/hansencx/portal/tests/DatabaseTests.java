@@ -1,5 +1,7 @@
 package com.hansencx.portal.tests;
 
+import com.hansencx.solutions.database.DatabaseHelper;
+
 public class DatabaseTests {
     private static DatabaseHelper databaseHelper = new DatabaseHelper();
 
