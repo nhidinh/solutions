@@ -4,6 +4,9 @@ import com.hansencx.solutions.core.BasePage;
 import com.hansencx.solutions.portal.pages.*;
 import com.hansencx.solutions.portal.pages.navigation.LeftNavigation;
 import com.hansencx.solutions.portal.pages.navigation.TopNavigation;
+import com.hansencx.solutions.portal.pages.servicecenter.approvals.EnterReasonForApprovalDialog;
+import com.hansencx.solutions.portal.pages.servicecenter.approvals.ServiceCenterApprovalDetailsPage;
+import com.hansencx.solutions.portal.pages.servicecenter.approvals.ServiceCenterApprovalsPage;
 import com.hansencx.solutions.portal.pages.servicecenter.history.ServiceCenterHistoryDetailsPage;
 import com.hansencx.solutions.portal.pages.servicecenter.history.ServiceCenterHistoryPage;
 import com.hansencx.solutions.portal.pages.servicecenter.update.*;
@@ -73,6 +76,16 @@ public class PortalPageGenerator {
         return GetPage(ServiceCenterHistoryDetailsPage.class);
     }
 
+    ////// GETTING SERVICE CENTER APPROVAL PAGES:
+    public ServiceCenterApprovalsPage ServiceCenterApprovals(){
+        return GetPage(ServiceCenterApprovalsPage.class);
+    }
+    public ServiceCenterApprovalDetailsPage ServiceCenterApprovalDetails(){
+        return GetPage(ServiceCenterApprovalDetailsPage.class);
+    }
+    public EnterReasonForApprovalDialog EnterReasonForApprovalDialog(){
+        return GetPage(EnterReasonForApprovalDialog.class);
+    }
 
 
     ////GETTING NAVIGATION
@@ -83,7 +96,7 @@ public class PortalPageGenerator {
         return GetPage(LeftNavigation.class);
     }
 
-    ////Huong: 28.01.19
+    //// GETTING PAGE: BIILING TRANSACTION LIST PAGE
     public BillingTransactionListPage BillingTransactionList(){
         return GetPage(BillingTransactionListPage.class);
     }

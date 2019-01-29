@@ -10,6 +10,7 @@ import com.hansencx.solutions.logger.Log;
 import utilities.configuration.TestListener;
 import utilities.configuration.driver.DriverType;
 import utilities.helper.Browser;
+import utilities.helper.JiraHelper;
 
 import java.net.MalformedURLException;
 
@@ -77,7 +78,7 @@ public class BaseTest {
         String testCaseName = testContext.getName();
         Log.endTestCase(testCaseName);
         Log.info("Closing browser after test");
-        Browser.quit();
+//        Browser.quit();
     }
     /**
      * @author Huong Trinh

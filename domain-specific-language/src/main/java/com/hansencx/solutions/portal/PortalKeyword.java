@@ -1,6 +1,7 @@
 package com.hansencx.solutions.portal;
 
 import com.hansencx.solutions.core.BaseKeyword;
+import com.hansencx.solutions.database.DatabaseHelper;
 import com.hansencx.solutions.portal.utilities.PortalPageGenerator;
 import org.openqa.selenium.WebDriver;
 import utilities.helper.ExcelHelper;

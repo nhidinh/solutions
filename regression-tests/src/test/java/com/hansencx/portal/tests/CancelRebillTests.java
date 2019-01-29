@@ -6,6 +6,8 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import utilities.configuration.InitialData;
 
+import java.util.ArrayList;
+
 /**
  * @param
  * @author Nhi Dinh
@@ -23,9 +25,9 @@ public class CancelRebillTests extends PortalBaseTest {
     @Test
     public void testCreateCancelRebill(){
         //STEP 2.c.	Click on left navigation menu symbol
-        Page.LeftNavigation().clickMenuButton();
+//        Page.LeftNavigation().clickMenuButton();
         //STEP 2.d.	Click on Service Center on the navigation list to expand sub areas of Service Center
-        Page.LeftNavigation().clickServiceCenter();
+//        Page.LeftNavigation().clickServiceCenter();
         //STEP 2.e.	Click on Update
         Page.LeftNavigation().clickServiceCenterUpdateMenu();
         //STEP 2.f.	Click on Add New:
@@ -43,6 +45,9 @@ public class CancelRebillTests extends PortalBaseTest {
         // then click on the Process button
         Page.CreateCancelRebill().verifyUploadSuccessfullyWithNoError();
         int numberOfUploadedRecord = Page.CreateCancelRebill().getNumberOfRecord();
+        ArrayList<String> listTransactionID = Page.CreateCancelRebill().getListOfTransactionID();
+
+
         Page.CreateCancelRebill().clickProcessButton();
         //STEP 2.m Select other from the drop down
         //enter a comment of Regression Testing
@@ -50,6 +55,7 @@ public class CancelRebillTests extends PortalBaseTest {
         Page.EnterReasonForProcess().selectReason("Other");
         Page.EnterReasonForProcess().setTextComment("Regression Testing");
         Page.EnterReasonForProcess().clickOkButton();
+        String createdTime = Page.EnterReasonForProcess().getCreatedTime();
         //Waiting for Process Popup message dismiss
         Page.WaitMessageDialog().waitForMessageDismiss();
         //Verify the "Update moved to Service Center Approval Queue" message appears
@@ -59,9 +65,45 @@ public class CancelRebillTests extends PortalBaseTest {
 
         //STEP 2.n.	Use the left navigation menu to go back to service center
         // and then select History to see the pending information
-        Page.LeftNavigation().clickMenuButton();
-        Page.LeftNavigation().clickServiceCenter();
+//        Page.LeftNavigation().clickMenuButton();
+//        Page.LeftNavigation().clickServiceCenter();
         Page.LeftNavigation().clickServiceCenterHistoryMenu();
+        Page.WaitMessageDialog().waitForMessageDismiss();
+
+        System.out.println("Created Time: " + createdTime);
+        Page.ServiceCenterHistory().verifyStatusIsWaitingForApproval(createdTime);
+        Page.ServiceCenterHistory().selectCreatedRecordByCreatedTime(createdTime);
+        Page.ServiceCenterHistoryDetails().verifyTheTransactionIDIsCorrect(listTransactionID);
+
+        //STEP 2.o.	User will request another person to go the Approvals screen and approve the pending service center so it is processed.
+        Page.TopNavigation().clickLogoutButton();
+        Page.Login().goTo();
+        Page.Login().logonWithEncodedCredential("QAAPPROVER", "NC9CDhQVFj8XFgFG");
+
+        //STEP 2.p.i. Use the left navigation menu to go back to service center, and then select Approvals to see the pending information
+        Page.LeftNavigation().clickServiceCenterApprovalsMenu();
+        Page.WaitMessageDialog().waitForMessageDismiss();
+
+        //STEP 2.q.	As different user than the one whom uploaded the Service Center, user will click on the Queue# link
+        Page.ServiceCenterApprovals().waitForListAppear();
+        Page.ServiceCenterApprovals().selectQueueRequestByCreatedTime(createdTime);
+        Page.WaitMessageDialog().waitForMessageDismiss();
+
+        //STEP 2.r.	User will click on Approve
+        Page.ServiceCenterApprovalDetails().verifyListTransactionIDIsCorrect(listTransactionID);
+        Page.ServiceCenterApprovalDetails().clickApproveButton();
+        //and then click on Ok when the window pops up
+        Page.EnterReasonForApprovalDialog().clickOKButton();
+
+        //STEP 2.s.	View the service center processed successfully by going back to the service center History screen:
+        Page.TopNavigation().clickLogoutButton();
+        Page.Login().goTo();
+        Page.Login().logonWithEncodedCredential("QAREQUESTER", "NC9CHQEUETUSBxwFXg==");
+
+        Page.LeftNavigation().clickServiceCenterHistoryMenu();
+        Page.WaitMessageDialog().waitForMessageDismiss();
+        Page.ServiceCenterHistory().verifyStatusIsApproved(createdTime);
 
     }
+
 }
