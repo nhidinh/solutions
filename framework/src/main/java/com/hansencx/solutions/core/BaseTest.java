@@ -10,7 +10,6 @@ import com.hansencx.solutions.logger.Log;
 import utilities.configuration.TestListener;
 import utilities.configuration.driver.DriverType;
 import utilities.helper.Browser;
-import utilities.helper.JiraHelper;
 
 import java.net.MalformedURLException;
 
@@ -87,9 +86,9 @@ public class BaseTest {
      */
     @AfterSuite (description = "Ending Log After Suite")
     public void endingLogAfterSuite() {
-//        Log.info("JIRA ISSUE CREATION HANDLING");
-//        String keyIssue = JiraHelper.createJiraIssue(TestListener.failIDList);
-//        JiraHelper.importReportAttachment(keyIssue);
+        Log.info("JIRA ISSUE CREATION HANDLING");
+        String keyIssue = JiraHelper.createJiraIssue(TestListener.failIDList);
+        JiraHelper.importReportAttachment(keyIssue);
         Log.info("ENDING SUITE");
         Log.endLog();
     }

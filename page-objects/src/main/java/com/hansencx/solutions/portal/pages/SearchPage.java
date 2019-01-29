@@ -1,7 +1,10 @@
 package com.hansencx.solutions.portal.pages;
 
 import com.hansencx.solutions.core.BasePage;
+<<<<<<< HEAD
 import com.hansencx.solutions.portal.utilities.PortalDatabaseSupplierDict;
+=======
+>>>>>>> b7ebc3f57dd06b428e6ff5d00221f9da76def2fc
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -24,7 +27,11 @@ public class SearchPage extends BasePage {
     WebElement txtEnrollmentNumber;
     @FindBy(id = "Suppliers")
     WebElement lstSupplierName;
+<<<<<<< HEAD
 //    WebElement processButton;
+=======
+
+>>>>>>> b7ebc3f57dd06b428e6ff5d00221f9da76def2fc
     //METHODS
     public void clickSearchButton(){
         click(btnSearch);
@@ -47,16 +54,16 @@ public class SearchPage extends BasePage {
         Select selectSupplierName = new Select(lstSupplierName);
         selectSupplierName.selectByVisibleText(supplierName);
     }
-    //HUONG:25.01.19:Update method for mapping between database & web present
-    public void selectSupplierByKySupplier(String supplierKyName){
-        Select selectSupplierName = new Select(lstSupplierName);
-        String supplierName = PortalDatabaseSupplierDict.getValue(supplierKyName);
-        System.out.println("supplierName: " + supplierName);
-        selectSupplierName.selectByVisibleText(supplierName);
-    }
+
     //ACTIONS
     public void searchByEnrollmentNumberWithFilter(String option, String enrollNumber){
         selectEnrollmentNumberFilterOption(option);
         setTextEnrollmentNumber(enrollNumber);
     }
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> b7ebc3f57dd06b428e6ff5d00221f9da76def2fc
 }
