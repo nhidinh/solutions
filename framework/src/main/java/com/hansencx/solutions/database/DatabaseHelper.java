@@ -5,17 +5,18 @@ import org.testng.Assert;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 import oracle.jdbc.driver.OracleDriver;
 
 /**
  * DatabaseHelper class
  *
- * @author  Vi Nguyen
+ * @author Vi Nguyen
  * @version 1.0
- * @since   2019-01-03
  * @see
+ * @since 2019-01-03
  */
-public class DatabaseHelper  {
+public class DatabaseHelper {
 
     private static final String jdbcOracleDriver = "oracle.jdbc.driver.OracleDriver";
     private static final String dbUsername = "nguyenv";
@@ -27,17 +28,20 @@ public class DatabaseHelper  {
     private Statement statement = null;
     private ResultSet resultSet = null;
 
+    public Statement getStatement() {
+        return statement;
+    }
 
     /**
      * Constructor
      */
-    public DatabaseHelper(){
+    public DatabaseHelper() {
         try {
             Class.forName(jdbcOracleDriver);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        System.setProperty("oracle.net.tns_admin",dbAdminFile);
+        System.setProperty("oracle.net.tns_admin", dbAdminFile);
         try {
             DriverManager.registerDriver(new OracleDriver());
         } catch (SQLException e) {
@@ -48,34 +52,37 @@ public class DatabaseHelper  {
 
     /**
      * Open the connection to database.
-     * @author Huong Trinh
+     *
      * @param
      * @return nothing.
-     * @since   2019-01-22
+     * @author Huong Trinh
      * @see
+     * @since 2019-01-22
      */
-    public void createConnection(String aliasName){
+    public void createConnection(String aliasName) {
         try {
             DriverManager.registerDriver(new OracleDriver());
         } catch (SQLException e) {
             e.printStackTrace();
         }
         try {
-            connection= DriverManager.getConnection(dbUrl + "@" + aliasName);
-            statement =  connection.createStatement();
+            connection = DriverManager.getConnection(dbUrl + "@" + aliasName);
+            statement = connection.createStatement();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
     /**
      * execute Query to database.
-     * @author Huong Trinh
+     *
      * @param
      * @return ResultSet.
-     * @since   2019-01-22
+     * @author Huong Trinh
      * @see
+     * @since 2019-01-22
      */
-    public ResultSet executeDBQuery( String queryStr){
+    public ResultSet executeDBQuery(String queryStr) {
         try {
             resultSet = statement.executeQuery(queryStr);
         } catch (SQLException e) {
@@ -86,40 +93,42 @@ public class DatabaseHelper  {
 
     /**
      * Execute query for single data type output, give out a list string
-     * @author Vi Nguyen, HuONG tRINH
+     *
      * @param querySingleFieldValue that would like to get output
      * @return List<String> of output following column
-     * @since   2019-01-23
+     * @author Vi Nguyen, Huong Trinh
      * @see
+     * @since 2019-01-23
      */
-    public List<String> executeQueryReturnString(String querySingleFieldValue){
+    public List<String> executeQueryReturnString(String querySingleFieldValue) {
 
-        List<String> dbList = new ArrayList<>();
+        List<String> listResult = new ArrayList<>();
         try {
             resultSet = statement.executeQuery(querySingleFieldValue);
 
-            while (resultSet.next()){
-                dbList.add(resultSet.getString(1));
+            while (resultSet.next()) {
+                listResult.add(resultSet.getString(1));
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return dbList;
+        return listResult;
     }
-    public List<Integer> executeQueryReturnInteger(String querySingleFieldValue){
 
-        List<Integer> dbList = new ArrayList<>();
+    public List<Integer> executeQueryReturnInteger(String querySingleFieldValue) {
+
+        List<Integer> listResult = new ArrayList<>();
         try {
             resultSet = statement.executeQuery(querySingleFieldValue);
 
-            while (resultSet.next()){
-                    dbList.add(resultSet.getInt(1));
+            while (resultSet.next()) {
+                listResult.add(resultSet.getInt(1));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return dbList;
+        return listResult;
     }
 
     /**
@@ -131,12 +140,12 @@ public class DatabaseHelper  {
      * @see
      * @since 2019-01-28
      */
-    public String returnQueriedStringField(String query){
+    public String returnQueriedStringField(String query) {
 
         String queryResult = "";
         List<String> list = executeQueryReturnString(query);
-        for(int i=0; i<list.size(); i++)
-            if(list.size() == 1)
+        for (int i = 0; i < list.size(); i++)
+            if (list.size() == 1)
                 return list.get(0);
             else
                 queryResult += list.get(i) + ",";
@@ -153,21 +162,22 @@ public class DatabaseHelper  {
      * @see
      * @since 2019-01-28
      */
-    public void checkResult(String observedResult, String expectedResult){
+    public void checkResult(String observedResult, String expectedResult) {
         Assert.assertEquals(observedResult, expectedResult);
     }
 
     /**
      * close the connection to database.
-     * @author Vi Nguyen
+     *
      * @param
      * @return Nothing.
-     * @since   2019-01-03
+     * @author Vi Nguyen
      * @see
+     * @since 2019-01-03
      */
-    public void closeDBConnection(){
+    public void closeDBConnection() {
         try {
-            if(null != resultSet)
+            if (null != resultSet)
                 resultSet.close();
             if (null != statement)
                 statement.close();
@@ -177,7 +187,5 @@ public class DatabaseHelper  {
             e.printStackTrace();
         }
     }
-    public Statement getStatement() {
-        return statement;
-    }
+
 }
