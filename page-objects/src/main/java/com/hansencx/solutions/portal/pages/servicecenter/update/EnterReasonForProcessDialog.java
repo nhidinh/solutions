@@ -8,6 +8,8 @@ import org.openqa.selenium.support.ui.Select;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * @param
@@ -40,6 +42,12 @@ public class EnterReasonForProcessDialog extends BasePage {
         click(btnOK);
     }
     public String getCreatedTime(){
-        return new SimpleDateFormat("MM/dd/yyyy hh:mm a").format(Calendar.getInstance().getTime());
+        String formatPattern = "MM/dd/yyyy hh:mm a";
+        SimpleDateFormat dateFormater = new SimpleDateFormat(formatPattern);
+        Date date = Calendar.getInstance().getTime();
+        TimeZone portalServer = TimeZone.getTimeZone("EST");
+        dateFormater.setTimeZone(portalServer);
+        String currentPortalTime = dateFormater.format(date);
+        return currentPortalTime;
     }
 }
