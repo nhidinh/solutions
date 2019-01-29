@@ -14,7 +14,7 @@ import java.util.List;
 public class CancelRebillTest extends PortalBaseTest {
 
     private DatabaseHelper db;
-    private String tranID = "61761470";
+    private String tranID = "55528896";
     private String cancelTransId = null;
     private String originalTransId = null;
     private ResultSet resultSet;
@@ -37,6 +37,7 @@ public class CancelRebillTest extends PortalBaseTest {
         List<String> rsCount = db.executeQueryReturnString(countLineQuery);
 
         Assert.assertEquals(rsCount.get(0), "2");
+
 
         /**  2. verify that two rounds are returned with value following pair of value (00, 01) or (17,18)
          3. verify that KY_BA, ID_TRANS_REF_NUM_867, ID_TRANS_REF_NUM_810 are the same for process, origin and cancel
@@ -126,7 +127,7 @@ public class CancelRebillTest extends PortalBaseTest {
         Assert.assertEquals(kySupplier0,kySupplier1);
         //2. log in PORTAL with acc : generic
         String userGeneric = "QAGENERIC";
-        String pswGeneric = "QA!generic1";
+        String pswGeneric = "NC9CCAELASIIEEI=";
 
         LoginPage loginPage = Page.Login().goTo();
         loginPage.logonWithEncodedCredential(userGeneric, pswGeneric);
@@ -149,7 +150,9 @@ public class CancelRebillTest extends PortalBaseTest {
 
 
         /** 5. click on cancel and original trans
-            6. Click on validate button and verify no error
+         6. Click on validate button and verify no error
+         NOTE: Validation should perform for Cancel first because of the order processing in Billing run,
+         it should be cancel firstly to have original trans
          **/
         String kyPndSeqCancelTransNumber = querySpecificInfoFollowingKyEnroll("KY_PND_SEQ_TRANS", tranID, cancelTransId);
         String kyPndSeqOriginalTransNumber = querySpecificInfoFollowingKyEnroll("KY_PND_SEQ_TRANS", tranID, originalTransId);
@@ -158,6 +161,11 @@ public class CancelRebillTest extends PortalBaseTest {
         Page.BillingTransactionList().clickOnValidateButton();
         Assert.assertEquals(Page.BillingTransactionList().getTextErrorWorkList(), "No errors exist.");
 
+        //verify status code in database after validation, should be 65 as sucessful validation
+        String queryInputCancel = "select cd_tran_status from custpro.cpm_pnd_tran_hdr where ky_enroll ="
+                + kyEnroll0 + " and ky_pnd_seq_trans =" + kyPndSeqCancelTransNumber;
+        String cdTranStatusCodeOfCancel = db.returnQueriedStringField(queryInputCancel);
+        Assert.assertEquals(cdTranStatusCodeOfCancel,"65");
         Page.BillingTransactionList().clickOnBackBillingTransList();
 
         Page.BillingTransactionList().clickOnTransText(kyPndSeqOriginalTransNumber);
@@ -166,16 +174,21 @@ public class CancelRebillTest extends PortalBaseTest {
 
         Page.BillingTransactionList().clickOnBackBillingTransList();
 
-        String queryToClean = "select ky_pnd_seq_trans from custpro.cpm_pnd_tran_hdr " +
-                "where ky_enroll in(select ky_enroll " +
-                "from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans = " + tranID + ") " +
-                "and cd_tran_status = 28";
-        List<String> kyPndSeqTrans = db.executeQueryReturnString(queryToClean);
-        if(!kyPndSeqTrans.isEmpty()){
-            for(String i :kyPndSeqTrans)
-            Page.BillingTransactionList().clickOnTransText(i);
-            Page.BillingTransactionList().clickOnAbandonButton();
-        }
+        //verify status code in database after validation, should be 65 as sucessful validation
+        String queryInputOriginal = "select cd_tran_status from custpro.cpm_pnd_tran_hdr where ky_enroll ="
+                + kyEnroll0+" and ky_pnd_seq_trans =" + kyPndSeqOriginalTransNumber;
+        String cdTranStatusCodeOfOriginal = db.returnQueriedStringField(queryInputOriginal);
+        Assert.assertEquals(cdTranStatusCodeOfOriginal,"65");
+//        String queryToClean = "select ky_pnd_seq_trans from custpro.cpm_pnd_tran_hdr " +
+//                "where ky_enroll in(select ky_enroll " +
+//                "from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans = " + tranID + ") " +
+//                "and cd_tran_status = 28";
+//        List<String> kyPndSeqTrans = db.executeQueryReturnString(queryToClean);
+//        if(!kyPndSeqTrans.isEmpty()){
+//            for(String i :kyPndSeqTrans)
+//            Page.BillingTransactionList().clickOnTransText(i);
+//            Page.BillingTransactionList().clickOnAbandonButton();
+//        }
     }
     private String querySpecificInfoFollowingKyEnroll(String queryLabel, String tranID, String purposeCode){
         String outputString = null;
