@@ -10,6 +10,8 @@ import utilities.helper.ExcelHelper;
 import utilities.helper.FailureHandling;
 import utilities.helper.StringEncrypt;
 
+import java.io.FileNotFoundException;
+
 /**
  * @param
  * @author Nhi Dinh
@@ -19,7 +21,7 @@ import utilities.helper.StringEncrypt;
 
 
 public class SearchTests extends PortalBaseTest {
-    ExcelHelper excelHelper = new ExcelHelper();
+    ExcelHelper excelHelper;// = new ExcelHelper();
 
     @Test(description = "Search by Enrollment Number With Filter 'in list' ")
     public void searchByEnrollmentNumberInList(){
@@ -30,12 +32,12 @@ public class SearchTests extends PortalBaseTest {
     }
 
     @BeforeTest
-    public void setUpTestData(){
+    public void setUpTestData() throws FileNotFoundException {
         String DataDirectory = InitialData.PARENT_DIR +"\\regression-tests\\src\\test\\java\\com\\hansencx\\portal\\datatest\\";
         String DataFileName = "PortalDataTest.xlsx";
         String SheetName = "EnrollmentNumber";
-
-        excelHelper.setupExcelTestData(DataDirectory, DataFileName, SheetName);
+        excelHelper = new ExcelHelper(DataDirectory + DataFileName,SheetName);
+        //excelHelper.setupExcelTestData(DataDirectory, DataFileName, SheetName);
     }
 
     @Test(description = "Search by Enrollment Number with Data File")
