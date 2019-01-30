@@ -38,6 +38,8 @@ public class SearchResultPage extends BasePage {
     //HUONG:25.01.19: billing transaction interface
     public void selectViewFromEnrollment(String enrollmentView){
         Select selectView = new Select(EnrollmentView);
+
         selectView.selectByVisibleText(enrollmentView);
+        waitForPageLoad();
     }
 }

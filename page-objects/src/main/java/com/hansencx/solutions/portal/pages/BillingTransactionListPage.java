@@ -2,10 +2,14 @@ package com.hansencx.solutions.portal.pages;
 
 import com.hansencx.solutions.core.BasePage;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 public class BillingTransactionListPage extends BasePage {
+    public BillingTransactionListPage(WebDriver driver){
+        super(driver);
+    }
     @FindBy(id = "_ctl0__ctl0_primary_primary_ucPendingTranInfo_btnValidate")
     WebElement validateButton;
     @FindBy(id = "_ctl0__ctl0_primary_primary_lblNoErrorsExist")
