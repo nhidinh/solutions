@@ -24,9 +24,6 @@ public class CreateCancelRebillPage extends BasePage {
     public CreateCancelRebillPage(WebDriver driver) {
         super(driver);
     }
-    // VARIABLE
-    String lstRecordXpath = "//div[contains(@class,'row') and not(contains(@data-bind,'service-center-staging-row'))]";
-
     //WEB ELEMENTS
     @FindBy(xpath = "//input[@value='Process']")
     WebElement btnProcess;
@@ -36,6 +33,7 @@ public class CreateCancelRebillPage extends BasePage {
     List<WebElement> lstRecord;
     @FindBy(xpath = "//div[contains(@class,'row') and not(contains(@data-bind,'service-center-staging-row'))]//div[contains(@class,'columnValue clip')][1]//div[contains(@data-bind,'title: value')]")
     List<WebElement> lstTransactionID;
+
     //METHODS
     public int getTheErrorCountNumber(){
         String errorCountNo = getText(lblErrorCountNumber);
@@ -50,7 +48,6 @@ public class CreateCancelRebillPage extends BasePage {
     public void clickProcessButton(){
         click(btnProcess);
     }
-
     public ArrayList<String> getListOfTransactionID(){
         ArrayList<String> listOfTransactionId = new ArrayList<>();
 
@@ -58,8 +55,6 @@ public class CreateCancelRebillPage extends BasePage {
             String getTextTitle = getText(record);
             listOfTransactionId.add(getTextTitle);
         }
-        System.out.println("Transaction ID list 1: "+listOfTransactionId);
         return listOfTransactionId;
     }
-
 }

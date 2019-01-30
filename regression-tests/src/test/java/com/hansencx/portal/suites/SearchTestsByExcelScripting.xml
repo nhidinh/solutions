@@ -1,22 +1,22 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<suite name = "Portal-Search Tests" >
-    <parameter name="browser" value="chrome" />
-    <parameter name="mode" value="NonRemote" />
+<suite name="Portal-Search Tests">
+    <parameter name="browser" value="chrome"/>
+    <parameter name="mode" value="NonRemote"/>
     <parameter name="username" value="QAREQUESTER"/>
-    <parameter name="encodedPassword" value="NC9CHQEUETUSBxwFXg==" />
+    <parameter name="encodedPassword" value="NC9CHQEUETUSBxwFXg=="/>
     <listeners>
         <listener class-name="utilities.configuration.TestListener"/>
     </listeners>
 
-    <test name = "Login Test Portal-SearchByEnrollmentNumberInList" >
-       <classes>
-           <class name="com.hansencx.portal.tests.SearchTestsByExcelScripting">
-               <methods>
-                   <include name="searchTest"/>
-               </methods>
-           </class>
-       </classes>
+    <test name="Login Test Portal-SearchByEnrollmentNumberInList">
+        <classes>
+            <class name="com.hansencx.portal.tests.SearchTestsByExcelScripting">
+                <methods>
+                    <include name="searchTest"/>
+                </methods>
+            </class>
+        </classes>
     </test>
 
 

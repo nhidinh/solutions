@@ -17,6 +17,5 @@ public class BaseKeyword {
      */
     public BaseKeyword(WebDriver driver) {
         this.driver = driver;
-        System.out.println("From Base action");
     }
 }
