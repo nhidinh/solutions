@@ -1,14 +1,11 @@
 package com.hansencx.solutions.portal.pages.servicecenter.update;
 
 import com.hansencx.solutions.core.BasePage;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.testng.Assert;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,11 +16,12 @@ import java.util.List;
  * @since 1/23/2019
  */
 
-
 public class CreateCancelRebillPage extends BasePage {
+
     public CreateCancelRebillPage(WebDriver driver) {
         super(driver);
     }
+
     //WEB ELEMENTS
     @FindBy(xpath = "//input[@value='Process']")
     WebElement btnProcess;
@@ -48,6 +46,7 @@ public class CreateCancelRebillPage extends BasePage {
     public void clickProcessButton(){
         click(btnProcess);
     }
+
     public ArrayList<String> getListOfTransactionID(){
         ArrayList<String> listOfTransactionId = new ArrayList<>();
 
@@ -56,5 +55,26 @@ public class CreateCancelRebillPage extends BasePage {
             listOfTransactionId.add(getTextTitle);
         }
         return listOfTransactionId;
+    }
+
+    /**
+     * Get the String list of transaction ids
+     * @author Vi Nguyen
+     * @param
+     * @return Nothing
+     * @since 2018-01-30
+     * @see
+     */
+    public String getListTransactionID(){
+        String listTransID = "";
+        if (lstTransactionID.size() == 1)
+            return lstTransactionID.get(0).getText();
+        else if (lstTransactionID.size() > 1) {
+            for (int i = 0; i < lstTransactionID.size() - 1; i++) {
+                listTransID += getText(lstTransactionID.get(i)) + ",";
+            }
+            listTransID += getText(lstTransactionID.get(lstTransactionID.size()-1));
+        }
+        return listTransID;
     }
 }

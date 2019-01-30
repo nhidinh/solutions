@@ -18,7 +18,6 @@ import java.util.Calendar;
 
 public class InitialData {
     public static String ROOT_DIRECTORY = System.getProperty("user.dir");
-
     public static String PARENT_DIR = getProjectDirectory();
     public static Platform PLATFORM = getCurrentPlatform();
     public static String PLATFORM_NAME;
@@ -37,6 +36,9 @@ public class InitialData {
 
     //FILE PATH OF extent-config.xml file
     public static String REPORT_CONFIG_XML_FILE_PATH = PARENT_DIR+"\\framework\\src\\main\\resources\\extent-config.xml";
+
+    // This variable is to keep track of the information the test want to share beside the passs/fail
+    public static String FINISH_TEST_INFO = null;
 
     //Get current platform
     private static Platform getCurrentPlatform () {
