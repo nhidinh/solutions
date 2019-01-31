@@ -1,10 +1,10 @@
 package com.hansencx.portal.tests;
 
+import com.hansencx.portal.datatest.DataFilePathHandler;
 import com.hansencx.solutions.portal.PortalBaseTest;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import utilities.configuration.InitialData;
 
 import java.util.ArrayList;
 
@@ -20,7 +20,7 @@ public class CancelRebillTests extends PortalBaseTest {
     String importedFilePath;
     @BeforeTest
     public void setupDataBeforeTest(){
-        importedFilePath = InitialData.PARENT_DIR + "\\regression-tests\\src\\test\\java\\com\\hansencx\\portal\\datatest\\Create Cancel Rebill - Filled In Template.xlsx";
+        importedFilePath = DataFilePathHandler.CREATE_CANCEL_REBILL_PATH;
     }
     @Test
     public void testCreateCancelRebill(){

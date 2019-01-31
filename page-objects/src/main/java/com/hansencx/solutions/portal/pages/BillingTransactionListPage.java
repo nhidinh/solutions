@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import utilities.helper.FailureHandling;
 
 public class BillingTransactionListPage extends BasePage {
     public BillingTransactionListPage(WebDriver driver){
@@ -23,6 +24,9 @@ public class BillingTransactionListPage extends BasePage {
     @FindBy(xpath = "//*[@id=\"_ctl0__ctl0_BodyMaster\"]/div[8]/div[3]/div/button[1]/span")
     WebElement processButton;
 
+    //Message - No Error Exist
+    @FindBy(xpath = "//span[contains(@id, 'lblNoErrorsExist')]")
+    private WebElement lblMessageNoError;
 
     //HUONG:25.01.19: click on origin and cancel trans
     public void clickOnTransText(String originTranId){
@@ -48,6 +52,13 @@ public class BillingTransactionListPage extends BasePage {
     public void handlingCommentBox(){
         setText(commentBox,"QA automation testing");
         click(processButton);
+    }
+    public void validateTransactionIsSuccessfully(){
+        try {
+            verifyElementPresent(lblMessageNoError);
+        }catch (AssertionError e){
+            FailureHandling.continueAtFailedTestCase(e,"Validate Transaction Is Successfully");
+        }
     }
 
 }

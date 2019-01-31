@@ -6,7 +6,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.testng.Assert;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,18 +30,20 @@ public class ServiceCenterApprovalDetailsPage extends BasePage {
     private List<WebElement> lstRequestedRecord;
 
     //METHODS
-    public ArrayList<String> getListTransactionID(){
+    public ArrayList<String> getListTransactionID() {
         ArrayList<String> listTransactionID = new ArrayList<>();
-        for(WebElement record:lstRequestedRecord){
+        for (WebElement record : lstRequestedRecord) {
             String transactionID = getText(record);
             listTransactionID.add(transactionID);
         }
         return listTransactionID;
     }
-    public void verifyListTransactionIDIsCorrect(ArrayList<String> listTransactionID){
+
+    public void verifyListTransactionIDIsCorrect(ArrayList<String> listTransactionID) {
         Assert.assertEquals(listTransactionID, getListTransactionID());
     }
-    public void clickApproveButton(){
+
+    public void clickApproveButton() {
         click(btnApprove);
     }
 

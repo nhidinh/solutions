@@ -23,7 +23,7 @@ public class EnterReasonForApprovalDialog extends BasePage {
     private WebElement btnOK;
 
     //METHOD
-    public void clickOKButton(){
+    public void clickOKButton() {
         click(btnOK);
     }
 }
