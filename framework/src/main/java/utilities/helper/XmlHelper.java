@@ -8,6 +8,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import utilities.configuration.InitialData;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,24 +25,27 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.commons.io.FilenameUtils.separatorsToSystem;
+
 /**
  * BaseKeyword class
  *
- * @author  Vi Nguyen
+ * @author Vi Nguyen
  * @version 1.0
- * @since   2018-12-03
+ * @since 2018-12-03
  */
 public class XmlHelper {
 
     /**
      * Split xml file to multiple file.
-     * @author Vi Nguyen
+     *
      * @param originalFile , targetFolder, rootNode, elementNode, keyAttribute
      * @return multiple files per element.
-     * @since   2019-01-24
+     * @author Vi Nguyen
      * @see
+     * @since 2019-01-24
      */
-    public void splitFile(String originalFile, String targetFolder, String rootNode, String elementNode, String keyAttribute) throws Exception{
+    public void splitFile(String originalFile, String targetFolder, String rootNode, String elementNode, String keyAttribute) throws Exception {
         File xmlFile = new File(originalFile);
 
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -53,7 +57,7 @@ public class XmlHelper {
 
         XPathFactory xfactory = XPathFactory.newInstance();
         XPath xpath = xfactory.newXPath();
-        XPathExpression allElementsExpression = xpath.compile("//" + elementNode +"/"+ keyAttribute + "/text()");
+        XPathExpression allElementsExpression = xpath.compile("//" + elementNode + "/" + keyAttribute + "/text()");
         NodeList listElementNodes = (NodeList) allElementsExpression.evaluate(doc, XPathConstants.NODESET);
 
         //Save all the accounts
@@ -67,14 +71,14 @@ public class XmlHelper {
 
         //Now we create the split XMLs
         for (String keyAttr : listKeyAttributes) {
-            String xpathQuery = "/"+ rootNode+"/"+ elementNode +"["+ keyAttribute+"='" + keyAttr + "']";
+            String xpathQuery = "/" + rootNode + "/" + elementNode + "[" + keyAttribute + "='" + keyAttr + "']";
 
             xpath = xfactory.newXPath();
             XPathExpression query = xpath.compile(xpathQuery);
             NodeList elementNodesFiltered = (NodeList) query.evaluate(doc, XPathConstants.NODESET);
 
             System.out.println("Found " + elementNodesFiltered.getLength() + " " +
-                    elementNode+" for "+ keyAttribute +" " + keyAttr);
+                    elementNode + " for " + keyAttribute + " " + keyAttr);
 
             //We store the new XML file in supplierName.xml e.g. Sony.xml
             Document suppXml = dBuilder.newDocument();
@@ -106,11 +110,12 @@ public class XmlHelper {
 
     /**
      * Compare 2 xml files to find differences.
-     * @author Vi Nguyen
+     *
      * @param file1 , file2, diffList
      * @return differences as files
-     * @since   2019-01-24
+     * @author Vi Nguyen
      * @see
+     * @since 2019-01-24
      */
     public void compare2XMLFiles(String file1, String file2, String diffList) throws SAXException, IOException {
         // reading two xml file to compare in Java program
@@ -134,11 +139,12 @@ public class XmlHelper {
 
     /**
      * Compare 2 xml files to find differences.
-     * @author Vi Nguyen
+     *
      * @param source , target
      * @return differences as list
-     * @since   2019-01-24
+     * @author Vi Nguyen
      * @see
+     * @since 2019-01-24
      */
     public List compareXML(Reader source, Reader target) throws SAXException, IOException {
         //creating Diff instance to compare two XML files
@@ -151,37 +157,50 @@ public class XmlHelper {
 
     /**
      * Compare 2 xml files to find differences.
-     * @author Vi Nguyen
+     *
      * @param differences , diffFile
      * @return generate files contain different
-     * @since   2019-01-24
+     * @author Vi Nguyen
      * @see
+     * @since 2019-01-24
      */
     public void printDifferencesToFile(List differences, String diffFile) throws IOException {
 
         int totalDifferences = differences.size();
+        if (totalDifferences >= 1) {
+            System.out.println("===============================");
+            System.out.println("Total differences : " + totalDifferences);
+            System.out.println("================================");
 
-        System.out.println("===============================");
-        System.out.println("Total differences : " + totalDifferences);
-        System.out.println("================================");
+            BufferedWriter output = null;
 
-        BufferedWriter output = null;
+            try {
+                File file = new File(diffFile);
+                output = new BufferedWriter(new FileWriter(file));
+                output.write("Total differences : " + totalDifferences + "\n\n");
 
-        try {
-            File file = new File(diffFile);
-            output = new BufferedWriter(new FileWriter(file));
-            output.write("Total differences : " + totalDifferences + "\n\n");
-
-            for (Object difference : differences) {
-                System.out.println(difference);
-                output.write(String.valueOf(difference) + "\n\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (null!= output) {
-                output.close();
+                for (Object difference : differences) {
+                    System.out.println(difference);
+                    output.write(String.valueOf(difference) + "\n\n");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (null != output) {
+                    output.close();
+                }
             }
         }
+    }
+    public void createTempAndSplitAndDiffFolder() {
+        String splittedFilePath = separatorsToSystem(InitialData.SPLITTED_DIR_PATH);
+        String tempPath = separatorsToSystem(InitialData.TEMP_DIR_PATH);
+        String diffPath = separatorsToSystem(InitialData.DIFFERENCE_DIR_PATH);
+        System.out.println("Temp Path is: " + tempPath);
+        System.out.println("Split Path is: " + splittedFilePath);
+        System.out.println("Diff Path is: " + diffPath);
+        FileHelper.createDirectory(tempPath);
+        FileHelper.createDirectory(splittedFilePath);
+        FileHelper.createDirectory(diffPath);
     }
 }
