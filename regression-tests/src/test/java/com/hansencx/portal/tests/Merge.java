@@ -7,7 +7,9 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import utilities.configuration.InitialData;
+import utilities.helper.ExcelHelper;
 
+import java.io.FileNotFoundException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -24,17 +26,14 @@ public class Merge extends PortalBaseTest{
     private ResultSet resultSet;
 
     @BeforeTest
-    public void setupDataBeforeTest(){
+    public void setupDataBeforeTest() throws FileNotFoundException {
         importedFilePath = InitialData.PARENT_DIR + "\\regression-tests\\src\\test\\java\\com\\hansencx\\portal\\datatest\\Create Cancel Rebill - Filled In Template.xlsx";
         db = new DatabaseHelper();
         db.createConnection("PSOLQ");
+
     }
     @Test
     public void testCreateCancelRebill(){
-        //STEP 2.c.	Click on left navigation menu symbol
-//        Page.LeftNavigation().clickMenuButton();
-//        //STEP 2.d.	Click on Service Center on the navigation list to expand sub areas of Service Center
-//        Page.LeftNavigation().clickServiceCenter();
         //STEP 2.e.	Click on Update
         Page.LeftNavigation().clickServiceCenterUpdateMenu();
         //STEP 2.f.	Click on Add New:
@@ -108,32 +107,40 @@ public class Merge extends PortalBaseTest{
         Page.LeftNavigation().clickServiceCenterHistoryMenu();
         Page.WaitMessageDialog().waitForMessageDismiss();
         Page.ServiceCenterHistory().verifyStatusIsApproved(createdTime);
-
+        if(!listTransactionID.isEmpty()) {
+            for (String tranID : listTransactionID) {
+                test3StepA(tranID);
+            }
+        }
 
     }
-    @Test(dependsOnMethods="testCreateCancelRebill", alwaysRun = true)
-    public void test3StepA() {
-        tranID = listTransactionID.get(0);
+//    @Test(dependsOnMethods="testCreateCancelRebill", alwaysRun = true)
+    public void test3StepA(String tranID) {
+//        tranID = listTransactionID.get(0);
         System.out.println("tranid: "+tranID);
         //0. Check database before doing test
 
         //Verify the result
         //1. Check that there are a pair of new trans are returned
-        String countLineQuery = "select count(ky_ba) from custpro.cpm_pnd_tran_hdr " +
-                "where ky_enroll in(select ky_enroll " +
-                "from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans = " + tranID + ") " +
-                "and cd_tran_status = 28";
-        List<String> rsCount = db.executeQueryReturnString(countLineQuery);
+        String countLineQuery = "select count(ky_pnd_seq_trans) from custpro.cpm_pnd_tran_hdr NEW " +
+                "where NEW.ky_enroll in(select OLD.ky_enroll from custpro.cpm_pnd_tran_hdr OLD " +
+                "where OLD.ky_pnd_seq_trans = " + tranID +
+                "and OLD.DT_PERIOD_START = NEW.DT_PERIOD_START " +
+                "and OLD.DT_PERIOD_END = NEW.DT_PERIOD_END) " +
+                "and NEW.cd_tran_status = 28";
+        List<String> resultsCountLine = db.executeQueryReturnString(countLineQuery);
 
-        Assert.assertEquals(rsCount.get(0), "2");
+        Assert.assertEquals(resultsCountLine.get(0), "2");
 
         /**  2. verify that two rounds are returned with value following pair of value (00, 01) or (17,18)
          3. verify that KY_BA, ID_TRANS_REF_NUM_867, ID_TRANS_REF_NUM_810 are the same for process, origin and cancel
          **/
-        String inputQueryNew = "select CD_PURPOSE from custpro.cpm_pnd_tran_hdr " +
-                "where ky_enroll in(select ky_enroll from custpro.cpm_pnd_tran_hdr" +
-                " where ky_pnd_seq_trans =" + tranID + ") " +
-                "and cd_tran_status = 28";
+        String inputQueryNew = "select CD_PURPOSE from custpro.cpm_pnd_tran_hdr NEW " +
+                "where NEW.ky_enroll in(select OLD.ky_enroll from custpro.cpm_pnd_tran_hdr OLD " +
+                "where OLD.ky_pnd_seq_trans = " + tranID +
+                "and OLD.DT_PERIOD_START = NEW.DT_PERIOD_START " +
+                "and OLD.DT_PERIOD_END = NEW.DT_PERIOD_END) " +
+                "and NEW.cd_tran_status = 28";
 
         List<String> rsNewCDPurpose = db.executeQueryReturnString(inputQueryNew);
 
@@ -202,7 +209,6 @@ public class Merge extends PortalBaseTest{
         //1. get ky_enroll, ky_supplier
         String queryEnroll = "select ky_enroll from custpro.cpm_pnd_tran_hdr where ky_enroll in(select ky_enroll " +
                 "from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans =" + tranID +" )";
-
         String kyEnroll0 = db.executeQueryReturnString(queryEnroll).get(0);
         String kyEnroll1 = db.executeQueryReturnString(queryEnroll).get(1);
         //validate whether ky_enroll is the same
@@ -225,7 +231,6 @@ public class Merge extends PortalBaseTest{
 
         //3. Search for ky_enroll
         Page.TopNavigation().clickSearchButton();
-//        Page.Search().selectSupplierByName("Think Energy2");
         if(enrollCheckFlag.equals(true) && supplierCheckFlag.equals(true)) {
             Page.Search().selectSupplierByKySupplier(kySupplier0);
             Page.Search().searchByEnrollmentNumberWithFilter("equals", kyEnroll0);
@@ -251,7 +256,7 @@ public class Merge extends PortalBaseTest{
         System.out.println("kyPndSeqOriginalTransNumber: "+ kyPndSeqOriginalTransNumber);
         Page.BillingTransactionList().clickOnTransText(kyPndSeqCancelTransNumber);
         Page.BillingTransactionList().clickOnValidateButton();
-        Assert.assertEquals(Page.BillingTransactionList().getTextErrorWorkList(), "No errors exist.");
+        Page.BillingTransactionList().validateTransactionIsSuccessfull();
 
         //verify status code in database after validation, should be 65 as sucessful validation
         String queryInputCancel = "select cd_tran_status from custpro.cpm_pnd_tran_hdr where ky_enroll ="
@@ -263,8 +268,7 @@ public class Merge extends PortalBaseTest{
 
         Page.BillingTransactionList().clickOnTransText(kyPndSeqOriginalTransNumber);
         Page.BillingTransactionList().clickOnValidateButton();
-        Assert.assertEquals(Page.BillingTransactionList().getTextErrorWorkList(), "No errors exist.");
-
+        Page.BillingTransactionList().validateTransactionIsSuccessfull();
         Page.BillingTransactionList().clickOnBackBillingTransList();
 
         //verify status code in database after validation, should be 65 as sucessful validation
@@ -275,30 +279,22 @@ public class Merge extends PortalBaseTest{
 
 
 
-//        String queryToClean = "select ky_pnd_seq_trans from custpro.cpm_pnd_tran_hdr " +
-//                "where ky_enroll in(select ky_enroll " +
-//                "from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans = " + tranID + ") " +
-//                "and cd_tran_status = 28";
-//        List<String> kyPndSeqTrans = db.executeQueryReturnString(queryToClean);
-//        if(!kyPndSeqTrans.isEmpty()){
-//            for(String i :kyPndSeqTrans)
-//                Page.BillingTransactionListPage().clickOnTransText(i);
-//            Page.BillingTransactionListPage().clickOnAbandonButton();
-//        }
+
     }
     private String querySpecificInfoFollowingKyEnroll(String queryLabel, String tranID, String purposeCode){
         String outputString = null;
-        String queryInput = "select " + queryLabel + " from custpro.cpm_pnd_tran_hdr where ky_enroll in(select ky_enroll " +
-                "from custpro.cpm_pnd_tran_hdr " +
-                "where ky_pnd_seq_trans =" + tranID + ") " +
-                "and cd_tran_status = 28 " +
+        String queryInput = "select " + queryLabel + " from custpro.cpm_pnd_tran_hdr NEW " +
+                "where NEW.ky_enroll in(select OLD.ky_enroll from custpro.cpm_pnd_tran_hdr OLD " +
+                "where OLD.ky_pnd_seq_trans = " + tranID +
+                "and OLD.DT_PERIOD_START = NEW.DT_PERIOD_START " +
+                "and OLD.DT_PERIOD_END = NEW.DT_PERIOD_END) " +
+                "and NEW.cd_tran_status = 28"+
                 "and cd_purpose = "+ purposeCode;
         try {
             resultSet = db.getStatement().executeQuery(queryInput);
             while(resultSet.next()){
                 outputString = resultSet.getString(1);
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -317,5 +313,24 @@ public class Merge extends PortalBaseTest{
             e.printStackTrace();
         }
         return outputString;
+    }
+    private ArrayList<String> getKY_PND_SEQ_TRANS() throws FileNotFoundException {
+        ExcelHelper excelHelper;
+        String DataDirectory = InitialData.PARENT_DIR + "\\regression-tests\\src\\test\\java\\com\\hansencx\\portal\\datatest\\";
+        String DataFileName = "Create Cancel Rebill - Filled In Template.xlsx";
+        String SheetName = "Create Cancel Rebill";
+        excelHelper = new ExcelHelper(DataDirectory + DataFileName, SheetName);
+
+        ArrayList<String> listKY_PND_SEQ_TRANS = new ArrayList<String>();
+        int countRow = excelHelper.getNumberOfRow();
+        String KY_PND_SEQ_TRANS;
+        String result;
+        int KY_PND_SEQ_TRANS_Cell = excelHelper.getCellIndexByText("KY_PND_SEQ_TRANS");
+
+        for(int i = 1; i<countRow; i++){
+            result = excelHelper.getCellData(i, KY_PND_SEQ_TRANS_Cell);
+            listKY_PND_SEQ_TRANS.add(result);
+        }
+        return listKY_PND_SEQ_TRANS;
     }
 }

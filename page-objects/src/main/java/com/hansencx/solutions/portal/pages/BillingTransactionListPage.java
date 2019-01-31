@@ -13,16 +13,25 @@ public class BillingTransactionListPage extends BasePage {
     }
     @FindBy(id = "_ctl0__ctl0_primary_primary_ucPendingTranInfo_btnValidate")
     WebElement validateButton;
-    @FindBy(id = "_ctl0__ctl0_primary_primary_lblNoErrorsExist")
+    @FindBy(id = "//*[@id=\\\"_ctl0__ctl0_primary_PageWrapper\\\"]/div[4]/fieldset/span")
     WebElement errorworkList;
     @FindBy(id = "_ctl0__ctl0_primary_primary_ucBillingAcctInfo_btnBackToPendingTranListing")
     WebElement backToPendingTranListing;
     @FindBy(id = "btnAbandon")
     WebElement abandonButton;
     @FindBy(id = "_ctl0__ctl0_txtComment")
-    WebElement commentBox;
+    WebElement commentAbandon;
+//    @FindBy(xpath = "//*[@id=\"_ctl0__ctl0_txtComment\"]")
+//    WebElement commentAbandon;
+    @FindBy(xpath = "//*[@id=\"_ctl0__ctl0_BodyMaster\"]/div[8]//span[.='Process']")
+    WebElement processAbandonButton;
     @FindBy(xpath = "//*[@id=\"_ctl0__ctl0_BodyMaster\"]/div[8]/div[3]/div/button[1]/span")
     WebElement processButton;
+    @FindBy(xpath = "//*[@class='quicklaunch']//li/a[.='Search']")
+    WebElement searchButton;
+    //Error Table Element:
+    @FindBy(xpath = "//table[@class='Grid error']")
+    private WebElement tblError;
 
     //Message - No Error Exist
     @FindBy(xpath = "//span[contains(@id, 'lblNoErrorsExist')]")
@@ -31,7 +40,11 @@ public class BillingTransactionListPage extends BasePage {
     //HUONG:25.01.19: click on origin and cancel trans
     public void clickOnTransText(String originTranId){
         String locator = "//a[@href='PndTranView.aspx?tranID="+ originTranId + "']";
+        System.out.println("locator: "+locator);
         click(driver.findElement(By.xpath(locator)));
+    }
+    public void setCommentAbandonBox(){
+        setText(commentAbandon,"QA Automation Test");
     }
     //HUONG:25.01.19: click on validate button
     public void clickOnValidateButton(){
@@ -45,20 +58,20 @@ public class BillingTransactionListPage extends BasePage {
     public void clickOnBackBillingTransList(){
         click(backToPendingTranListing);
     }
-    //HUONG:25.01.19: get text on validate button
-    public void clickOnAbandonButton(){
-        click(abandonButton);
+    public void handlingAbandonBox(){
+        setCommentAbandonBox();
+        waitForPageLoad();
+        click(processAbandonButton);
+        waitForPageLoad();
     }
-    public void handlingCommentBox(){
-        setText(commentBox,"QA automation testing");
-        click(processButton);
+    public void clickOnSearch(){
+        click(searchButton);
     }
-    public void validateTransactionIsSuccessfully(){
+    public void validateTransactionIsSuccessfull(){
         try {
             verifyElementPresent(lblMessageNoError);
         }catch (AssertionError e){
             FailureHandling.continueAtFailedTestCase(e,"Validate Transaction Is Successfully");
         }
     }
-
 }

@@ -14,6 +14,8 @@ public class PortalDatabaseSupplierDict {
             put("THINK2", "Think Energy2");
             put("THINK", "Think Energy");
             put("SMART", "Smart Energy, LLC");
+            put("SPERIAN", "Sperian Energy Corp.");
+            put("TESI", "ENGIE Resources");
         }
     };
     /* Get supplier name in Web by provide supplier key from database

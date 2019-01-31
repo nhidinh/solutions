@@ -47,12 +47,17 @@ public class SearchPage extends BasePage {
     public void selectSupplierByName(String supplierName){
         Select selectSupplierName = new Select(lstSupplierName);
         selectSupplierName.selectByVisibleText(supplierName);
+        waitForPageLoad();
     }
     //HUONG:25.01.19:Update method for mapping between database & web present
     public void selectSupplierByKySupplier(String supplierKyName){
-        Select selectSupplierName = new Select(lstSupplierName);
         String supplierName = PortalDatabaseSupplierDict.getValue(supplierKyName);
+        System.out.println("supplierName: "+ supplierName);
+        waitForPageLoad();
+        Select selectSupplierName = new Select(lstSupplierName);
         selectSupplierName.selectByVisibleText(supplierName);
+        waitForPageLoad();
+
     }
     //ACTIONS
     public void searchByEnrollmentNumberWithFilter(String option, String enrollNumber){
