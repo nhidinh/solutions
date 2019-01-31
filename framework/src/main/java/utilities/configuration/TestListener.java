@@ -4,7 +4,6 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import com.aventstack.extentreports.MediaEntityModelProvider;
-import com.hansencx.solutions.core.BaseTest;
 import com.hansencx.solutions.logger.Log;
 import com.hansencx.solutions.reporting.extentreports.ExtentManager;
 import org.openqa.selenium.WebDriver;
@@ -26,9 +25,8 @@ import static org.apache.commons.io.FilenameUtils.separatorsToSystem;
  * @since 1/17/2019
  */
 
-
 public class TestListener implements ITestListener {
-    private static ExtentReports extent ;
+    private static ExtentReports extent;
     private static ThreadLocal<ExtentTest> test = ExtentManager.getTest();
     private static String methodDes;
     private static String message;
@@ -65,11 +63,14 @@ public class TestListener implements ITestListener {
         message = setMessage("PASS", methodDes);
         test.get().pass(message);
         Log.info(message);
+        if ("" != InitialData.FINISH_TEST_INFO)
+            test.get().info(InitialData.FINISH_TEST_INFO);
     }
+
     /**
      * @author Huong Trinh
-     * @since 1/22/2019
      * @update: update code to get fail ID test case for Jira
+     * @since 1/22/2019
      */
     @Override
     public synchronized void onTestFailure(ITestResult result) {
@@ -79,9 +80,9 @@ public class TestListener implements ITestListener {
             ITestContext context = result.getTestContext();
             driver = (WebDriver) context.getAttribute("driver");
 
-            String screenshotName = result.getName() +"_"+ InitialData.TIMESTAMP;
-            String screenshotDirectory = separatorsToSystem(ExtentManager.getReportDirectory() + "\\FailedTestsScreenshots\\") ;
-            String encodedScreenshot = ScreenCaptor.takeBase64Screenshot(driver,screenshotName,screenshotDirectory );
+            String screenshotName = result.getName() + "_" + InitialData.TIMESTAMP;
+            String screenshotDirectory = separatorsToSystem(ExtentManager.getReportDirectory() + "\\FailedTestsScreenshots\\");
+            String encodedScreenshot = ScreenCaptor.takeBase64Screenshot(driver, screenshotName, screenshotDirectory);
 
             MediaEntityModelProvider mediaModel = MediaEntityBuilder.createScreenCaptureFromBase64String(encodedScreenshot).build();
             test.get().fail("image:", mediaModel);
@@ -91,6 +92,7 @@ public class TestListener implements ITestListener {
         Throwable error = result.getThrowable();
         test.get().fail(error.getMessage());
         Log.error(error.toString());
+
         //Huong: currently list out failed method name in JIRA Issue, can be changed
         failIDList.add(result.getMethod().getMethodName());
     }
@@ -103,12 +105,11 @@ public class TestListener implements ITestListener {
 
     @Override
     public void onTestFailedButWithinSuccessPercentage(ITestResult result) {
-        Log.info("onTestFailedButWithinSuccessPercentage for " + methodDes );
+        Log.info("onTestFailedButWithinSuccessPercentage for " + methodDes);
     }
 
-    private String setMessage(String status, String description){
-        return  "TEST "+status+": " + description;
+    private String setMessage(String status, String description) {
+        return "TEST " + status + ": " + description;
     }
-
 
 }

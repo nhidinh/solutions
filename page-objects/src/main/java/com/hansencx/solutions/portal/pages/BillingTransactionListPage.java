@@ -58,14 +58,6 @@ public class BillingTransactionListPage extends BasePage {
     public void clickOnBackBillingTransList(){
         click(backToPendingTranListing);
     }
-    //HUONG:25.01.19: get text on validate button
-    public void clickOnAbandonButton(){
-        click(abandonButton);
-    }
-    public void handlingCommentBox(){
-//        setText(commentBox,"QA automation testing");
-        click(processButton);
-    }
     public void handlingAbandonBox(){
         setCommentAbandonBox();
         waitForPageLoad();

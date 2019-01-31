@@ -1,5 +1,6 @@
 package com.hansencx.portal.tests;
 
+import com.hansencx.portal.datatest.DataFilePathHandler;
 import com.hansencx.solutions.portal.PortalBaseTest;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
@@ -33,11 +34,7 @@ public class SearchTests extends PortalBaseTest {
 
     @BeforeTest
     public void setUpTestData() throws FileNotFoundException {
-        String DataDirectory = InitialData.PARENT_DIR +"\\regression-tests\\src\\test\\java\\com\\hansencx\\portal\\datatest\\";
-        String DataFileName = "PortalDataTest.xlsx";
-        String SheetName = "EnrollmentNumber";
-        excelHelper = new ExcelHelper(DataDirectory + DataFileName,SheetName);
-        //excelHelper.setupExcelTestData(DataDirectory, DataFileName, SheetName);
+        excelHelper = new ExcelHelper(DataFilePathHandler.PORTAL_DATA_TEST_PATH, DataFilePathHandler.PORTAL_DATA_SHEET_NAME);
     }
 
     @Test(description = "Search by Enrollment Number with Data File")
@@ -47,10 +44,14 @@ public class SearchTests extends PortalBaseTest {
         String filterOption;
         String enrollmentNumberValue;
         String result;
+        String executedTime;
+        String status;
+        String message;
         int filterOptionCell = excelHelper.getCellIndexByText("Filter");
         int EnrollmentNumberValueCell = excelHelper.getCellIndexByText("Value");
         int tcNameCell = excelHelper.getCellIndexByText("TestCaseName");
         int resultCell = excelHelper.getCellIndexByText("Result");
+
 
         for(int i = 1; i<countRow; i++){
             filterOption = excelHelper.getCellData(i, filterOptionCell);
@@ -73,8 +74,6 @@ public class SearchTests extends PortalBaseTest {
             }
             Log.info("Complete Test case: "+ testcaseName);
             System.out.println("Compete Test case: " + testcaseName);
-
-
         }
     }
 

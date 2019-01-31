@@ -50,4 +50,19 @@ public class EnterReasonForProcessDialog extends BasePage {
         String currentPortalTime = dateFormater.format(date);
         return currentPortalTime;
     }
+
+    /**
+     * Do process
+     *
+     * @param reason, comment
+     * @return nothing
+     * @author Vi Nguyen
+     * @see
+     * @since 2019-01-30
+     */
+    public void doProcess(String reason, String comment){
+        selectReason(reason);
+        setTextComment(comment);
+        clickOkButton();
+    }
 }
