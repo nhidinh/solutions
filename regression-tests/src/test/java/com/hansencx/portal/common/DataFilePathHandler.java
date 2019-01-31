@@ -1,4 +1,4 @@
-package com.hansencx.portal.datatest;
+package com.hansencx.portal.common;
 
 import utilities.configuration.InitialData;
 
