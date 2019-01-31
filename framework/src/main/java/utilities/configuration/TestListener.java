@@ -41,10 +41,7 @@ public class TestListener implements ITestListener {
     @Override
     public synchronized void onFinish(ITestContext context) {
         message = "TEST COMPLETED - REPORT IS UPDATED";
-        if (null != InitialData.FINISH_TEST_INFO)
-            Log.info(InitialData.FINISH_TEST_INFO);
         Log.info(message);
-
     }
 
     @Override
@@ -66,6 +63,8 @@ public class TestListener implements ITestListener {
         message = setMessage("PASS", methodDes);
         test.get().pass(message);
         Log.info(message);
+        if ("" != InitialData.FINISH_TEST_INFO)
+            test.get().info(InitialData.FINISH_TEST_INFO);
     }
 
     /**
