@@ -68,7 +68,6 @@ public class CancelRebillTests extends PortalBaseTest{
         Page.LeftNavigation().clickServiceCenterHistoryMenu();
         Page.WaitMessageDialog().waitForMessageDismiss();
 
-        System.out.println("Created Time: " + createdTime);
         Page.ServiceCenterHistory().verifyStatusIsWaitingForApproval(createdTime);
         Page.ServiceCenterHistory().selectCreatedRecordByCreatedTime(createdTime);
         Page.ServiceCenterHistoryDetails().verifyTheTransactionIDIsCorrect(listTransactionID);
