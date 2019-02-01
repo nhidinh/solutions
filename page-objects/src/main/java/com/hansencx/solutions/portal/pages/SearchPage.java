@@ -1,7 +1,7 @@
 package com.hansencx.solutions.portal.pages;
 
 import com.hansencx.solutions.core.BasePage;
-import org.openqa.selenium.By;
+import com.hansencx.solutions.portal.utilities.PortalDatabaseSupplierDict;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -24,7 +24,7 @@ public class SearchPage extends BasePage {
     WebElement txtEnrollmentNumber;
     @FindBy(id = "Suppliers")
     WebElement lstSupplierName;
-
+//    WebElement processButton;
 
     //METHODS
     public void clickSearchButton(){
@@ -34,22 +34,34 @@ public class SearchPage extends BasePage {
     public void clickClearButton(){
         click(btnClear);
     }
+
     public void setTextEnrollmentNumber(String enrollNumber){
         setText(txtEnrollmentNumber, enrollNumber);
     }
+
     public void selectEnrollmentNumberFilterOption(String option){
         Select selectEnrollmentNumberFilter = new Select(ddlEnrollmentNumberFilter);
         selectEnrollmentNumberFilter.selectByVisibleText(option);
     }
+
     public void selectSupplierByName(String supplierName){
         Select selectSupplierName = new Select(lstSupplierName);
         selectSupplierName.selectByVisibleText(supplierName);
+        waitForPageLoad();
     }
+    //HUONG:25.01.19:Update method for mapping between database & web present
+    public void selectSupplierByKySupplier(String supplierKyName){
+        String supplierName = PortalDatabaseSupplierDict.getValue(supplierKyName);
+        System.out.println("supplierName: "+ supplierName);
+        waitForPageLoad();
+        Select selectSupplierName = new Select(lstSupplierName);
+        selectSupplierName.selectByVisibleText(supplierName);
+        waitForPageLoad();
 
+    }
     //ACTIONS
     public void searchByEnrollmentNumberWithFilter(String option, String enrollNumber){
         selectEnrollmentNumberFilterOption(option);
         setTextEnrollmentNumber(enrollNumber);
     }
-
 }

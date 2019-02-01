@@ -7,7 +7,6 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-
 /**
  * @param
  * @author Nhi Dinh
@@ -15,10 +14,8 @@ import java.util.Calendar;
  * @since 1/15/2019
  */
 
-
 public class InitialData {
     public static String ROOT_DIRECTORY = System.getProperty("user.dir");
-
     public static String PARENT_DIR = getProjectDirectory();
     public static Platform PLATFORM = getCurrentPlatform();
     public static String PLATFORM_NAME;
@@ -26,20 +23,29 @@ public class InitialData {
 
     //LOG DIRECTORY AND FILE PATH
     private static String FILE_NAME_LOG = TIMESTAMP + ".log";
-    public static String LOG_DIR_PATH = PARENT_DIR+"\\solutions\\regression-tests\\logs";
-    public static String LOG_FILE_PATH = LOG_DIR_PATH + "/" + FILE_NAME_LOG;
-    public static String LOG_CONFIG_FILE_PATH = "./framework/src/main/resources/log4j.xml";
+    public static String LOG_DIR_PATH = PARENT_DIR + "\\regression-tests\\logs";
+    public static String LOG_FILE_PATH = LOG_DIR_PATH + "\\" + FILE_NAME_LOG;
+    public static String LOG_CONFIG_FILE_PATH = PARENT_DIR + "\\framework\\src\\main\\resources\\log4j.xml";
 
     //REPORT DIRECTORY PATH
-    public static String FILE_NAME_REPORT = "REPORT-"+TIMESTAMP+".html";
-    public static String REPORT_DIR_PATH = PARENT_DIR+ "\\solutions\\regression-tests\\reports" + "\\Report-"+TIMESTAMP;
-    public static String REPORT_FILE_PATH = REPORT_DIR_PATH +"/"+FILE_NAME_REPORT;
+    public static String FILE_NAME_REPORT = "REPORT-" + TIMESTAMP + ".html";
+    public static String REPORT_DIR_PATH = PARENT_DIR + "\\regression-tests\\reports" + "\\Report-" + TIMESTAMP;
+    public static String REPORT_FILE_PATH = REPORT_DIR_PATH + "\\" + FILE_NAME_REPORT;
+
+    // TEMP DIRECTORY FOR DIFFERENCE FILS AND SPLITTED FILE
+    public static String DIFF_FILE_NAME = "differences_" + TIMESTAMP + ".txt";
+    public static String TEMP_DIR_PATH = PARENT_DIR + "\\regression-tests\\temp\\";
+    public static String SPLITTED_DIR_PATH = TEMP_DIR_PATH + "split-" + TIMESTAMP + "\\";
+    public static String DIFFERENCE_DIR_PATH = TEMP_DIR_PATH + "differences\\";
 
     //FILE PATH OF extent-config.xml file
-    public static String REPORT_CONFIG_XML_FILE_PATH = PARENT_DIR+"\\solutions\\framework\\src\\main\\java\\com\\hansencx\\solutions\\reporting\\extentreports\\config\\extent-config.xml";
+    public static String REPORT_CONFIG_XML_FILE_PATH = PARENT_DIR + "\\framework\\src\\main\\resources\\extent-config.xml";
+
+    // This variable is to keep track of the information the test want to share beside the passs/fail
+    public static String FINISH_TEST_INFO = "";
 
     //Get current platform
-    private static Platform getCurrentPlatform () {
+    private static Platform getCurrentPlatform() {
         if (PLATFORM == null) {
             String operSys = System.getProperty("os.name").toLowerCase();
             if (operSys.contains("win")) {

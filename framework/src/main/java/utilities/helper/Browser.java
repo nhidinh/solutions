@@ -13,7 +13,6 @@ import utilities.configuration.driver.DriverType;
  * @since 1/17/2019
  */
 
-
 public class Browser {
     private static WebDriver driver;
     private static DriverManager driverManager;

@@ -7,8 +7,10 @@ import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.annotations.*;
 import com.hansencx.solutions.logger.Log;
+import utilities.configuration.TestListener;
 import utilities.configuration.driver.DriverType;
 import utilities.helper.Browser;
+import utilities.helper.JiraHelper;
 
 import java.net.MalformedURLException;
 
@@ -78,9 +80,16 @@ public class BaseTest {
         Log.info("Closing browser after test");
         Browser.quit();
     }
-
+    /**
+     * @author Huong Trinh
+     * @since 1/18/2019
+     * @Update: update action related to Jira
+     */
     @AfterSuite (description = "Ending Log After Suite")
     public void endingLogAfterSuite() {
+        Log.info("JIRA ISSUE CREATION HANDLING");
+//        String keyIssue = JiraHelper.createJiraIssue(TestListener.failIDList);
+//        JiraHelper.importReportAttachment(keyIssue);
         Log.info("ENDING SUITE");
         Log.endLog();
     }
