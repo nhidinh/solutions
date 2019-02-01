@@ -10,6 +10,7 @@ import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
+import utilities.helper.FileHelper;
 import utilities.helper.screenshot.ScreenCaptor;
 
 import java.io.IOException;
@@ -82,7 +83,8 @@ public class TestListener implements ITestListener {
 
             String screenshotName = result.getName() + "_" + InitialData.TIMESTAMP;
             String screenshotDirectory = separatorsToSystem(ExtentManager.getReportDirectory() + "\\FailedTestsScreenshots\\");
-            String encodedScreenshot = ScreenCaptor.takeBase64Screenshot(driver, screenshotName, screenshotDirectory);
+            FileHelper.createDirectory(screenshotDirectory);
+            String encodedScreenshot = ScreenCaptor.takeFullScreenshot(driver, screenshotName, screenshotDirectory);
 
             MediaEntityModelProvider mediaModel = MediaEntityBuilder.createScreenCaptureFromBase64String(encodedScreenshot).build();
             test.get().fail("image:", mediaModel);
