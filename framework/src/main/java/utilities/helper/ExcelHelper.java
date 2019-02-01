@@ -1,13 +1,14 @@
 package utilities.helper;
 
 import com.hansencx.solutions.logger.Log;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellValue;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.openqa.selenium.Platform;
-import utilities.configuration.InitialData;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,11 +17,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.apache.poi.ss.usermodel.CellType.*;
+import static org.apache.poi.ss.usermodel.CellType.FORMULA;
 
 /**
  * @param
- * @author Nhi Dinh
+ * @author Nhi Dinh, Vi Nguyen
  * @return
  * @update Jan 23, 2019
  * @since 1/15/2019
@@ -32,24 +33,34 @@ public class ExcelHelper {
     private XSSFWorkbook excelWorkBook;
     private XSSFSheet excelSheet;
     private FileInputStream excelFile;
-
     private DataFormatter formatter = new DataFormatter();
 
     /**
+     * Getters and Setters
+     */
+    public XSSFWorkbook getExcelWorkBook() {
+        return excelWorkBook;
+    }
+
+    public XSSFSheet getExcelSheet() {
+        return excelSheet;
+    }
+
+    /**
      * Constructor
+     * @author Vi Nguyen
      * @param filePath
      * @param sheetName
      * @throws FileNotFoundException
      */
     public ExcelHelper(String filePath, String sheetName) throws FileNotFoundException {
-
         this.filePath = filePath;
         this.sheetName = sheetName;
         openFile();
     }
 
     /**
-     * open the excel ffile
+     * open the excel file
      *
      * @param
      * @return String value of the cell
@@ -78,6 +89,15 @@ public class ExcelHelper {
         }
     }
 
+    /**
+     * force recalculate cell
+     *
+     * @param
+     * @return nothing
+     * @author Vi Nguyen
+     * @see
+     * @since 2019-01-29
+     */
     public void forceFormulaRecalculation() {
         this.getExcelWorkBook().setForceFormulaRecalculation(true);
     }
@@ -86,7 +106,7 @@ public class ExcelHelper {
      * close the excel ffile
      *
      * @param
-     * @return String value of the cell
+     * @return nothing
      * @author Vi Nguyen
      * @see
      * @since 2019-01-29
@@ -99,6 +119,15 @@ public class ExcelHelper {
         }
     }
 
+    /**
+     * Get the index of the last row
+     *
+     * @param
+     * @return last row index
+     * @author Vi Nguyen
+     * @see
+     * @since 2019-01-29
+     */
     public int getLastRowNum() {
         return getExcelSheet().getLastRowNum();
     }
@@ -253,13 +282,7 @@ public class ExcelHelper {
         }
     }
 
-    public XSSFWorkbook getExcelWorkBook() {
-        return excelWorkBook;
-    }
 
-    public XSSFSheet getExcelSheet() {
-        return excelSheet;
-    }
 
     public int getCellIndexByText(String text){
         Log.info("Getting cell index by text: " + text);

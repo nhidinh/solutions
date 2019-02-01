@@ -1,12 +1,11 @@
 package com.hansencx.solutions.database;
 
+import oracle.jdbc.driver.OracleDriver;
 import org.testng.Assert;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import oracle.jdbc.driver.OracleDriver;
 
 /**
  * DatabaseHelper class
@@ -28,6 +27,9 @@ public class DatabaseHelper {
     private Statement statement = null;
     private ResultSet resultSet = null;
 
+    /**
+     * Getters and Setters
+     */
     public Statement getStatement() {
         return statement;
     }
@@ -47,7 +49,6 @@ public class DatabaseHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -74,57 +75,24 @@ public class DatabaseHelper {
     }
 
     /**
-     * execute Query to database.
+     * Execute query only single column output, give out a list string
      *
-     * @param
-     * @return ResultSet.
-     * @author Huong Trinh
-     * @see
-     * @since 2019-01-22
-     */
-    public ResultSet executeDatabaseQuery(String queryStr) {
-        try {
-            resultSet = statement.executeQuery(queryStr);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return resultSet;
-    }
-
-    /**
-     * Execute query for single data type output, give out a list string
-     *
-     * @param querySingleFieldValue that would like to get output
-     * @return List<String> of output following column
+     * @param query is supposed to output values of only 1 column
+     * @return List<String> of the queried column
      * @author Vi Nguyen, Huong Trinh
      * @see
      * @since 2019-01-23
      */
-    public List<String> executeQueryReturnString(String querySingleFieldValue) {
+    public List<String> executeQueryReturnString(String query) {
 
         List<String> listResult = new ArrayList<>();
         try {
-            resultSet = statement.executeQuery(querySingleFieldValue);
+            resultSet = statement.executeQuery(query);
 
             while (resultSet.next()) {
                 listResult.add(resultSet.getString(1));
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return listResult;
-    }
-
-    public List<Integer> executeQueryReturnInteger(String querySingleFieldValue) {
-
-        List<Integer> listResult = new ArrayList<>();
-        try {
-            resultSet = statement.executeQuery(querySingleFieldValue);
-
-            while (resultSet.next()) {
-                listResult.add(resultSet.getInt(1));
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }

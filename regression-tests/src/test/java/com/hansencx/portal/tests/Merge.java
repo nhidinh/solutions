@@ -1,6 +1,5 @@
 package com.hansencx.portal.tests;
 
-
 import com.hansencx.solutions.database.DatabaseHelper;
 import com.hansencx.solutions.portal.PortalBaseTest;
 import com.hansencx.solutions.portal.pages.LoginPage;
@@ -8,25 +7,30 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import utilities.configuration.InitialData;
+import utilities.helper.ExcelHelper;
+
+import java.io.FileNotFoundException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CancelRebillTests extends PortalBaseTest{
+public class Merge extends PortalBaseTest{
 
     String importedFilePath;
     static ArrayList<String> listTransactionID = new ArrayList<String>();
     private DatabaseHelper db;
+    private String tranID = null;
     private String cancelTransId = null;
     private String originalTransId = null;
     private ResultSet resultSet;
 
     @BeforeTest
-    public void setupDataBeforeTest(){
+    public void setupDataBeforeTest() throws FileNotFoundException {
         importedFilePath = InitialData.PARENT_DIR + "\\regression-tests\\src\\test\\java\\com\\hansencx\\portal\\datatest\\Create Cancel Rebill - Filled In Template.xlsx";
         db = new DatabaseHelper();
         db.createConnection("PSOLQ");
+
     }
     @Test
     public void testCreateCancelRebill(){
@@ -65,6 +69,8 @@ public class CancelRebillTests extends PortalBaseTest{
 
         //STEP 2.n.	Use the left navigation menu to go back to service center
         // and then select History to see the pending information
+//        Page.LeftNavigation().clickMenuButton();
+//        Page.LeftNavigation().clickServiceCenter();
         Page.LeftNavigation().clickServiceCenterHistoryMenu();
         Page.WaitMessageDialog().waitForMessageDismiss();
 
@@ -103,13 +109,17 @@ public class CancelRebillTests extends PortalBaseTest{
         Page.ServiceCenterHistory().verifyStatusIsApproved(createdTime);
         if(!listTransactionID.isEmpty()) {
             for (String tranID : listTransactionID) {
-                validateTransactionCancelRebill(tranID);
+                test3StepA(tranID);
             }
         }
 
     }
-    public void validateTransactionCancelRebill(String tranID) {
+//    @Test(dependsOnMethods="testCreateCancelRebill", alwaysRun = true)
+    public void test3StepA(String tranID) {
+//        tranID = listTransactionID.get(0);
         System.out.println("tranid: "+tranID);
+        //0. Check database before doing test
+
         //Verify the result
         //1. Check that there are a pair of new trans are returned
         String countLineQuery = "select count(ky_pnd_seq_trans) from custpro.cpm_pnd_tran_hdr NEW " +
@@ -195,7 +205,7 @@ public class CancelRebillTests extends PortalBaseTest{
         } else {
             Assert.fail("Wrong output of cd_purpose: no valid value !");
         }
-        //step 4:
+//step 4:
         //1. get ky_enroll, ky_supplier
         String queryEnroll = "select ky_enroll from custpro.cpm_pnd_tran_hdr where ky_enroll in(select ky_enroll " +
                 "from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans =" + tranID +" )";
@@ -213,8 +223,11 @@ public class CancelRebillTests extends PortalBaseTest{
         Boolean supplierCheckFlag = kySupplier0.equals(kySupplier1);
         Assert.assertEquals(kySupplier0,kySupplier1);
         //2. log in PORTAL with acc : generic
+        String userGeneric = "QAGENERIC";
+        String encodedPswGeneric = "NC9CCAELASIIEEI=";
+
         LoginPage loginPage = Page.Login().goTo();
-        loginPage.logonWithEncodedCredential("QAGENERIC", "NC9CCAELASIIEEI=");
+        loginPage.logonWithEncodedCredential(userGeneric, encodedPswGeneric);
 
         //3. Search for ky_enroll
         Page.TopNavigation().clickSearchButton();
@@ -231,6 +244,7 @@ public class CancelRebillTests extends PortalBaseTest{
         //4. choose billing transaction interface view
         Page.SearchResult().selectViewFromEnrollment("Billing Transaction Interface");
 
+
         /** 5. click on cancel and original trans
          6. Click on validate button and verify no error
          NOTE: Validation should perform for Cancel first because of the order processing in Billing run,
@@ -241,8 +255,8 @@ public class CancelRebillTests extends PortalBaseTest{
         System.out.println("kyPndSeqCancelTransNumber: "+ kyPndSeqCancelTransNumber);
         System.out.println("kyPndSeqOriginalTransNumber: "+ kyPndSeqOriginalTransNumber);
         Page.BillingTransactionList().clickOnTransText(kyPndSeqCancelTransNumber);
-        Page.BillingTransactionView().clickOnValidateButton();
-        Page.BillingTransactionView().validateTransactionIsSuccessful();
+        Page.BillingTransactionList().clickOnValidateButton();
+        Page.BillingTransactionList().validateTransactionIsSuccessfull();
 
         //verify status code in database after validation, should be 65 as sucessful validation
         String queryInputCancel = "select cd_tran_status from custpro.cpm_pnd_tran_hdr where ky_enroll ="
@@ -250,18 +264,22 @@ public class CancelRebillTests extends PortalBaseTest{
         String cdTranStatusCodeOfCancel = db.returnQueriedStringField(queryInputCancel);
         Assert.assertEquals(cdTranStatusCodeOfCancel,"65");
 
-        Page.BillingTransactionView().clickOnBackBillingTransList();
+        Page.BillingTransactionList().clickOnBackBillingTransList();
 
         Page.BillingTransactionList().clickOnTransText(kyPndSeqOriginalTransNumber);
-        Page.BillingTransactionView().clickOnValidateButton();
-        Page.BillingTransactionView().validateTransactionIsSuccessful();
-        Page.BillingTransactionView().clickOnBackBillingTransList();
+        Page.BillingTransactionList().clickOnValidateButton();
+        Page.BillingTransactionList().validateTransactionIsSuccessfull();
+        Page.BillingTransactionList().clickOnBackBillingTransList();
 
         //verify status code in database after validation, should be 65 as sucessful validation
         String queryInputOriginal = "select cd_tran_status from custpro.cpm_pnd_tran_hdr where ky_enroll ="
-                + kyEnroll0 +" and ky_pnd_seq_trans =" + kyPndSeqOriginalTransNumber;
+                + kyEnroll0+" and ky_pnd_seq_trans =" + kyPndSeqOriginalTransNumber;
         String cdTranStatusCodeOfOriginal = db.returnQueriedStringField(queryInputOriginal);
         Assert.assertEquals(cdTranStatusCodeOfOriginal,"65");
+
+
+
+
     }
     private String querySpecificInfoFollowingKyEnroll(String queryLabel, String tranID, String purposeCode){
         String outputString = null;
@@ -296,5 +314,23 @@ public class CancelRebillTests extends PortalBaseTest{
         }
         return outputString;
     }
+    private ArrayList<String> getKY_PND_SEQ_TRANS() throws FileNotFoundException {
+        ExcelHelper excelHelper;
+        String DataDirectory = InitialData.PARENT_DIR + "\\regression-tests\\src\\test\\java\\com\\hansencx\\portal\\datatest\\";
+        String DataFileName = "Create Cancel Rebill - Filled In Template.xlsx";
+        String SheetName = "Create Cancel Rebill";
+        excelHelper = new ExcelHelper(DataDirectory + DataFileName, SheetName);
 
+        ArrayList<String> listKY_PND_SEQ_TRANS = new ArrayList<String>();
+        int countRow = excelHelper.getNumberOfRow();
+        String KY_PND_SEQ_TRANS;
+        String result;
+        int KY_PND_SEQ_TRANS_Cell = excelHelper.getCellIndexByText("KY_PND_SEQ_TRANS");
+
+        for(int i = 1; i<countRow; i++){
+            result = excelHelper.getCellData(i, KY_PND_SEQ_TRANS_Cell);
+            listKY_PND_SEQ_TRANS.add(result);
+        }
+        return listKY_PND_SEQ_TRANS;
+    }
 }

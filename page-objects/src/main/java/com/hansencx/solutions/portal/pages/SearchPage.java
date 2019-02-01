@@ -52,6 +52,8 @@ public class SearchPage extends BasePage {
     //HUONG:25.01.19:Update method for mapping between database & web present
     public void selectSupplierByKySupplier(String supplierKyName){
         String supplierName = PortalDatabaseSupplierDict.getValue(supplierKyName);
+        System.out.println("supplierName: "+ supplierName);
+        waitForPageLoad();
         Select selectSupplierName = new Select(lstSupplierName);
         selectSupplierName.selectByVisibleText(supplierName);
         waitForPageLoad();
