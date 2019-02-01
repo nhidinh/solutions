@@ -12,7 +12,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,10 +47,11 @@ public class ExcelHelper {
 
     /**
      * Constructor
-     * @author Vi Nguyen
+     *
      * @param filePath
      * @param sheetName
      * @throws FileNotFoundException
+     * @author Vi Nguyen
      */
     public ExcelHelper(String filePath, String sheetName) throws FileNotFoundException {
         this.filePath = filePath;
@@ -156,10 +156,10 @@ public class ExcelHelper {
         return "";
     }
 
-    public String getCellData(int rowNumber, int colNumber) {
+    public String getCellData(int rowIndex, int colIndex) {
         Log.info("Getting Cell Data...");
-        XSSFCell cell = getExcelSheet().getRow(rowNumber).getCell(colNumber);
-        //DataFormatter formatter = new DataFormatter();
+        XSSFCell cell = getExcelSheet().getRow(rowIndex).getCell(colIndex);
+
         Log.info("Return Cell Data Value: " + cell);
         return formatter.formatCellValue(cell);
     }
@@ -223,7 +223,7 @@ public class ExcelHelper {
     }
 
     /**
-     * Return list of cell values in a row
+     * Return list of cell values in a row from cell #3 to row #7
      *
      * @param rowIndex
      * @return a XSSFCell list of parameters of the specified row(step) of the test script (Excel)
@@ -231,77 +231,60 @@ public class ExcelHelper {
      * @see
      * @since 2019-01-30
      */
-    public List<XSSFCell> getRow(int rowIndex) {
+    public List<XSSFCell> getExcelScriptsArguments(int rowIndex) {
         List<XSSFCell> listParameters = new ArrayList<>();
+
         //argument cell is from cell 3 -> 7 of each row
+        Log.info("Getting the arguments from Excel scripts");
         for (int i = 3; i < 8; i++)
             listParameters.add(getExcelSheet().getRow(rowIndex).getCell(i));
+        Log.info("Return the arguments from Excel scripts");
         return listParameters;
     }
 
-    public XSSFRow getRowData(int rowNumber) {
-        Log.info("Getting Row Data...");
-        XSSFRow row = getExcelSheet().getRow(rowNumber);
-        Log.info("Return Row data value");
-        return row;
+    public XSSFRow getRowData(int rowIndex) {
+        Log.info("Get and return the row data as XSSFRow");
+        return getExcelSheet().getRow(rowIndex);
     }
 
+    /**
+     * Return String of cell
+     *
+     * @param rowIndex, colIndex
+     * @return String value of the cell
+     * @author Vi Nguyen
+     * @see
+     * @since 2019-01-30
+     */
     public void setCellValue(int rowIndex, int colIndex, String value) {
         XSSFRow row = getExcelSheet().getRow(rowIndex);
         XSSFCell cell = row.getCell(colIndex);
+
+        Log.info("Setting Cell Data...");
         if (null != cell)
             cell.setCellValue(value);
         else
             row.createCell(colIndex).setCellValue(value);
     }
 
-    public void setCellData(String value, int rowNumber, int colNumber) {
-        try {
-            XSSFRow row = getExcelSheet().getRow(rowNumber);
-            XSSFCell cell = row.getCell(colNumber);
-
-            Log.info("Setting Cell Data...");
-            if (cell == null) {
-                cell = row.createCell(colNumber);
-                cell.setCellValue(value);
-            } else {
-                cell.setCellValue(value);
-            }
-            FileOutputStream outputFile = new FileOutputStream(filePath);
-
-            Log.info("Writing Data to file: " + outputFile);
-            getExcelWorkBook().write(outputFile);
-            outputFile.flush();
-            outputFile.close();
-
-            Log.info("Complete writing file");
-        } catch (IOException e) {
-            Log.error("FAILED to write file");
-            Log.error(e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-
-
-    public int getCellIndexByText(String text){
+    public int getCellIndexByText(String text) {
         Log.info("Getting cell index by text: " + text);
         DataFormatter formatter = new DataFormatter();
         XSSFRow row = excelSheet.getRow(0);
         int cellIndex = -1;
-        if(row == null){
+        if (row == null) {
             Log.error("Header row is empty");
         }
-        for(Cell cell:row){
+        for (Cell cell : row) {
             String textCell = formatter.formatCellValue(cell);
-            if(textCell.equals(text)){
-                cellIndex= cell.getColumnIndex();
-                Log.info("Found Cell with column index: "+ cell.getColumnIndex());
+            if (textCell.equals(text)) {
+                cellIndex = cell.getColumnIndex();
+                Log.info("Found Cell with column index: " + cell.getColumnIndex());
             }
         }
-        if (cellIndex != -1){
+        if (cellIndex != -1) {
             return cellIndex;
-        }else {
+        } else {
             Log.info("No cell is found in header");
             System.out.println("No cell is found in header");
         }

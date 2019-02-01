@@ -32,11 +32,12 @@ public class InitialData {
     public static String REPORT_DIR_PATH = PARENT_DIR + "\\regression-tests\\reports" + "\\Report-" + TIMESTAMP;
     public static String REPORT_FILE_PATH = REPORT_DIR_PATH + "\\" + FILE_NAME_REPORT;
 
-    // TEMP DIRECTORY FOR DIFFERENCE FILS AND SPLITTED FILE
-    public static String DIFF_FILE_NAME = "differences_" + TIMESTAMP + ".txt";
+    // TEMP DIRECTORY FOR DIFFERENCE FILS AND SPLITTED FILE, THIS IS SUPPORTING THE XML COMPARING
     public static String TEMP_DIR_PATH = PARENT_DIR + "\\regression-tests\\temp\\";
-    public static String SPLITTED_DIR_PATH = TEMP_DIR_PATH + "split-" + TIMESTAMP + "\\";
-    public static String DIFFERENCE_DIR_PATH = TEMP_DIR_PATH + "differences\\";
+    public static String TEMP_XML_DIR_PATH = TEMP_DIR_PATH + "xml\\";
+    public static String XML_SPLITTED_DIR_PATH = TEMP_XML_DIR_PATH + "split-" + TIMESTAMP + "\\";
+    public static String XML_DIFFERENCE_DIR_PATH = TEMP_XML_DIR_PATH + "differences\\";
+    public static String XML_DIFF_FILE_NAME = "differences_" + TIMESTAMP + ".txt";
 
     //FILE PATH OF extent-config.xml file
     public static String REPORT_CONFIG_XML_FILE_PATH = PARENT_DIR + "\\framework\\src\\main\\resources\\extent-config.xml";
