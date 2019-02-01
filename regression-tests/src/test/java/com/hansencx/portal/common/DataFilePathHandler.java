@@ -12,6 +12,8 @@ import utilities.configuration.InitialData;
 
 public class DataFilePathHandler {
     public static String DATA_DIRECTORY_PATH = InitialData.PARENT_DIR + "\\regression-tests\\src\\test\\java\\com\\hansencx\\portal\\datatest\\";
+    public static String SCRIPTS_DIRECTORY_PATH = InitialData.PARENT_DIR + "\\regression-tests\\src\\test\\java\\com\\hansencx\\portal\\testscripts\\";
+
     public static String PORTAL_DATA_FILE_NAME = "PortalDataTest.xlsx";
     public static String PORTAL_DATA_SHEET_NAME = "EnrollmentNumber";
     public static String PORTAL_DATA_TEST_PATH = DATA_DIRECTORY_PATH+PORTAL_DATA_FILE_NAME;

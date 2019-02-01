@@ -7,14 +7,12 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-
 /**
  * @param
  * @author Nhi Dinh
  * @return
  * @since 1/15/2019
  */
-
 
 public class InitialData {
     public static String ROOT_DIRECTORY = System.getProperty("user.dir");
