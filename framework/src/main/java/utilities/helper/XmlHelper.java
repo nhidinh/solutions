@@ -192,14 +192,25 @@ public class XmlHelper {
             }
         }
     }
+
+    /**
+     * Create temp,split,diff folder to prepare to do xml comparing.
+     *
+     * @param
+     * @return generate files contain different
+     * @author Vi Nguyen
+     * @see
+     * @since 2019-01-24
+     */
     public void createTempAndSplitAndDiffFolder() {
-        String splittedFilePath = separatorsToSystem(InitialData.SPLITTED_DIR_PATH);
+
         String tempPath = separatorsToSystem(InitialData.TEMP_DIR_PATH);
-        String diffPath = separatorsToSystem(InitialData.DIFFERENCE_DIR_PATH);
-        System.out.println("Temp Path is: " + tempPath);
-        System.out.println("Split Path is: " + splittedFilePath);
-        System.out.println("Diff Path is: " + diffPath);
+        String tempXMLPath = separatorsToSystem(InitialData.TEMP_XML_DIR_PATH);
+        String diffPath = separatorsToSystem(InitialData.XML_DIFFERENCE_DIR_PATH);
+        String splittedFilePath = separatorsToSystem(InitialData.XML_SPLITTED_DIR_PATH);
+
         FileHelper.createDirectory(tempPath);
+        FileHelper.createDirectory(tempXMLPath);
         FileHelper.createDirectory(splittedFilePath);
         FileHelper.createDirectory(diffPath);
     }
