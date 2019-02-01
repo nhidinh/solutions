@@ -1,6 +1,6 @@
 package com.hansencx.portal.tests;
 
-import com.hansencx.portal.datatest.DataFilePathHandler;
+import com.hansencx.portal.common.DataFilePathHandler;
 import com.hansencx.solutions.portal.PortalBaseTest;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;

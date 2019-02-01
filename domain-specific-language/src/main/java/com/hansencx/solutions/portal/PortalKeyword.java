@@ -16,17 +16,15 @@ import java.util.Map;
 /**
  * PortalKeyword class
  *
- * @author Vi Nguyen, Huong Trinh
+ * @author Vi Nguyen
  * @version 1.0
  * @see BaseKeyword
- * @since 2018-12-03
+ * @since 2019-1-30
  */
 public class PortalKeyword extends BaseKeyword {
 
     private ExcelHelper excelHelper;
     private DatabaseHelper databaseHelper;
-
-    private static String observedQueryResult = "";
 
     /**
      * Constructors
@@ -45,9 +43,9 @@ public class PortalKeyword extends BaseKeyword {
     /**
      * Do mapping and call mapped keywords.
      *
-     * @param
-     * @return ResultSet.
-     * @author Huong Trinh
+     * @param step, keyword, listParameters
+     * @return Nothing.
+     * @author Vi Nguyen
      * @see
      * @since 2019-01-22
      */
@@ -99,11 +97,10 @@ public class PortalKeyword extends BaseKeyword {
         }
     }
 
-    public void runTestScriptsTest() throws FileNotFoundException {
+    public void runTestScripts() throws FileNotFoundException {
         List<XSSFCell> listCell;
 
         for (int i = 0; i < excelHelper.getLastRowNum(); i++) {
-            //excelHelper.openFile();
             listCell = excelHelper.getRow(i + 1);
             callKeyword(i + 1, excelHelper.getCellValue(i + 1, 2), listCell);
         }
@@ -118,10 +115,7 @@ public class PortalKeyword extends BaseKeyword {
 
     }
 
-    private void cancelRebillGetListTransactions() {
-    }
+    private void cancelRebillGetListTransactions() {}
 
-    private void getCacelRebillCreatedTime() {
-
-    }
+    private void getCacelRebillCreatedTime() {}
 }

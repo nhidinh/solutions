@@ -78,7 +78,7 @@ public class BaseTest {
         String testCaseName = testContext.getName();
         Log.endTestCase(testCaseName);
         Log.info("Closing browser after test");
-//        Browser.quit();
+        Browser.quit();
     }
     /**
      * @author Huong Trinh

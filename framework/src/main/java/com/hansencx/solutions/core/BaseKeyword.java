@@ -10,7 +10,7 @@ import org.openqa.selenium.WebDriver;
  * @since   2018-12-03
  */
 public class BaseKeyword {
-    public WebDriver driver;
+    protected WebDriver driver;
 
     /**
      * Constructor
