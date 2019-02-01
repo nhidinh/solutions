@@ -87,7 +87,6 @@ public class PortalPageGenerator {
         return GetPage(EnterReasonForApprovalDialog.class);
     }
 
-
     ////GETTING NAVIGATION
     public TopNavigation TopNavigation(){
         return GetPage(TopNavigation.class);
