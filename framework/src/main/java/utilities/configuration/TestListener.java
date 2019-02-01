@@ -81,8 +81,8 @@ public class TestListener implements ITestListener {
             ITestContext context = result.getTestContext();
             driver = (WebDriver) context.getAttribute("driver");
 
-            String screenshotName = result.getName() +"_"+ InitialData.TIMESTAMP;
-            String screenshotDirectory = separatorsToSystem(ExtentManager.getReportDirectory() + "\\FailedTestsScreenshots\\") ;
+            String screenshotName = result.getName() + "_" + InitialData.TIMESTAMP;
+            String screenshotDirectory = separatorsToSystem(ExtentManager.getReportDirectory() + "\\FailedTestsScreenshots\\");
             FileHelper.createDirectory(screenshotDirectory);
             String encodedScreenshot = ScreenCaptor.takeFullScreenshot(driver, screenshotName, screenshotDirectory);
 
