@@ -15,5 +15,4 @@ public class BillingTransactionListPage extends BasePage {
         String locator = "//a[@href='PndTranView.aspx?tranID="+ originTranId + "']";
         click(driver.findElement(By.xpath(locator)));
     }
-
 }

@@ -23,18 +23,18 @@ public class ServiceCenterApprovalsPage extends BasePage {
     //WEB ELEMENT
     @FindBy(xpath = "//div[@class='list']")
     WebElement listRequestedRecord;
-    private WebElement getLinkQueue(String createdTime){
-        //div[@class='columnValue requestedOn' and contains(text(),'01/29/2019 12:00 AM')]//parent::div//a[@class='columnValue queue']
-        String lnkQueueXpath = "//div[@class='columnValue requestedOn' and contains(text(),'"+createdTime+"')]//parent::div//a[@class='columnValue queue']";
-        WebElement lnkQueue = driver.findElement(By.xpath(lnkQueueXpath));
-        return lnkQueue;
+
+    private WebElement getLinkQueue(String createdTime) {
+        String lnkQueueXpath = "//div[@class='columnValue requestedOn' and contains(text(),'" + createdTime + "')]//parent::div//a[@class='columnValue queue']";
+        return driver.findElement(By.xpath(lnkQueueXpath));
     }
 
     // METHODS
-    public void waitForListAppear(){
+    public void waitForListAppear() {
         waitForElementToAppear(listRequestedRecord);
     }
-    public void selectQueueRequestByCreatedTime(String createdTime){
+
+    public void selectQueueRequestByCreatedTime(String createdTime) {
         WebElement lnkQueue = getLinkQueue(createdTime);
         click(lnkQueue);
         waitForPageLoad();

@@ -1,0 +1,329 @@
+<Accounts>
+	<Account>
+		<AccountNumber>5483077000</AccountNumber>
+		<SupplierCode>MC2</SupplierCode>
+		<ServiceType>EL</ServiceType>
+		<CustomerType>RES</CustomerType>
+		<Language>E</Language>
+		<RecurringCCFlag>N</RecurringCCFlag>
+		<AffinityGrp></AffinityGrp>
+		<FirstBill>N</FirstBill>
+		<EFT>0</EFT>
+		<BPMessage>SB</BPMessage>
+		<RocPileInd>1</RocPileInd>
+		<LPC>1.5</LPC>
+		<SupplierMessage></SupplierMessage>
+		<SupplierInternetAddress>www.mc2energyservices.com</SupplierInternetAddress>
+		<SupplierEmailAddress>custcare@mc2energyservices.com</SupplierEmailAddress>
+		<CCInternetAddress>www.mc2energyservices.com</CCInternetAddress>
+		<CCEmailAddress>custcare@mc2energyservices.com</CCEmailAddress>
+		<SummaryBillingSub>0</SummaryBillingSub>
+		<SpecialBill>00</SpecialBill>
+		<SpecialBillType></SpecialBillType>
+		<CustomerName>KORRALL CORP</CustomerName>
+		<CustomerName2>Korrall Corp</CustomerName2>
+		<ContractStartDate></ContractStartDate>
+		<ContractEndDate>June 2019</ContractEndDate>
+		<ContractEndDateMDY>06/30/2019</ContractEndDateMDY>
+		<UtilityAccountNumber>0264506005</UtilityAccountNumber>
+		<UtilityName>ComEd-IL-Elec</UtilityName>
+		<NextReadDate>Nov 29, 2018</NextReadDate>
+		<BillDueDate>Jan 01, 0001</BillDueDate>
+		<ConEnergyChg>N</ConEnergyChg>
+		<ConUtilityChg>N</ConUtilityChg>
+		<ConTaxOtherChg>N</ConTaxOtherChg>
+		<FYIQuestionDate>Jan 01, 0001</FYIQuestionDate>
+		<CustCarePhoneNumber>1-888-232-6332</CustCarePhoneNumber>
+		<EDCPhone>1-877-426-6331</EDCPhone>
+		<BillDate>Nov 29, 2018</BillDate>
+		<BillDateYMD>20181129</BillDateYMD>
+		<ServiceAddress1>305 W NEW AVE</ServiceAddress1>
+		<ServiceAddress2></ServiceAddress2>
+		<ServiceCity>LEMONT</ServiceCity>
+		<ServiceState>IL</ServiceState>
+		<ServiceZIPCode>60439</ServiceZIPCode>
+		<HurricaneInsert>N</HurricaneInsert>
+		<UtilityAddress1>Customer Care Center</UtilityAddress1>
+		<UtilityAddress2>P.O. Box 805379</UtilityAddress2>
+		<UtilityCity>Chicago</UtilityCity>
+		<UtilityState>IL</UtilityState>
+		<UtilityZIPCode>60680-5379</UtilityZIPCode>
+		<UtilityInternetAddress>www.comed.com</UtilityInternetAddress>
+		<RemitAddress1>MC Squared Energy</RemitAddress1>
+		<RemitAddress2>P.O. Box 9001846</RemitAddress2>
+		<RemitAddress3>Louisville, KY</RemitAddress3>
+		<RemitZIP>40290-1846</RemitZIP>
+		<RemitZIP5>40290</RemitZIP5>
+		<RemitZIP4>1846</RemitZIP4>
+		<MailingAddress1>13301 S CICERO AVE</MailingAddress1>
+		<MailingAddress2></MailingAddress2>
+		<MailingAddress3></MailingAddress3>
+		<MailingCity>CRESTWOOD</MailingCity>
+		<MailingState>IL</MailingState>
+		<MailingZIPCode5>60445</MailingZIPCode5>
+		<MailingZIPCode4>0000</MailingZIPCode4>
+		<MailingZIPCode>60445000000</MailingZIPCode>
+		<DocSpecialHandlingCode></DocSpecialHandlingCode>
+		<PONumber></PONumber>
+		<TotalEnergyCharges>7466.54</TotalEnergyCharges>
+		<TotalTaxes>0.00</TotalTaxes>
+		<TotalLocalUtilCharges>0.00</TotalLocalUtilCharges>
+		<TotalEPlusCharges>0.00</TotalEPlusCharges>
+		<TotalOtherCharges>0.00</TotalOtherCharges>
+		<CustSummaryLastBal>14347.38</CustSummaryLastBal>
+		<CustSummaryCurrBal>14640.23</CustSummaryCurrBal>
+		<PreviousBillDate>Aug 03, 2018</PreviousBillDate>
+		<PreviousAmountDue>7173.69</PreviousAmountDue>
+		<MultiplePayments>N</MultiplePayments>
+		<PaymentReceivedDate></PaymentReceivedDate>
+		<PaymentReceivedAmount></PaymentReceivedAmount>
+		<AdjustmentReceivedAmount></AdjustmentReceivedAmount>
+		<CombinepaymentAdjAmount></CombinepaymentAdjAmount>
+		<AmountStillOwed>7173.69</AmountStillOwed>
+		<BillFromDate>Sep 28, 2018</BillFromDate>
+		<BillToDate>Oct 31, 2018</BillToDate>
+		<CustSummaryTotalCharges>7466.54</CustSummaryTotalCharges>
+		<CustSummaryAmountDue>14640.23</CustSummaryAmountDue>
+		<CustSummaryBudgetAmount>0.00</CustSummaryBudgetAmount>
+		<BillMessages></BillMessages>
+		<GraphType>2</GraphType>
+		<UsageHistoryCount>13</UsageHistoryCount>
+		<UsageData>    
+			<UsageSequence>1</UsageSequence>
+			<ReadingType>Actual</ReadingType>
+			<TotalKWH>115278</TotalKWH>
+			<AvgDailyKWH>3975</AvgDailyKWH>
+			<CTAmountCons></CTAmountCons>
+			<ReadingFromDate>Aug 01, 2017</ReadingFromDate>
+			<ReadingToDate>Aug 30, 2017</ReadingToDate>
+			<GraphMonth>A</GraphMonth>
+			<NumDaysBillingPeriod>29</NumDaysBillingPeriod>
+	
+			<UsageSequence>2</UsageSequence>
+			<ReadingType>Actual</ReadingType>
+			<TotalKWH>118763</TotalKWH>
+			<AvgDailyKWH>4095</AvgDailyKWH>
+			<CTAmountCons></CTAmountCons>
+			<ReadingFromDate>Aug 30, 2017</ReadingFromDate>
+			<ReadingToDate>Sep 28, 2017</ReadingToDate>
+			<GraphMonth>S</GraphMonth>
+			<NumDaysBillingPeriod>29</NumDaysBillingPeriod>
+	
+			<UsageSequence>3</UsageSequence>
+			<ReadingType>Actual</ReadingType>
+			<TotalKWH>119150</TotalKWH>
+			<AvgDailyKWH>4109</AvgDailyKWH>
+			<CTAmountCons></CTAmountCons>
+			<ReadingFromDate>Sep 28, 2017</ReadingFromDate>
+			<ReadingToDate>Oct 27, 2017</ReadingToDate>
+			<GraphMonth>O</GraphMonth>
+			<NumDaysBillingPeriod>29</NumDaysBillingPeriod>
+	
+			<UsageSequence>4</UsageSequence>
+			<ReadingType>Actual</ReadingType>
+			<TotalKWH>137603</TotalKWH>
+			<AvgDailyKWH>4170</AvgDailyKWH>
+			<CTAmountCons></CTAmountCons>
+			<ReadingFromDate>Oct 27, 2017</ReadingFromDate>
+			<ReadingToDate>Nov 29, 2017</ReadingToDate>
+			<GraphMonth>N</GraphMonth>
+			<NumDaysBillingPeriod>33</NumDaysBillingPeriod>
+	
+			<UsageSequence>5</UsageSequence>
+			<ReadingType>Actual</ReadingType>
+			<TotalKWH>149028</TotalKWH>
+			<AvgDailyKWH>4383</AvgDailyKWH>
+			<CTAmountCons></CTAmountCons>
+			<ReadingFromDate>Nov 29, 2017</ReadingFromDate>
+			<ReadingToDate>Jan 02, 2018</ReadingToDate>
+			<GraphMonth>J</GraphMonth>
+			<NumDaysBillingPeriod>34</NumDaysBillingPeriod>
+	
+			<UsageSequence>6</UsageSequence>
+			<ReadingType>Actual</ReadingType>
+			<TotalKWH>135857</TotalKWH>
+			<AvgDailyKWH>4529</AvgDailyKWH>
+			<CTAmountCons></CTAmountCons>
+			<ReadingFromDate>Jan 02, 2018</ReadingFromDate>
+			<ReadingToDate>Feb 01, 2018</ReadingToDate>
+			<GraphMonth>F</GraphMonth>
+			<NumDaysBillingPeriod>30</NumDaysBillingPeriod>
+	
+			<UsageSequence>7</UsageSequence>
+			<ReadingType>Actual</ReadingType>
+			<TotalKWH>130375</TotalKWH>
+			<AvgDailyKWH>4496</AvgDailyKWH>
+			<CTAmountCons></CTAmountCons>
+			<ReadingFromDate>Feb 01, 2018</ReadingFromDate>
+			<ReadingToDate>Mar 02, 2018</ReadingToDate>
+			<GraphMonth>M</GraphMonth>
+			<NumDaysBillingPeriod>29</NumDaysBillingPeriod>
+	
+			<UsageSequence>8</UsageSequence>
+			<ReadingType>Actual</ReadingType>
+			<TotalKWH>141734</TotalKWH>
+			<AvgDailyKWH>4572</AvgDailyKWH>
+			<CTAmountCons></CTAmountCons>
+			<ReadingFromDate>Mar 02, 2018</ReadingFromDate>
+			<ReadingToDate>Apr 02, 2018</ReadingToDate>
+			<GraphMonth>A</GraphMonth>
+			<NumDaysBillingPeriod>31</NumDaysBillingPeriod>
+	
+			<UsageSequence>9</UsageSequence>
+			<ReadingType>Actual</ReadingType>
+			<TotalKWH>132241</TotalKWH>
+			<AvgDailyKWH>4560</AvgDailyKWH>
+			<CTAmountCons></CTAmountCons>
+			<ReadingFromDate>Apr 02, 2018</ReadingFromDate>
+			<ReadingToDate>May 01, 2018</ReadingToDate>
+			<GraphMonth>M</GraphMonth>
+			<NumDaysBillingPeriod>29</NumDaysBillingPeriod>
+	
+			<UsageSequence>10</UsageSequence>
+			<ReadingType>Actual</ReadingType>
+			<TotalKWH>130077</TotalKWH>
+			<AvgDailyKWH>4336</AvgDailyKWH>
+			<CTAmountCons></CTAmountCons>
+			<ReadingFromDate>May 01, 2018</ReadingFromDate>
+			<ReadingToDate>May 31, 2018</ReadingToDate>
+			<GraphMonth>M</GraphMonth>
+			<NumDaysBillingPeriod>30</NumDaysBillingPeriod>
+	
+			<UsageSequence>11</UsageSequence>
+			<ReadingType>Actual</ReadingType>
+			<TotalKWH>129077</TotalKWH>
+			<AvgDailyKWH>4451</AvgDailyKWH>
+			<CTAmountCons></CTAmountCons>
+			<ReadingFromDate>May 31, 2018</ReadingFromDate>
+			<ReadingToDate>Jun 29, 2018</ReadingToDate>
+			<GraphMonth>J</GraphMonth>
+			<NumDaysBillingPeriod>29</NumDaysBillingPeriod>
+	
+			<UsageSequence>12</UsageSequence>
+			<ReadingType>Actual</ReadingType>
+			<TotalKWH>140303</TotalKWH>
+			<AvgDailyKWH>4384</AvgDailyKWH>
+			<CTAmountCons></CTAmountCons>
+			<ReadingFromDate>Jun 29, 2018</ReadingFromDate>
+			<ReadingToDate>Jul 31, 2018</ReadingToDate>
+			<GraphMonth>J</GraphMonth>
+			<NumDaysBillingPeriod>32</NumDaysBillingPeriod>
+	
+			<UsageSequence>13</UsageSequence>
+			<ReadingType>Actual</ReadingType>
+			<TotalKWH>146031</TotalKWH>
+			<AvgDailyKWH>4425</AvgDailyKWH>
+			<CTAmountCons></CTAmountCons>
+			<ReadingFromDate>Sep 28, 2018</ReadingFromDate>
+			<ReadingToDate>Oct 31, 2018</ReadingToDate>
+			<GraphMonth>O</GraphMonth>
+			<NumDaysBillingPeriod>33</NumDaysBillingPeriod>
+		</UsageData>
+		<PrevGraphMonth>Nov</PrevGraphMonth>
+		<PrevGraphYear>2017</PrevGraphYear>
+		<UsagePrevYearKWH>1542307</UsagePrevYearKWH>
+		<UsagePrevNumMonth>12</UsagePrevNumMonth>
+		<CurrGraphMonth>Oct</CurrGraphMonth>
+		<CurrGraphYear>2018</CurrGraphYear>
+		<UsageCurrYearKWH>1610239</UsageCurrYearKWH>
+		<UsageCurrNumMonth>12</UsageCurrNumMonth>
+		<TempCurrMonth></TempCurrMonth>
+		<TempLastYear></TempLastYear>
+		<CurNumDaysBillingPeriod>33</CurNumDaysBillingPeriod>
+		<GraphKWHMin>0</GraphKWHMin>
+		<GraphKWHMax>4620</GraphKWHMax>
+		<GraphCT>N</GraphCT>
+		<GraphCTMin></GraphCTMin>
+		<GraphCTMax></GraphCTMax>
+		<UsageAvgKWH>4425</UsageAvgKWH>
+		<UnitOfMeasure></UnitOfMeasure>
+		<UsageAvgKWHPrev>4109</UsageAvgKWHPrev>
+		<UsageAverageMonthly>134187</UsageAverageMonthly>
+		<TotalMeterRdgKWH>146030.58</TotalMeterRdgKWH>
+		<ScanLine>42 7100146402310014640233 5483077000</ScanLine>
+		<FederalTaxID>26-3615852</FederalTaxID>
+		<LicenseNumber>09-0059</LicenseNumber>
+		<InsertPocket1>1</InsertPocket1>
+		<InsertPocket2>0</InsertPocket2>
+		<InsertPocket3>0</InsertPocket3>
+		<InsertPocket4>0</InsertPocket4>
+		<InsertPocket5>0</InsertPocket5>
+		<InsertPocket6>0</InsertPocket6>
+		<InsertPocket7>0</InsertPocket7>
+		<InsertPocket8>0</InsertPocket8>
+		<CSSSupplierName>MC Squared Energy</CSSSupplierName>
+		<Charges>
+			<ChargeSequence>1</ChargeSequence>
+			<ChargeDesc>MC2 Custom Fixed Price</ChargeDesc>
+			<ChargeAmount>7466.54</ChargeAmount>
+			<IncludeTotal>Y</IncludeTotal>
+			<Bold>N</Bold>
+    		</Charges>
+		<ConnectCharge></ConnectCharge>
+		<ServiceCharge></ServiceCharge>
+		<ReconnectCharge></ReconnectCharge>
+		<TransferredAmount></TransferredAmount>
+		<LPCAdjustment></LPCAdjustment>
+		<ReturnedCheckFee></ReturnedCheckFee>
+		<ReturnedCheckFeeCanceled></ReturnedCheckFeeCanceled>
+		<Adjustment></Adjustment>
+		<ExcessCredit></ExcessCredit>
+		<ActiveReferral></ActiveReferral>
+		<OtherLPC></OtherLPC>
+		<LPCGrossReceiptReimbursement>$LPCGrossReceiptReimbursement$</LPCGrossReceiptReimbursement>
+		<OtherChargeTotal>0.00</OtherChargeTotal>
+		<PriceToCompareAmt></PriceToCompareAmt>
+		<MeterData>
+			<MeterSequence>1</MeterSequence>
+			<ServiceStartDate>September 28, 2018</ServiceStartDate>
+			<ServiceEndDate>October 31, 2018</ServiceEndDate>
+			<MeterNumber>230137635</MeterNumber>
+			<MeterMultiplier></MeterMultiplier>
+			<MeterBeginRdg></MeterBeginRdg>
+			<MeterEndRdg></MeterEndRdg>
+			<MeterRdgType>kW</MeterRdgType>
+			<MeterRdgAmt>318.048</MeterRdgAmt>
+
+			<MeterSequence>2</MeterSequence>
+			<ServiceStartDate>September 28, 2018</ServiceStartDate>
+			<ServiceEndDate>October 31, 2018</ServiceEndDate>
+			<MeterNumber>230137635</MeterNumber>
+			<MeterMultiplier>240</MeterMultiplier>
+			<MeterBeginRdg>0</MeterBeginRdg>
+			<MeterEndRdg>0</MeterEndRdg>
+			<MeterRdgType>kWh</MeterRdgType>
+			<MeterRdgAmt>143330.916</MeterRdgAmt>
+
+			<MeterSequence>3</MeterSequence>
+			<ServiceStartDate>September 28, 2018</ServiceStartDate>
+			<ServiceEndDate>October 31, 2018</ServiceEndDate>
+			<MeterNumber>230137637</MeterNumber>
+			<MeterMultiplier></MeterMultiplier>
+			<MeterBeginRdg></MeterBeginRdg>
+			<MeterEndRdg></MeterEndRdg>
+			<MeterRdgType>kW</MeterRdgType>
+			<MeterRdgAmt>38.82</MeterRdgAmt>
+
+			<MeterSequence>4</MeterSequence>
+			<ServiceStartDate>September 28, 2018</ServiceStartDate>
+			<ServiceEndDate>October 31, 2018</ServiceEndDate>
+			<MeterNumber>230137637</MeterNumber>
+			<MeterMultiplier>120</MeterMultiplier>
+			<MeterBeginRdg>0</MeterBeginRdg>
+			<MeterEndRdg>0</MeterEndRdg>
+			<MeterRdgType>kWh</MeterRdgType>
+			<MeterRdgAmt>2699.664</MeterRdgAmt>
+
+			<MeterSequence>5</MeterSequence>
+			<ServiceStartDate>September 28, 2018</ServiceStartDate>
+			<ServiceEndDate>October 31, 2018</ServiceEndDate>
+			<MeterNumber> </MeterNumber>
+			<MeterMultiplier></MeterMultiplier>
+			<MeterBeginRdg></MeterBeginRdg>
+			<MeterEndRdg></MeterEndRdg>
+			<MeterRdgType>Total</MeterRdgType>
+			<MeterRdgAmt>146030.58</MeterRdgAmt>
+    		</MeterData>
+		<AdjDetailsData>		</AdjDetailsData>
+	</Account>
+	</Accounts>

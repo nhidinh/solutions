@@ -1,5 +1,6 @@
 package com.hansencx.portal.tests;
 
+
 import com.hansencx.solutions.database.DatabaseHelper;
 import com.hansencx.solutions.portal.PortalBaseTest;
 import com.hansencx.solutions.portal.pages.LoginPage;
@@ -7,9 +8,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import utilities.configuration.InitialData;
-import utilities.helper.ExcelHelper;
-
-import java.io.FileNotFoundException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,7 +27,6 @@ public class CancelRebillTests extends PortalBaseTest{
         importedFilePath = InitialData.PARENT_DIR + "\\regression-tests\\src\\test\\java\\com\\hansencx\\portal\\datatest\\Create Cancel Rebill - Filled In Template.xlsx";
         db = new DatabaseHelper();
         db.createConnection("PSOLQ");
-
     }
     @Test
     public void testCreateCancelRebill(){

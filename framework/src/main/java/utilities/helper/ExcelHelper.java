@@ -27,7 +27,6 @@ import static org.apache.poi.ss.usermodel.CellType.*;
  */
 public class ExcelHelper {
 
-    private Platform platform = InitialData.PLATFORM;
     private String filePath;
     private String sheetName;
     private XSSFWorkbook excelWorkBook;
@@ -36,9 +35,12 @@ public class ExcelHelper {
 
     private DataFormatter formatter = new DataFormatter();
 
-    public ExcelHelper() {
-    }
-
+    /**
+     * Constructor
+     * @param filePath
+     * @param sheetName
+     * @throws FileNotFoundException
+     */
     public ExcelHelper(String filePath, String sheetName) throws FileNotFoundException {
 
         this.filePath = filePath;
