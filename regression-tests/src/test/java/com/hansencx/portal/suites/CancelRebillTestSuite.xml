@@ -11,7 +11,7 @@
 
     <test name = "Portal-Create Cancel Rebill Test">
         <classes>
-            <class name="com.hansencx.portal.tests.Merge">
+            <class name="com.hansencx.portal.tests.CancelRebillTests">
                 <!--<methods>-->
                     <!--<include name="testCreateCancelRebill"/>-->
                 <!--</methods>-->

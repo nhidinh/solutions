@@ -100,4 +100,8 @@ public class PortalPageGenerator {
     public BillingTransactionListPage BillingTransactionList(){
         return GetPage(BillingTransactionListPage.class);
     }
+    //// GETTING PAGE: BIILING TRANSACTION VIEW PAGE
+    public BillingTransactionViewPage BillingTransactionView(){
+        return GetPage(BillingTransactionViewPage.class);
+    }
 }
