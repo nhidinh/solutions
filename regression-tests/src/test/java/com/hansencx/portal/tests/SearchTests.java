@@ -1,15 +1,13 @@
 package com.hansencx.portal.tests;
 
-import com.hansencx.portal.datatest.DataFilePathHandler;
+import com.hansencx.portal.common.DataFilePathHandler;
+import com.hansencx.solutions.logger.Log;
 import com.hansencx.solutions.portal.PortalBaseTest;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import com.hansencx.solutions.logger.Log;
-import utilities.configuration.InitialData;
 import utilities.helper.ExcelHelper;
 import utilities.helper.FailureHandling;
-import utilities.helper.StringEncrypt;
 
 import java.io.FileNotFoundException;
 
