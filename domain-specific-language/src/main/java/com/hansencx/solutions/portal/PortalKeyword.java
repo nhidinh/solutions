@@ -88,20 +88,29 @@ public class PortalKeyword extends BaseKeyword {
 
         if (dictionary.containsKey(keyword.toLowerCase())) {
             if (keyword.toLowerCase().equals("execute query")) {
-                excelHelper.setCellData(databaseHelper.returnQueriedStringField(evaluator.evaluate(listParameters.get(0)).getStringValue()), step, 8);
+                excelHelper.setCellValue(step, 8, databaseHelper.returnQueriedStringField(evaluator.evaluate(listParameters.get(0)).getStringValue()));
             } else if (keyword.toLowerCase().equals("create cancel rebill")) {
-                excelHelper.setCellData(pageGenerator.CreateCancelRebill().getListTransactionID(), step, 8);
+                excelHelper.setCellValue(step, 8, pageGenerator.CreateCancelRebill().getListTransactionID());
             } else if (keyword.toLowerCase().equals("create cancel rebill - get created time"))
-                excelHelper.setCellData(pageGenerator.EnterReasonForProcess().getCreatedTime(), step, 8);
+                excelHelper.setCellValue(step, 8, pageGenerator.EnterReasonForProcess().getCreatedTime());
             dictionary.get(keyword.toLowerCase()).run();
         }
     }
 
+    /**
+     * run test scripts from excel file
+     *
+     * @param
+     * @return Nothing.
+     * @author Vi Nguyen
+     * @see
+     * @since 2019-01-22
+     */
     public void runTestScripts() throws FileNotFoundException {
         List<XSSFCell> listCell;
 
         for (int i = 0; i < excelHelper.getLastRowNum(); i++) {
-            listCell = excelHelper.getRow(i + 1);
+            listCell = excelHelper.getExcelScriptsArguments(i + 1);
             callKeyword(i + 1, excelHelper.getCellValue(i + 1, 2), listCell);
         }
     }
