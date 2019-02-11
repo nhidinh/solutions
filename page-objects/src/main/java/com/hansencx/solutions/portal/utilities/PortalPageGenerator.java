@@ -87,7 +87,6 @@ public class PortalPageGenerator {
         return GetPage(EnterReasonForApprovalDialog.class);
     }
 
-
     ////GETTING NAVIGATION
     public TopNavigation TopNavigation(){
         return GetPage(TopNavigation.class);
@@ -99,5 +98,9 @@ public class PortalPageGenerator {
     //// GETTING PAGE: BIILING TRANSACTION LIST PAGE
     public BillingTransactionListPage BillingTransactionList(){
         return GetPage(BillingTransactionListPage.class);
+    }
+    //// GETTING PAGE: BIILING TRANSACTION VIEW PAGE
+    public BillingTransactionViewPage BillingTransactionView(){
+        return GetPage(BillingTransactionViewPage.class);
     }
 }
