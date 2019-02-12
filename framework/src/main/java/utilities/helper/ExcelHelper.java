@@ -12,6 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -257,14 +258,23 @@ public class ExcelHelper {
      * @since 2019-01-30
      */
     public void setCellValue(int rowIndex, int colIndex, String value) {
-        XSSFRow row = getExcelSheet().getRow(rowIndex);
-        XSSFCell cell = row.getCell(colIndex);
+       try {
+           XSSFRow row = getExcelSheet().getRow(rowIndex);
+           XSSFCell cell = row.getCell(colIndex);
 
-        Log.info("Setting Cell Data...");
-        if (null != cell)
-            cell.setCellValue(value);
-        else
-            row.createCell(colIndex).setCellValue(value);
+           Log.info("Setting Cell Data...");
+           if (null != cell)
+               cell.setCellValue(value);
+           else
+               row.createCell(colIndex).setCellValue(value);
+           FileOutputStream fileOut = new FileOutputStream(filePath);
+
+           excelWorkBook.write(fileOut);
+           fileOut.flush();
+           fileOut.close();
+       }catch (IOException e){
+           e.printStackTrace();
+       }
     }
 
     public int getCellIndexByText(String text) {
