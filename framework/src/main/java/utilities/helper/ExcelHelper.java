@@ -71,7 +71,7 @@ public class ExcelHelper {
      */
     public void openFile() {
         try {
-            Log.info("Opening the data file");
+            Log.info("Opening the data file:" + filePath);
             excelFile = new FileInputStream(filePath);
             Log.info("Getting Excel File");
             excelWorkBook = new XSSFWorkbook(excelFile);
@@ -135,6 +135,10 @@ public class ExcelHelper {
 
     public int getNumberOfRow() {
         return getExcelSheet().getPhysicalNumberOfRows();
+    }
+
+    public int getNumberOfCol() {
+        return getExcelSheet().getRow(0).getPhysicalNumberOfCells();
     }
 
     /**
@@ -258,23 +262,23 @@ public class ExcelHelper {
      * @since 2019-01-30
      */
     public void setCellValue(int rowIndex, int colIndex, String value) {
-       try {
-           XSSFRow row = getExcelSheet().getRow(rowIndex);
-           XSSFCell cell = row.getCell(colIndex);
+        try {
+            XSSFRow row = getExcelSheet().getRow(rowIndex);
+            XSSFCell cell = row.getCell(colIndex);
 
-           Log.info("Setting Cell Data...");
-           if (null != cell)
-               cell.setCellValue(value);
-           else
-               row.createCell(colIndex).setCellValue(value);
-           FileOutputStream fileOut = new FileOutputStream(filePath);
+            Log.info("Setting Cell Data...");
+            if (null != cell)
+                cell.setCellValue(value);
+            else
+                row.createCell(colIndex).setCellValue(value);
+            FileOutputStream fileOut = new FileOutputStream(filePath);
 
-           excelWorkBook.write(fileOut);
-           fileOut.flush();
-           fileOut.close();
-       }catch (IOException e){
-           e.printStackTrace();
-       }
+            excelWorkBook.write(fileOut);
+            fileOut.flush();
+            fileOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public int getCellIndexByText(String text) {
@@ -299,5 +303,24 @@ public class ExcelHelper {
             System.out.println("No cell is found in header");
         }
         return cellIndex;
+    }
+
+    public Object[][] getTableArray() {
+        String[][] tabArray = null;
+        int startRow = 1;
+        int startCol = 0;
+        int ci, cj;
+        int totalRows = getNumberOfRow();
+        int totalCols = getNumberOfCol();
+        tabArray = new String[totalRows-1][totalCols];
+        ci = 0;
+        for (int i = startRow; i < totalRows; i++, ci++) {
+            cj = 0;
+            for (int j = startCol; j < totalCols; j++, cj++) {
+                tabArray[ci][cj] = getCellData(i, j);
+                System.out.println(tabArray[ci][cj]);
+            }
+        }
+        return (tabArray);
     }
 }

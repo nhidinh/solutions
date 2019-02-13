@@ -18,6 +18,11 @@ public class DataFilePathHandler {
     public static String PORTAL_DATA_SHEET_NAME = "EnrollmentNumber";
     public static String PORTAL_DATA_TEST_PATH = DATA_DIRECTORY_PATH+PORTAL_DATA_FILE_NAME;
 
+    public static String PORTAL_DATA_TEST_RESULT_FILE_NAME = "PortalDataTest.xlsx";
+    public static String PORTAL_DATA_TEST_RESULT_SHEET_NAME = "Result";
+    public static String PORTAL_DATA_TEST_RESULT_PATH = DATA_DIRECTORY_PATH+PORTAL_DATA_TEST_RESULT_FILE_NAME;
+
+
     public static String CREATE_CANCEL_REBILL_FILE_NAME = "Create Cancel Rebill - Filled In Template.xlsx";
     public static String CREATE_CANCEL_REBILL_SHEET_NAME = "Create Cancel Rebill";
     public static String CREATE_CANCEL_REBILL_PATH = DATA_DIRECTORY_PATH+CREATE_CANCEL_REBILL_FILE_NAME;

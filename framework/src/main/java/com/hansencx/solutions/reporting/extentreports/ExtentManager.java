@@ -90,7 +90,6 @@ public class ExtentManager {
      */
 
     public static void createTest(String testDescription){
-        System.out.println(" create test " + parentTest.get());
         child = parentTest.get().createNode(testDescription);
         test.set(child);
     }
