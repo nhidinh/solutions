@@ -1,10 +1,14 @@
 package com.hansencx.solutions.portal.pages;
 
 import com.hansencx.solutions.core.BasePage;
+import com.hansencx.solutions.logger.Log;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import utilities.helper.FailureHandling;
+import utilities.helper.SoftAssert;
+
 
 public class BillingTransactionViewPage extends BasePage {
 
@@ -24,9 +28,6 @@ public class BillingTransactionViewPage extends BasePage {
     @FindBy(xpath = "//*[@id=\"_ctl0__ctl0_BodyMaster\"]/div[8]//span[.='Process']")
     private WebElement processAbandonButton;
 
-    //Message - No Error Exist
-    @FindBy(xpath = "//span[contains(@id, 'lblNoErrorsExist')]")
-    private WebElement lblMessageNoError;
 
     public void setCommentAbandonBox(){
         setText(commentAbandon,"QA Automation Test");
@@ -47,11 +48,15 @@ public class BillingTransactionViewPage extends BasePage {
         waitForPageLoad();
     }
 
-    public void validateTransactionIsSuccessful(){
-        try {
-            verifyElementPresent(lblMessageNoError);
-        }catch (AssertionError e){
-            FailureHandling.continueAtFailedTestCase(e,"Validate Transaction Is Successfully");
+    public boolean validateTransactionIsSuccessful() {
+        boolean flag = false;
+        By noError = By.xpath("//span[contains(@id,'lblNoErrorsExist')]");
+        try{
+            flag = driver.findElement(noError).isDisplayed();
+        }catch (NoSuchElementException e){
+            Log.info("ValidateTransactionIsSuccessful get NoSuchElementException " + e);
         }
+        return flag;
     }
+
 }

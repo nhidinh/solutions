@@ -2,6 +2,7 @@ package com.hansencx.solutions.database;
 
 import oracle.jdbc.driver.OracleDriver;
 import org.testng.Assert;
+import utilities.helper.SoftAssert;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ public class DatabaseHelper {
     private Connection connection = null;
     private Statement statement = null;
     private ResultSet resultSet = null;
+
+    SoftAssert softAssert;
 
     /**
      * Getters and Setters
@@ -130,10 +133,40 @@ public class DatabaseHelper {
      * @see
      * @since 2019-01-28
      */
-    public void checkResult(String observedResult, String expectedResult) {
+    public void checkResultByAssert(String observedResult, String expectedResult) {
         Assert.assertEquals(observedResult, expectedResult);
     }
+    /**
+     * get soft assert obj
+     *
+     * @param softAssert
+     * @author HuonG trINH
+     * @see
+     * @since 2019-02-11
+     */
+    public void getSoftAssertObj(SoftAssert softAssert){
+        this.softAssert = softAssert;
+    }
+    /**
+     * check result by soft assert
+     *
+     * @param observedResult , expectedResult
+     * @return Pass if observedResult = expectedResult, otherwise, fail
+     * @author HuonG trINH
+     * @see
+     * @since 2019-02-11
+     */
+    public void checkResultBySoftAssert(String observedResult, String expectedResult) {
+        softAssert.assertEquals(observedResult, expectedResult, "SQL Query Validation: ");
+    }
 
+    public void checkResultBySoftAssertWithMsg(String observedResult, String expectedResult, String messageContainSQLKeyWord) {
+        if(messageContainSQLKeyWord.toUpperCase().contains("SQL")) {
+            softAssert.assertEquals(observedResult, expectedResult, messageContainSQLKeyWord);
+        }else{
+            softAssert.assertEquals(observedResult, expectedResult, "SQL Query Validation: " +messageContainSQLKeyWord );
+        }
+    }
     /**
      * close the connection to database.
      *

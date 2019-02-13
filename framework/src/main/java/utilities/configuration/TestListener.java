@@ -11,8 +11,10 @@ import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 import utilities.helper.FileHelper;
+import utilities.helper.SoftAssert;
 import utilities.helper.screenshot.ScreenCaptor;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,25 +78,33 @@ public class TestListener implements ITestListener {
      */
     @Override
     public synchronized void onTestFailure(ITestResult result) {
+        MediaEntityModelProvider mediaModel = null;
         message = setMessage("FAILED", methodDes);
         test.get().fail(message);
-        try {
-            ITestContext context = result.getTestContext();
-            driver = (WebDriver) context.getAttribute("driver");
+        String location = separatorsToSystem(ExtentManager.getReportDirectory() + "\\FailedTestsScreenshots\\");
+        SoftAssert softAssert = new SoftAssert();
 
-            String screenshotName = result.getName() + "_" + InitialData.TIMESTAMP;
-            String screenshotDirectory = separatorsToSystem(ExtentManager.getReportDirectory() + "\\FailedTestsScreenshots\\");
-            FileHelper.createDirectory(screenshotDirectory);
-            String encodedScreenshot = ScreenCaptor.takeFullScreenshot(driver, screenshotName, screenshotDirectory);
-
-            MediaEntityModelProvider mediaModel = MediaEntityBuilder.createScreenCaptureFromBase64String(encodedScreenshot).build();
-            test.get().fail("image:", mediaModel);
-        } catch (IOException e) {
-            Log.error(e.getMessage());
+        StringBuilder noScreenshotErrorMsg = new StringBuilder(softAssert.getNoScreenshotErrorMessage());
+        List<String>  screenshotNameList = softAssert.getScreenshotNameList();
+        if(noScreenshotErrorMsg.length() != 0) {
+            String[] singleMsg = noScreenshotErrorMsg.toString().split("#");
+            for(String str : singleMsg) {
+                test.get().fail(str);
+            }
         }
-        Throwable error = result.getThrowable();
-        test.get().fail(error.getMessage());
-        Log.error(error.toString());
+
+        if(!screenshotNameList.isEmpty()){
+            for(String name: screenshotNameList){
+                String destination = location + name +".png";
+                String encodedScreenshot = ScreenCaptor.encodedFile(new File(destination));
+                try {
+                    mediaModel = MediaEntityBuilder.createScreenCaptureFromBase64String(encodedScreenshot).build();
+                } catch (IOException e) {
+                    Log.error(e.getMessage());
+                }
+                test.get().fail(softAssert.getErrorMessage().get(name).toString().replace("#",""), mediaModel);
+            }
+        }
 
         //Huong: currently list out failed method name in JIRA Issue, can be changed
         failIDList.add(result.getMethod().getMethodName());
