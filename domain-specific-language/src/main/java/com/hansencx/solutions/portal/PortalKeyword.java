@@ -84,7 +84,7 @@ public class PortalKeyword extends BaseKeyword {
 
         //Cancel billing
         dictionary.put("execute query", () -> executeQuery(""));
-        dictionary.put("check value", () -> databaseHelper.checkResult(evaluator.evaluate(listParameters.get(0)).getStringValue(), excelHelper.getCellValue(listParameters.get(1))));
+        dictionary.put("check value", () -> databaseHelper.checkResultByAssert(evaluator.evaluate(listParameters.get(0)).getStringValue(), excelHelper.getCellValue(listParameters.get(1))));
 
         if (dictionary.containsKey(keyword.toLowerCase())) {
             if (keyword.toLowerCase().equals("execute query")) {

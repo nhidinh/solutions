@@ -111,12 +111,12 @@ public class CancelRebillTests extends PortalBaseTest{
 
         //STEP 2.s.	View the service center processed successfully by going back to the service center History screen:
         Page.TopNavigation().clickLogoutButton();
-//        Page.Login().goTo();
-//        Page.Login().logonWithEncodedCredential("QAREQUESTER", "NC9CHQEUETUSBxwFXg==");
-//
-//        Page.LeftNavigation().clickServiceCenterHistoryMenu();
-//        Page.WaitMessageDialog().waitForMessageDismiss();
-//        Page.ServiceCenterHistory().verifyStatusIsApproved(createdTime);
+        Page.Login().goTo();
+        Page.Login().logonWithEncodedCredential("QAREQUESTER", "NC9CHQEUETUSBxwFXg==");
+
+        Page.LeftNavigation().clickServiceCenterHistoryMenu();
+        Page.WaitMessageDialog().waitForMessageDismiss();
+        Page.ServiceCenterHistory().verifyStatusIsApproved(createdTime);
         System.out.println("tranId: "+listTransactionID.toString());
         if(!listTransactionID.isEmpty()) {
             for (String tranID : listTransactionID) {
@@ -333,8 +333,12 @@ public class CancelRebillTests extends PortalBaseTest{
         return false;
     }
     private List<String> querySpecifiedInfoList(String label,String tranID){
-        String infoList = "select "+ label + " from custpro.cpm_pnd_tran_hdr where ky_enroll in(select ky_enroll " +
-                "from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans =" + tranID +" ) and cd_tran_status=28";
+        String infoList = "select "+label+" from custpro.cpm_pnd_tran_hdr NEW" +
+                " where NEW.ky_enroll in(select OLD.ky_enroll from custpro.cpm_pnd_tran_hdr OLD " +
+                "where OLD.ky_pnd_seq_trans =" + tranID +
+                "and OLD.DT_PERIOD_START = NEW.DT_PERIOD_START " +
+                "and OLD.DT_PERIOD_END = NEW.DT_PERIOD_END) " +
+                "and NEW.cd_tran_status = 28";
         return db.executeQueryReturnString(infoList);
     }
 
