@@ -1,16 +1,14 @@
 package com.hansencx.solutions.core;
 
 import com.aventstack.extentreports.ExtentReports;
+import com.hansencx.solutions.logger.Log;
 import com.hansencx.solutions.reporting.extentreports.ExtentManager;
-import utilities.configuration.DriverConfiguration;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.annotations.*;
-import com.hansencx.solutions.logger.Log;
-import utilities.configuration.TestListener;
+import utilities.configuration.DriverConfiguration;
 import utilities.configuration.driver.DriverType;
 import utilities.helper.Browser;
-import utilities.helper.JiraHelper;
 
 import java.net.MalformedURLException;
 
@@ -36,13 +34,14 @@ public class BaseTest {
 
     @BeforeSuite(description = "Setting Report Before Suite")
     public void settingReportBeforeSuite(ITestContext iTestContext){
+        Log.startLog();
         extent = ExtentManager.getInstance();
         String suiteName = iTestContext.getCurrentXmlTest().getSuite().getName();
         ExtentManager.createRootNode(extent, suiteName);
     }
 
     @Parameters({"browser","mode"})
-    @BeforeTest (description = "Set Up Browser")
+    @BeforeMethod (description = "Set Up Browser")
     public void setUp(final DriverType browser, final String mode, ITestContext testContext){
         if(mode.equals("NonRemote")){
             Browser.setup(browser, testContext);
@@ -72,7 +71,7 @@ public class BaseTest {
      * @since 2018-12-03
      * @see ITestContext
      */
-    @AfterTest (description = "Clean Session")
+    @AfterMethod (description = "Clean Session")
     public synchronized void clean(ITestContext testContext){
         extent.flush();
         String testCaseName = testContext.getName();
