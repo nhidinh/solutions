@@ -5,9 +5,15 @@ import com.hansencx.solutions.database.DatabaseHelper;
 import com.hansencx.solutions.portal.PortalBaseTest;
 import com.hansencx.solutions.portal.pages.LoginPage;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+//import org.testng.asserts.SoftAssert;
 import utilities.configuration.InitialData;
+import utilities.helper.SoftAssert;
+
+import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,18 +21,28 @@ import java.util.List;
 
 public class CancelRebillTests extends PortalBaseTest{
 
-    String importedFilePath;
-    static ArrayList<String> listTransactionID = new ArrayList<String>();
+    private String importedFilePath;
+    private static ArrayList<String> listTransactionID = new ArrayList<String>();
+    private SoftAssert softAssert ;
     private DatabaseHelper db;
     private String cancelTransId = null;
-    private String originalTransId = null;
+    private String rebilledTransId = null;
     private ResultSet resultSet;
+    String methodname = null;
 
     @BeforeTest
     public void setupDataBeforeTest(){
+
         importedFilePath = InitialData.PARENT_DIR + "\\regression-tests\\src\\test\\java\\com\\hansencx\\portal\\datatest\\Create Cancel Rebill - Filled In Template.xlsx";
         db = new DatabaseHelper();
         db.createConnection("PSOLQ");
+
+
+    }
+    @BeforeMethod
+    public void setupbeforemethod(Method method){
+        methodname = method.getName();
+        softAssert = new SoftAssert(getDriver(), methodname );
     }
     @Test
     public void testCreateCancelRebill(){
@@ -71,7 +87,7 @@ public class CancelRebillTests extends PortalBaseTest{
         System.out.println("Created Time: " + createdTime);
         Page.ServiceCenterHistory().verifyStatusIsWaitingForApproval(createdTime);
         Page.ServiceCenterHistory().selectCreatedRecordByCreatedTime(createdTime);
-        Page.ServiceCenterHistoryDetails().verifyTheTransactionIDIsCorrect(listTransactionID);
+//        Page.ServiceCenterHistoryDetails().verifyTheTransactionIDIsCorrect(listTransactionID);
 
         //STEP 2.o.	User will request another person to go the Approvals screen and approve the pending service center so it is processed.
         Page.TopNavigation().clickLogoutButton();
@@ -95,175 +111,186 @@ public class CancelRebillTests extends PortalBaseTest{
 
         //STEP 2.s.	View the service center processed successfully by going back to the service center History screen:
         Page.TopNavigation().clickLogoutButton();
-        Page.Login().goTo();
-        Page.Login().logonWithEncodedCredential("QAREQUESTER", "NC9CHQEUETUSBxwFXg==");
-
-        Page.LeftNavigation().clickServiceCenterHistoryMenu();
-        Page.WaitMessageDialog().waitForMessageDismiss();
-        Page.ServiceCenterHistory().verifyStatusIsApproved(createdTime);
+//        Page.Login().goTo();
+//        Page.Login().logonWithEncodedCredential("QAREQUESTER", "NC9CHQEUETUSBxwFXg==");
+//
+//        Page.LeftNavigation().clickServiceCenterHistoryMenu();
+//        Page.WaitMessageDialog().waitForMessageDismiss();
+//        Page.ServiceCenterHistory().verifyStatusIsApproved(createdTime);
+        System.out.println("tranId: "+listTransactionID.toString());
         if(!listTransactionID.isEmpty()) {
             for (String tranID : listTransactionID) {
+                System.out.println("tranId: "+ tranID);
                 validateTransactionCancelRebill(tranID);
             }
         }
-
+        softAssert.assertAll();
     }
-    public void validateTransactionCancelRebill(String tranID) {
-        System.out.println("tranid: "+tranID);
+    private void validateTransactionCancelRebill(String tranID) {
+
         //Verify the result
+        db.getSoftAssertObj(softAssert);
         //1. Check that there are a pair of new trans are returned
-        String countLineQuery = "select count(ky_pnd_seq_trans) from custpro.cpm_pnd_tran_hdr NEW " +
+        String queryTotalLine = "select count(ky_pnd_seq_trans) from custpro.cpm_pnd_tran_hdr NEW " +
                 "where NEW.ky_enroll in(select OLD.ky_enroll from custpro.cpm_pnd_tran_hdr OLD " +
                 "where OLD.ky_pnd_seq_trans = " + tranID +
                 "and OLD.DT_PERIOD_START = NEW.DT_PERIOD_START " +
                 "and OLD.DT_PERIOD_END = NEW.DT_PERIOD_END) " +
                 "and NEW.cd_tran_status = 28";
-        List<String> resultsCountLine = db.executeQueryReturnString(countLineQuery);
+        String numberOfCreatedTransactions = db.executeQueryReturnString(queryTotalLine).get(0);
+        db.checkResultBySoftAssert(numberOfCreatedTransactions,"2");
 
-        Assert.assertEquals(resultsCountLine.get(0), "2");
-
-        /**  2. verify that two rounds are returned with value following pair of value (00, 01) or (17,18)
+        /*  2. verify that two rounds are returned with value following pair of value (00, 01) or (17,18)
          3. verify that KY_BA, ID_TRANS_REF_NUM_867, ID_TRANS_REF_NUM_810 are the same for process, origin and cancel
          **/
-        String inputQueryNew = "select CD_PURPOSE from custpro.cpm_pnd_tran_hdr NEW " +
+        String queryCdPurposeList = "select CD_PURPOSE from custpro.cpm_pnd_tran_hdr NEW " +
                 "where NEW.ky_enroll in(select OLD.ky_enroll from custpro.cpm_pnd_tran_hdr OLD " +
                 "where OLD.ky_pnd_seq_trans = " + tranID +
                 "and OLD.DT_PERIOD_START = NEW.DT_PERIOD_START " +
                 "and OLD.DT_PERIOD_END = NEW.DT_PERIOD_END) " +
                 "and NEW.cd_tran_status = 28";
 
-        List<String> rsNewCDPurpose = db.executeQueryReturnString(inputQueryNew);
+        List<String> cdPurposeList = db.executeQueryReturnString(queryCdPurposeList);
 
         // process
-        String ky_ba_ProcessedTran = querySpecificInfoInProcessedTrans("KY_BA", tranID);
-        String id_trans_ref_867_ProcessedTran = querySpecificInfoInProcessedTrans("ID_TRANS_REF_NUM_867", tranID);
-        String id_trans_ref_810_ProcessedTran = querySpecificInfoInProcessedTrans("ID_TRANS_REF_NUM_810", tranID);
+        String kyBAProcessedTran = queryInfoInProcessedTrans("KY_BA", tranID);
+        String idTransRef867ProcessedTran = queryInfoInProcessedTrans("ID_TRANS_REF_NUM_867",tranID);
+        String idTransRef810ProcessedTran = queryInfoInProcessedTrans("ID_TRANS_REF_NUM_810", tranID);
         // cd_purpose = 00: origin
-        String ky_ba_New00 = querySpecificInfoFollowingKyEnroll("KY_BA", tranID, "00");
-        String id_trans_ref_867_New00 = querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_867", tranID, "00");
-        String id_trans_ref_810_New00 = querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_810", tranID, "00");
+        String kyBARebilled00 = querySpecifiedInfoInCreatedTrans("KY_BA", "00",tranID);
+        String idTransRef867Rebilled00 = querySpecifiedInfoInCreatedTrans("ID_TRANS_REF_NUM_867", "00",tranID);
+        String idTransRef810Rebilled00 = querySpecifiedInfoInCreatedTrans("ID_TRANS_REF_NUM_810", "00",tranID);
         // cd_purpose = 01: cancel
-        String ky_ba_New01 = querySpecificInfoFollowingKyEnroll("KY_BA", tranID, "01");
-        String id_trans_ref_867_New01 = querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_867", tranID, "01");
-        String id_trans_ref_810_New01 = querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_810", tranID, "01");
+        String kyBACancel01 = querySpecifiedInfoInCreatedTrans("KY_BA", "01",tranID);
+        String idTransRef867Cancel01 = querySpecifiedInfoInCreatedTrans("ID_TRANS_REF_NUM_867", "01",tranID);
+        String idTransRef810Cancel01 = querySpecifiedInfoInCreatedTrans("ID_TRANS_REF_NUM_810", "01",tranID);
 
         // cd_purpose = 17: origin
-        String ky_ba_New17 = querySpecificInfoFollowingKyEnroll("KY_BA", tranID, "17");
-        String id_trans_ref_867_New17 = querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_867", tranID, "17");
-        String id_trans_ref_810_New17 = querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_810", tranID, "17");
+        String kyBARebilled17 = querySpecifiedInfoInCreatedTrans("KY_BA", "17",tranID);
+        String idTransRef867Rebilled17 = querySpecifiedInfoInCreatedTrans("ID_TRANS_REF_NUM_867", "17",tranID);
+        String idTransRef810Rebilled17 = querySpecifiedInfoInCreatedTrans("ID_TRANS_REF_NUM_810", "17",tranID);
         // cd_purpose = 18: cancel
-        String ky_ba_New18 = querySpecificInfoFollowingKyEnroll("KY_BA", tranID, "18");
-        String id_trans_ref_867_New18 = querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_867", tranID, "18");
-        String id_trans_ref_810_New18 = querySpecificInfoFollowingKyEnroll("ID_TRANS_REF_NUM_810", tranID, "18");
+        String kyBACancel18 = querySpecifiedInfoInCreatedTrans("KY_BA", "18",tranID);
+        String idTransRef867Cancel18 = querySpecifiedInfoInCreatedTrans("ID_TRANS_REF_NUM_867", "18",tranID);
+        String idTransRef810Cancel18 = querySpecifiedInfoInCreatedTrans("ID_TRANS_REF_NUM_810", "18",tranID);
 
-        if (rsNewCDPurpose.contains("01") && rsNewCDPurpose.contains("00")) {
+        if (cdPurposeList.contains("01") && cdPurposeList.contains("00")) {
             //verify for appearance of 00 and 01
-            Assert.assertEquals(rsNewCDPurpose.get(0), "01");
-            Assert.assertEquals(rsNewCDPurpose.get(1), "00");
+           db.checkResultBySoftAssertWithMsg(cdPurposeList.get(0), "01","Appearance of CD_Purpose 01: ");
+           db.checkResultBySoftAssertWithMsg(cdPurposeList.get(1), "00","Appearance of CD_Purpose 00: ");
 
             //verify for content cd_purpose = 00 against processed trans
-            Assert.assertEquals(ky_ba_ProcessedTran, ky_ba_New00);
-            Assert.assertEquals(id_trans_ref_867_ProcessedTran, id_trans_ref_867_New00);
-            Assert.assertEquals(id_trans_ref_810_ProcessedTran, id_trans_ref_810_New00);
+           db.checkResultBySoftAssert(kyBAProcessedTran, kyBARebilled00);
+           db.checkResultBySoftAssert(idTransRef867ProcessedTran, idTransRef867Rebilled00);
+           db.checkResultBySoftAssert(idTransRef810ProcessedTran, idTransRef810Rebilled00);
 
             //verify for content cd_purpose = 01 against processed trans
-            Assert.assertEquals(ky_ba_ProcessedTran, ky_ba_New01);
-            Assert.assertEquals(id_trans_ref_867_ProcessedTran, id_trans_ref_867_New01);
-            Assert.assertEquals(id_trans_ref_810_ProcessedTran, id_trans_ref_810_New01);
+           db.checkResultBySoftAssert(kyBAProcessedTran, kyBACancel01);
+           db.checkResultBySoftAssert(idTransRef867ProcessedTran, idTransRef867Cancel01);
+           db.checkResultBySoftAssert(idTransRef810ProcessedTran, idTransRef810Cancel01);
             // store cancel & original id
             cancelTransId = "01";
-            originalTransId = "00";
+            rebilledTransId = "00";
 
-        } else if (rsNewCDPurpose.contains("17") && rsNewCDPurpose.contains("18")) {
+        } else if (cdPurposeList.contains("17") && cdPurposeList.contains("18")) {
             //verify for appearance of 17 and 18
-            Assert.assertEquals(rsNewCDPurpose.get(0), "17");
-            Assert.assertEquals(rsNewCDPurpose.get(1), "18");
+           db.checkResultBySoftAssertWithMsg(cdPurposeList.get(0), "17","Appearance of CD_Purpose 17: ");
+           db.checkResultBySoftAssertWithMsg(cdPurposeList.get(1), "18", "Appearance of CD_Purpose 18: ");
 
             //verify for content cd_purpose = 17 against processed trans
-            Assert.assertEquals(ky_ba_ProcessedTran, ky_ba_New17);
-            Assert.assertEquals(id_trans_ref_867_ProcessedTran, id_trans_ref_867_New17);
-            Assert.assertEquals(id_trans_ref_810_ProcessedTran, id_trans_ref_810_New17);
+           db.checkResultBySoftAssert(kyBAProcessedTran, kyBARebilled17);
+           db.checkResultBySoftAssert(idTransRef867ProcessedTran, idTransRef867Rebilled17);
+           db.checkResultBySoftAssert(idTransRef810ProcessedTran, idTransRef810Rebilled17);
 
             //verify for content cd_purpose = 18 against processed trans
-            Assert.assertEquals(ky_ba_ProcessedTran, ky_ba_New18);
-            Assert.assertEquals(id_trans_ref_867_ProcessedTran, id_trans_ref_867_New18);
-            Assert.assertEquals(id_trans_ref_810_ProcessedTran, id_trans_ref_810_New18);
+           db.checkResultBySoftAssert(kyBAProcessedTran, kyBACancel18);
+           db.checkResultBySoftAssert(idTransRef867ProcessedTran, idTransRef867Cancel18);
+           db.checkResultBySoftAssert(idTransRef810ProcessedTran, idTransRef810Cancel18);
 
             // store cancel & original id
             cancelTransId = "17";
-            originalTransId = "18";
+            rebilledTransId = "18";
         } else {
             Assert.fail("Wrong output of cd_purpose: no valid value !");
         }
         //step 4:
-        //1. get ky_enroll, ky_supplier
-        String queryEnroll = "select ky_enroll from custpro.cpm_pnd_tran_hdr where ky_enroll in(select ky_enroll " +
-                "from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans =" + tranID +" )";
-        String kyEnroll0 = db.executeQueryReturnString(queryEnroll).get(0);
-        String kyEnroll1 = db.executeQueryReturnString(queryEnroll).get(1);
-        //validate whether ky_enroll is the same
-        Boolean enrollCheckFlag = kyEnroll0.equals(kyEnroll1);
-        Assert.assertEquals(kyEnroll0,kyEnroll1);
 
-        String querySupplier = "select ky_supplier from custpro.cpm_pnd_tran_hdr where ky_enroll in(select ky_enroll " +
-                "from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans =" + tranID +" )";
-        String kySupplier0 = db.executeQueryReturnString(querySupplier).get(0);
-        String kySupplier1 = db.executeQueryReturnString(querySupplier).get(1);
-        //validate whether KY_SUPPLIER is the same
-        Boolean supplierCheckFlag = kySupplier0.equals(kySupplier1);
-        Assert.assertEquals(kySupplier0,kySupplier1);
-        //2. log in PORTAL with acc : generic
+        //1. log in PORTAL with acc : generic
         LoginPage loginPage = Page.Login().goTo();
         loginPage.logonWithEncodedCredential("QAGENERIC", "NC9CCAELASIIEEI=");
 
-        //3. Search for ky_enroll
+        //2. Search for ky_enroll
         Page.TopNavigation().clickSearchButton();
-        if(enrollCheckFlag.equals(true) && supplierCheckFlag.equals(true)) {
-            Page.Search().selectSupplierByKySupplier(kySupplier0);
-            Page.Search().searchByEnrollmentNumberWithFilter("equals", kyEnroll0);
+
+        Boolean enrollMatchingFlag = enrollMatchingFlag(tranID);
+        Boolean supplierMatchingFlag = supplierMatchingFlag(tranID);
+        String kyEnroll = querySpecifiedInfoList("KY_ENROLL",tranID).get(0);
+        String kySupplier = querySpecifiedInfoList("KY_SUPPLIER",tranID).get(0);
+
+        if(enrollMatchingFlag.equals(true) && supplierMatchingFlag.equals(true)) {
+            Page.Search().selectSupplierByKySupplier(kySupplier);
+            Page.Search().searchByEnrollmentNumberWithFilter("equals",kyEnroll);
             Page.Search().clickSearchButton();
         }else
         {
             Assert.fail("Ky_enroll/ky_supplier is diffeent between cancel and original transaction ! " +
-                    "\n enrollCheckFlag: " + enrollCheckFlag + "\n supplierCheckFlag: " + supplierCheckFlag);
+                    "\n enrollCheckFlag: " + enrollMatchingFlag + "\n supplierCheckFlag: " + supplierMatchingFlag);
         }
 
         //4. choose billing transaction interface view
         Page.SearchResult().selectViewFromEnrollment("Billing Transaction Interface");
 
-        /** 5. click on cancel and original trans
+        /* 5. click on cancel and original trans
          6. Click on validate button and verify no error
          NOTE: Validation should perform for Cancel first because of the order processing in Billing run,
          it should be cancel firstly to have original trans
          **/
-        String kyPndSeqCancelTransNumber = querySpecificInfoFollowingKyEnroll("KY_PND_SEQ_TRANS", tranID, cancelTransId);
-        String kyPndSeqOriginalTransNumber = querySpecificInfoFollowingKyEnroll("KY_PND_SEQ_TRANS", tranID, originalTransId);
-        System.out.println("kyPndSeqCancelTransNumber: "+ kyPndSeqCancelTransNumber);
-        System.out.println("kyPndSeqOriginalTransNumber: "+ kyPndSeqOriginalTransNumber);
-        Page.BillingTransactionList().clickOnTransText(kyPndSeqCancelTransNumber);
+        String kyPndSeqNumberOfCancel = querySpecifiedInfoInCreatedTrans("KY_PND_SEQ_TRANS", cancelTransId,tranID);
+        String kyPndSeqNumberOfRebilled = querySpecifiedInfoInCreatedTrans("KY_PND_SEQ_TRANS", rebilledTransId,tranID);
+        Page.BillingTransactionList().clickOnTransText(kyPndSeqNumberOfCancel);
         Page.BillingTransactionView().clickOnValidateButton();
-        Page.BillingTransactionView().validateTransactionIsSuccessful();
+        verifyBooleanResultBySoftAssert(Page.BillingTransactionView().validateTransactionIsSuccessful(),true,
+                "Transaction "+ tranID +" Cancel transaction validation: ");
 
         //verify status code in database after validation, should be 65 as sucessful validation
-        String queryInputCancel = "select cd_tran_status from custpro.cpm_pnd_tran_hdr where ky_enroll ="
-                + kyEnroll0 + " and ky_pnd_seq_trans =" + kyPndSeqCancelTransNumber;
-        String cdTranStatusCodeOfCancel = db.returnQueriedStringField(queryInputCancel);
-        Assert.assertEquals(cdTranStatusCodeOfCancel,"65");
+        String cdTranStatusCodeOfCancel = queryStatusCodeOfCancel(kyEnroll, kyPndSeqNumberOfCancel);
+       db.checkResultBySoftAssertWithMsg(cdTranStatusCodeOfCancel,"65",
+               "Transaction "+ tranID + " SQL validation: Cancel's transaction status code ");
 
         Page.BillingTransactionView().clickOnBackBillingTransList();
 
-        Page.BillingTransactionList().clickOnTransText(kyPndSeqOriginalTransNumber);
+        Page.BillingTransactionList().clickOnTransText(kyPndSeqNumberOfRebilled);
         Page.BillingTransactionView().clickOnValidateButton();
-        Page.BillingTransactionView().validateTransactionIsSuccessful();
+
+        verifyBooleanResultBySoftAssert(Page.BillingTransactionView().validateTransactionIsSuccessful(),true,
+                "Transaction "+ tranID + " Rebilled transaction validation: ");
+
         Page.BillingTransactionView().clickOnBackBillingTransList();
 
         //verify status code in database after validation, should be 65 as sucessful validation
-        String queryInputOriginal = "select cd_tran_status from custpro.cpm_pnd_tran_hdr where ky_enroll ="
-                + kyEnroll0 +" and ky_pnd_seq_trans =" + kyPndSeqOriginalTransNumber;
-        String cdTranStatusCodeOfOriginal = db.returnQueriedStringField(queryInputOriginal);
-        Assert.assertEquals(cdTranStatusCodeOfOriginal,"65");
+        String cdStatusCodeOfRebilled = queryStatusCodeOfCancel(kyEnroll,kyPndSeqNumberOfRebilled);
+        db.checkResultBySoftAssertWithMsg(cdStatusCodeOfRebilled,"65",
+                "Transaction "+ tranID +" SQL validation: Rebilled's transaction status code ");
+
+
     }
-    private String querySpecificInfoFollowingKyEnroll(String queryLabel, String tranID, String purposeCode){
+    private void verifyBooleanResultBySoftAssert(boolean checkedValue, boolean expectedValue, String explainMsg){
+        softAssert.assertEquals(checkedValue,expectedValue, explainMsg);
+    }
+    private String queryInfoInProcessedTrans(String queryLabel, String tranID){
+        String outputString = null;
+        String queryInput = "select "+ queryLabel + " from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans ="+ tranID;
+        try {
+            resultSet = db.getStatement().executeQuery(queryInput);
+            while(resultSet.next()){
+                outputString = resultSet.getString(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return outputString;
+    }
+    private String querySpecifiedInfoInCreatedTrans(String queryLabel, String purposeCode, String tranID){
         String outputString = null;
         String queryInput = "select " + queryLabel + " from custpro.cpm_pnd_tran_hdr NEW " +
                 "where NEW.ky_enroll in(select OLD.ky_enroll from custpro.cpm_pnd_tran_hdr OLD " +
@@ -282,19 +309,33 @@ public class CancelRebillTests extends PortalBaseTest{
         }
         return outputString;
     }
-
-    private String querySpecificInfoInProcessedTrans(String queryLabel, String tranID){
-        String outputString = null;
-        String queryInput = "select "+ queryLabel + " from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans ="+ tranID;
-        try {
-            resultSet = db.getStatement().executeQuery(queryInput);
-            while(resultSet.next()){
-                outputString = resultSet.getString(1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    private String queryStatusCodeOfCancel(String kyEnroll, String kyPndSeqNumberOfCancel){
+        String queryInputCancel = "select cd_tran_status from custpro.cpm_pnd_tran_hdr where ky_enroll ="
+                + kyEnroll + " and ky_pnd_seq_trans =" + kyPndSeqNumberOfCancel;
+        return db.returnQueriedStringField(queryInputCancel);
+    }
+    private Boolean enrollMatchingFlag(String tranID){
+        List<String> KYEnrollList = querySpecifiedInfoList("KY_ENROLL", tranID);
+        if(KYEnrollList.size() == 2) {
+            String kyEnroll0 = KYEnrollList.get(0);
+            String kyEnroll1 = KYEnrollList.get(1);
+            return kyEnroll0.equals(kyEnroll1);
         }
-        return outputString;
+        return false;
+    }
+    private Boolean supplierMatchingFlag(String tranID){
+        List<String> KYSupplierList = querySpecifiedInfoList("KY_SUPPLIER", tranID);
+        if(KYSupplierList.size() == 2) {
+            String kySupplier0 = KYSupplierList.get(0);
+            String kySupplier1 = KYSupplierList.get(1);
+            return kySupplier0.equals(kySupplier1);
+        }
+        return false;
+    }
+    private List<String> querySpecifiedInfoList(String label,String tranID){
+        String infoList = "select "+ label + " from custpro.cpm_pnd_tran_hdr where ky_enroll in(select ky_enroll " +
+                "from custpro.cpm_pnd_tran_hdr where ky_pnd_seq_trans =" + tranID +" ) and cd_tran_status=28";
+        return db.executeQueryReturnString(infoList);
     }
 
 }
