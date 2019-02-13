@@ -36,6 +36,7 @@ public class BaseTest {
 
     @BeforeSuite(description = "Setting Report Before Suite")
     public void settingReportBeforeSuite(ITestContext iTestContext){
+        Log.startLog();
         extent = ExtentManager.getInstance();
         String suiteName = iTestContext.getCurrentXmlTest().getSuite().getName();
         ExtentManager.createRootNode(extent, suiteName);

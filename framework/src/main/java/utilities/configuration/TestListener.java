@@ -36,7 +36,6 @@ public class TestListener implements ITestListener {
 
     @Override
     public void onStart(ITestContext iTestContext) {
-        Log.startLog();
     }
 
     @Override

@@ -1,10 +1,7 @@
 package utilities.helper;
 
 import com.hansencx.solutions.logger.Log;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellValue;
-import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -77,10 +74,7 @@ public class ExcelHelper {
             excelWorkBook = new XSSFWorkbook(excelFile);
             Log.info("Setting Excel File Sheet");
             excelSheet = getExcelWorkBook().getSheet(sheetName);
-
             FormulaEvaluator evaluator = getExcelWorkBook().getCreationHelper().createFormulaEvaluator();
-            CellValue cellValue = evaluator.evaluate(getExcelSheet().getRow(2).getCell(3));
-
             Log.info("Complete setting Excel File Sheet");
 
         } catch (Exception e) {
@@ -278,6 +272,17 @@ public class ExcelHelper {
             fileOut.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void writeExcelValue(String[] dataToWrite) {
+        Row headerRow = excelSheet.getRow(0);
+        int rowCount = excelSheet.getLastRowNum();
+        Row newRow = excelSheet.createRow(rowCount+1);
+
+        for(int i=0; i< headerRow.getLastCellNum(); i++){
+            Cell cell = newRow.createCell(i);
+            setCellValue(rowCount+1, i, dataToWrite[i]);
         }
     }
 

@@ -18,7 +18,7 @@ public class DataFilePathHandler {
     public static String PORTAL_DATA_SHEET_NAME = "EnrollmentNumber";
     public static String PORTAL_DATA_TEST_PATH = DATA_DIRECTORY_PATH+PORTAL_DATA_FILE_NAME;
 
-    public static String PORTAL_DATA_TEST_RESULT_FILE_NAME = "PortalDataTest.xlsx";
+    public static String PORTAL_DATA_TEST_RESULT_FILE_NAME = "PortalDataTestResult.xlsx";
     public static String PORTAL_DATA_TEST_RESULT_SHEET_NAME = "Result";
     public static String PORTAL_DATA_TEST_RESULT_PATH = DATA_DIRECTORY_PATH+PORTAL_DATA_TEST_RESULT_FILE_NAME;
 
