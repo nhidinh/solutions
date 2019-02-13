@@ -42,7 +42,7 @@ public class InitialData {
     //FILE PATH OF extent-config.xml file
     public static String REPORT_CONFIG_XML_FILE_PATH = PARENT_DIR + "\\framework\\src\\main\\resources\\extent-config.xml";
 
-    // This variable is to keep track of the information the test want to share beside the passs/fail
+    // This variable is to keep track of the information the test wants to share beside the pass/fail
     public static String FINISH_TEST_INFO = "";
 
     //Get current platform

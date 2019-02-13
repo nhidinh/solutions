@@ -1,10 +1,7 @@
 package utilities.helper;
 
 import com.hansencx.solutions.logger.Log;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellValue;
-import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -12,6 +9,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,16 +68,13 @@ public class ExcelHelper {
      */
     public void openFile() {
         try {
-            Log.info("Opening the data file");
+            Log.info("Opening the data file:" + filePath);
             excelFile = new FileInputStream(filePath);
             Log.info("Getting Excel File");
             excelWorkBook = new XSSFWorkbook(excelFile);
             Log.info("Setting Excel File Sheet");
             excelSheet = getExcelWorkBook().getSheet(sheetName);
-
             FormulaEvaluator evaluator = getExcelWorkBook().getCreationHelper().createFormulaEvaluator();
-            CellValue cellValue = evaluator.evaluate(getExcelSheet().getRow(2).getCell(3));
-
             Log.info("Complete setting Excel File Sheet");
 
         } catch (Exception e) {
@@ -134,6 +129,10 @@ public class ExcelHelper {
 
     public int getNumberOfRow() {
         return getExcelSheet().getPhysicalNumberOfRows();
+    }
+
+    public int getNumberOfCol() {
+        return getExcelSheet().getRow(0).getPhysicalNumberOfCells();
     }
 
     /**
@@ -257,14 +256,34 @@ public class ExcelHelper {
      * @since 2019-01-30
      */
     public void setCellValue(int rowIndex, int colIndex, String value) {
-        XSSFRow row = getExcelSheet().getRow(rowIndex);
-        XSSFCell cell = row.getCell(colIndex);
+        try {
+            XSSFRow row = getExcelSheet().getRow(rowIndex);
+            XSSFCell cell = row.getCell(colIndex);
 
-        Log.info("Setting Cell Data...");
-        if (null != cell)
-            cell.setCellValue(value);
-        else
-            row.createCell(colIndex).setCellValue(value);
+            Log.info("Setting Cell Data...");
+            if (null != cell)
+                cell.setCellValue(value);
+            else
+                row.createCell(colIndex).setCellValue(value);
+            FileOutputStream fileOut = new FileOutputStream(filePath);
+
+            excelWorkBook.write(fileOut);
+            fileOut.flush();
+            fileOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void writeExcelValue(String[] dataToWrite) {
+        Row headerRow = excelSheet.getRow(0);
+        int rowCount = excelSheet.getLastRowNum();
+        Row newRow = excelSheet.createRow(rowCount+1);
+
+        for(int i=0; i< headerRow.getLastCellNum(); i++){
+            Cell cell = newRow.createCell(i);
+            setCellValue(rowCount+1, i, dataToWrite[i]);
+        }
     }
 
     public int getCellIndexByText(String text) {
@@ -289,5 +308,24 @@ public class ExcelHelper {
             System.out.println("No cell is found in header");
         }
         return cellIndex;
+    }
+
+    public Object[][] getTableArray() {
+        String[][] tabArray = null;
+        int startRow = 1;
+        int startCol = 0;
+        int ci, cj;
+        int totalRows = getNumberOfRow();
+        int totalCols = getNumberOfCol();
+        tabArray = new String[totalRows-1][totalCols];
+        ci = 0;
+        for (int i = startRow; i < totalRows; i++, ci++) {
+            cj = 0;
+            for (int j = startCol; j < totalCols; j++, cj++) {
+                tabArray[ci][cj] = getCellData(i, j);
+                System.out.println(tabArray[ci][cj]);
+            }
+        }
+        return (tabArray);
     }
 }
