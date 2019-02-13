@@ -15,7 +15,9 @@ import utilities.helper.FailureHandling;
 
 import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * @param
@@ -27,38 +29,14 @@ import java.util.ArrayList;
 public class SearchTests extends PortalBaseTest {
     private ExcelHelper excelHelper;
     private ExcelHelper excelResult;
-    ArrayList<String> listOfTestCase = new ArrayList<String>();
+    private ArrayList<String> listOfTestCase = new ArrayList<String>();
     private String testCaseName;
-    int testCaseIndex = 0;
-
-    @Test(description = "Search by Enrollment Number With Filter 'in list' ")
-    public void searchByEnrollmentNumberInList() {
-        Page.TopNavigation().clickSearchButton();
-        Page.Search().searchByEnrollmentNumberWithFilter("in list", "1");
-        Page.Search().clickSearchButton();
-        Assert.assertEquals(Page.SearchResult().getNumberOfResult(), 2);
-    }
+    private int testCaseIndex = 0;
 
     @BeforeTest
     public void setUpTestData() throws FileNotFoundException {
         excelHelper = new ExcelHelper(DataFilePathHandler.PORTAL_DATA_TEST_PATH, DataFilePathHandler.PORTAL_DATA_SHEET_NAME);
         excelResult = new ExcelHelper(DataFilePathHandler.PORTAL_DATA_TEST_RESULT_PATH, DataFilePathHandler.PORTAL_DATA_TEST_RESULT_SHEET_NAME);
-    }
-
-    @BeforeMethod(alwaysRun = true)
-    private void setTestCaseName(ITestResult result) {
-        testCaseName = listOfTestCase.get(testCaseIndex);
-        testCaseIndex = testCaseIndex + 1;
-
-        try {
-            BaseTestMethod baseTestMethod = (BaseTestMethod) result.getMethod();
-            Field f = baseTestMethod.getClass().getSuperclass().getDeclaredField("m_description");
-            f.setAccessible(true);
-            f.set(baseTestMethod, testCaseName);
-            System.out.println("AfterMethod - testReportName");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @DataProvider
@@ -71,9 +49,27 @@ public class SearchTests extends PortalBaseTest {
         return data;
     }
 
+    @BeforeMethod(alwaysRun = true)
+    private void setTestCaseName(ITestResult result) {
+        testCaseName = listOfTestCase.get(testCaseIndex);
+        testCaseIndex = testCaseIndex + 1;
+
+        try {
+            BaseTestMethod baseTestMethod = (BaseTestMethod) result.getMethod();
+            Field f = baseTestMethod.getClass().getSuperclass().getDeclaredField("m_description");
+            f.setAccessible(true);
+            f.set(baseTestMethod, testCaseName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Test(description = "Search by Enrollment Number with Data File", dataProvider = "getData")
     public void searchByEnrollmentNumberWithDataFile(String testcaseName, String filterOption, String enrollmentNumberValue, String result) {
         int resultValue = Integer.parseInt(result);
+        String executedTime = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
+        String status;
+        String message = "";
         Page.TopNavigation().clickSearchButton();
         if (filterOption.equals("contains")) {
             Page.Search().selectSupplierByName("Talen Energy Electric");
@@ -83,9 +79,14 @@ public class SearchTests extends PortalBaseTest {
         int numberOfResult = Page.SearchResult().getNumberOfResult();
         try {
             Assert.assertEquals(numberOfResult, resultValue);
+            status = "PASSED";
         } catch (AssertionError e) {
+            status = "FAILED";
+            message = e.getMessage();
             FailureHandling.continueAtFailedTestCase(e, testcaseName);
         }
+        String[] resultData = {testcaseName, filterOption, enrollmentNumberValue, result, executedTime, status, message};
+        excelResult.writeExcelValue(resultData);
         Log.info("Complete Test case: " + testcaseName);
         System.out.println("Compete Test case: " + testcaseName);
     }
