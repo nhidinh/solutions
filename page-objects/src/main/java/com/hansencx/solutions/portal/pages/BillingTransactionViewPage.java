@@ -1,11 +1,10 @@
 package com.hansencx.solutions.portal.pages;
 
 import com.hansencx.solutions.core.BasePage;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-
+import utilities.helper.FailureHandling;
 
 public class BillingTransactionViewPage extends BasePage {
 
@@ -48,17 +47,11 @@ public class BillingTransactionViewPage extends BasePage {
         waitForPageLoad();
     }
 
-    public boolean validateTransactionIsSuccessful() {
-//        verifyElementPresent(lblMessageNoError);
-        try{
-            return lblMessageNoError.isDisplayed();
-        }catch (NoSuchElementException e){
-            System.out.println(" error fail");
-            return false;
+    public void validateTransactionIsSuccessful(){
+        try {
+            verifyElementPresent(lblMessageNoError);
+        }catch (AssertionError e){
+            FailureHandling.continueAtFailedTestCase(e,"Validate Transaction Is Successfully");
         }
-
-
-
     }
-
 }

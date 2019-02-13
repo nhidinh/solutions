@@ -64,6 +64,8 @@ public class TestListener implements ITestListener {
         message = setMessage("PASS", methodDes);
         test.get().pass(message);
         Log.info(message);
+
+        // Vi: this is to print out the path of the difference when comparing xml
         if ("" != InitialData.FINISH_TEST_INFO)
             test.get().info(InitialData.FINISH_TEST_INFO);
     }
@@ -113,5 +115,4 @@ public class TestListener implements ITestListener {
     private String setMessage(String status, String description) {
         return "TEST " + status + ": " + description;
     }
-
 }
