@@ -12,9 +12,9 @@
     <test name = "Portal-Create Cancel Rebill Test">
         <classes>
             <class name="com.hansencx.portal.tests.CancelRebillTests">
-                <!--<methods>-->
-                    <!--<include name="testCreateCancelRebill"/>-->
-                <!--</methods>-->
+                <methods>
+                    <include name="testCreateCancelRebill"/>
+                </methods>
             </class>
         </classes>
     </test>

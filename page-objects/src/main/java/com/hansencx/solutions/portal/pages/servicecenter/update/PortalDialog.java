@@ -14,10 +14,6 @@ import org.openqa.selenium.support.FindBy;
 
 
 public class PortalDialog extends BasePage {
-    public PortalDialog(WebDriver driver) {
-        super(driver);
-    }
-
     @FindBy(id = "PopupMessageBox")
     private WebElement boxMessage;
     @FindBy(id = "MessageBoxMessage")
@@ -25,13 +21,22 @@ public class PortalDialog extends BasePage {
     @FindBy(xpath = "//div[@id='PopupMessageBox']//following-sibling::div//button")
     private WebElement btnOK;
 
-    public void waitForPopupMessageBox(){
+    /**
+     * Constructors
+     */
+    public PortalDialog(WebDriver driver) {
+        super(driver);
+    }
+
+    public void waitForPopupMessageBox() {
         waitForElementToAppear(boxMessage);
     }
-    public void verifyMessageConfirm(String message){
+
+    public void verifyMessageConfirm(String message) {
         assertText(lblMessage, message);
     }
-    public void clickOkButton(){
+
+    public void clickOkButton() {
         click(btnOK);
     }
 }

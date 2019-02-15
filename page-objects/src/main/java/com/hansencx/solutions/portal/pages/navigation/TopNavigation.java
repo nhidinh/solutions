@@ -1,13 +1,15 @@
 package com.hansencx.solutions.portal.pages.navigation;
 
 import com.hansencx.solutions.core.BasePage;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 public class TopNavigation extends BasePage {
-    public TopNavigation(WebDriver driver){
+    /**
+     * Constructors
+     */
+    public TopNavigation(WebDriver driver) {
         super(driver);
     }
 
@@ -19,16 +21,17 @@ public class TopNavigation extends BasePage {
     @FindBy(xpath = "//header//a[contains(@id, 'Logout')]")
     WebElement btnLogout;
 
-
     //METHODS
-    public void clickSearchButton(){
+    public void clickSearchButton() {
         click(btnSearch);
         waitForPageLoad();
     }
-    public void clickLogoutButton(){
+
+    public void clickLogoutButton() {
         click(btnLogout);
     }
-    public void clickHomeButton(){
+
+    public void clickHomeButton() {
         click(btnHome);
     }
 }

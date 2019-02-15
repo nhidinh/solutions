@@ -18,10 +18,6 @@ import java.util.List;
 
 public class CreateCancelRebillPage extends BasePage {
 
-    public CreateCancelRebillPage(WebDriver driver) {
-        super(driver);
-    }
-
     //WEB ELEMENTS
     @FindBy(xpath = "//input[@value='Process']")
     WebElement btnProcess;
@@ -32,25 +28,35 @@ public class CreateCancelRebillPage extends BasePage {
     @FindBy(xpath = "//div[contains(@class,'row') and not(contains(@data-bind,'service-center-staging-row'))]//div[contains(@class,'columnValue clip')][1]//div[contains(@data-bind,'title: value')]")
     List<WebElement> lstTransactionID;
 
+    /**
+     * Constructors
+     */
+    public CreateCancelRebillPage(WebDriver driver) {
+        super(driver);
+    }
+
     //METHODS
-    public int getTheErrorCountNumber(){
+    public int getTheErrorCountNumber() {
         String errorCountNo = getText(lblErrorCountNumber);
         return Integer.parseInt(errorCountNo);
     }
-    public int getNumberOfRecord(){
+
+    public int getNumberOfRecord() {
         return lstRecord.size();
     }
-    public void verifyUploadSuccessfullyWithNoError(){
+
+    public void verifyUploadSuccessfullyWithNoError() {
         Assert.assertEquals(getTheErrorCountNumber(), 0);
     }
-    public void clickProcessButton(){
+
+    public void clickProcessButton() {
         click(btnProcess);
     }
 
-    public ArrayList<String> getListOfTransactionID(){
+    public ArrayList<String> getListOfTransactionID() {
         ArrayList<String> listOfTransactionId = new ArrayList<>();
 
-        for(WebElement record:lstTransactionID){
+        for (WebElement record : lstTransactionID) {
             String getTextTitle = getText(record);
             listOfTransactionId.add(getTextTitle);
         }
@@ -59,13 +65,14 @@ public class CreateCancelRebillPage extends BasePage {
 
     /**
      * Get the String list of transaction ids
-     * @author Vi Nguyen
+     *
      * @param
      * @return Nothing
-     * @since 2018-01-30
+     * @author Vi Nguyen
      * @see
+     * @since 2018-01-30
      */
-    public String getListTransactionID(){
+    public String getListTransactionID() {
         String listTransID = "";
         if (lstTransactionID.size() == 1)
             return lstTransactionID.get(0).getText();
@@ -73,7 +80,7 @@ public class CreateCancelRebillPage extends BasePage {
             for (int i = 0; i < lstTransactionID.size() - 1; i++) {
                 listTransID += getText(lstTransactionID.get(i)) + ",";
             }
-            listTransID += getText(lstTransactionID.get(lstTransactionID.size()-1));
+            listTransID += getText(lstTransactionID.get(lstTransactionID.size() - 1));
         }
         return listTransID;
     }

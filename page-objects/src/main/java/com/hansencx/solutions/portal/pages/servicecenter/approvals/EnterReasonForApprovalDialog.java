@@ -12,8 +12,11 @@ import org.openqa.selenium.support.FindBy;
  * @since 1/29/2019
  */
 
-
 public class EnterReasonForApprovalDialog extends BasePage {
+
+    /**
+     * Constructors
+     */
     public EnterReasonForApprovalDialog(WebDriver driver) {
         super(driver);
     }

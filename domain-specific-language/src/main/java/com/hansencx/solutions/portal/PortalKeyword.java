@@ -8,7 +8,6 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.openqa.selenium.WebDriver;
 import utilities.helper.ExcelHelper;
 
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,20 +22,17 @@ import java.util.Map;
  */
 public class PortalKeyword extends BaseKeyword {
 
-    private ExcelHelper excelHelper;
     private DatabaseHelper databaseHelper;
 
     /**
      * Constructors
      */
     public PortalKeyword(WebDriver driver, ExcelHelper excelHelper) {
-        super(driver);
-        this.excelHelper = excelHelper;
+        super(driver, excelHelper);
     }
 
     public PortalKeyword(WebDriver driver, ExcelHelper excelHelper, DatabaseHelper databaseHelper) {
-        super(driver);
-        this.excelHelper = excelHelper;
+        super(driver, excelHelper);
         this.databaseHelper = databaseHelper;
     }
 
@@ -52,14 +48,14 @@ public class PortalKeyword extends BaseKeyword {
 
     public void callKeyword(int step, String keyword, final List<XSSFCell> listParameters) {
         Map<String, Runnable> dictionary = new HashMap<String, Runnable>();
-        PortalPageGenerator pageGenerator = new PortalPageGenerator(driver);
-        FormulaEvaluator evaluator = excelHelper.getExcelWorkBook().getCreationHelper().createFormulaEvaluator();
+        PortalPageGenerator pageGenerator = new PortalPageGenerator(getDriver());
+        FormulaEvaluator evaluator = getExcelHelper().getExcelWorkBook().getCreationHelper().createFormulaEvaluator();
 
         // Search tests
         dictionary.put("go to search page", () -> pageGenerator.TopNavigation().clickSearchButton());
         dictionary.put("navigate to portal", () -> pageGenerator.Login().goTo());
-        dictionary.put("log in to portal", () -> pageGenerator.Login().logonWithUsername(excelHelper.getCellValue(listParameters.get(0)), excelHelper.getCellValue(listParameters.get(1))));
-        dictionary.put("search by enrollment number with filter", () -> pageGenerator.Search().searchByEnrollmentNumberWithFilter(excelHelper.getCellValue(listParameters.get(0)), excelHelper.getCellValue(listParameters.get(1))));
+        dictionary.put("log in to portal", () -> pageGenerator.Login().logonWithUsername(getExcelHelper().getCellValue(listParameters.get(0)), getExcelHelper().getCellValue(listParameters.get(1))));
+        dictionary.put("search by enrollment number with filter", () -> pageGenerator.Search().searchByEnrollmentNumberWithFilter(getExcelHelper().getCellValue(listParameters.get(0)), getExcelHelper().getCellValue(listParameters.get(1))));
         dictionary.put("click search", () -> pageGenerator.Search().clickSearchButton());
         dictionary.put("verify search result", () -> pageGenerator.SearchResult().verifySearchResult(listParameters.get(0).getRawValue()));
 
@@ -70,13 +66,13 @@ public class PortalKeyword extends BaseKeyword {
         dictionary.put("service update add new - select cancel rebill checkbox", () -> pageGenerator.AddServiceCenterUpdate().checkCreateCancelRebillCheckbox());
         dictionary.put("service update add new - click import button", () -> pageGenerator.AddServiceCenterUpdate().clickImportButton());
 
-        dictionary.put("import service update - upload cancel rebill file", () -> pageGenerator.ImportServiceCenterUpdate().uploadCancelRebillFile(excelHelper.getCellValue(listParameters.get(0))));
+        dictionary.put("import service update - upload cancel rebill file", () -> pageGenerator.ImportServiceCenterUpdate().uploadCancelRebillFile(getExcelHelper().getCellValue(listParameters.get(0))));
         dictionary.put("import service update - cick upload button", () -> pageGenerator.ImportServiceCenterUpdate().clickUploadButton());
 
         dictionary.put("create cancel rebill - verify upload successfully", () -> pageGenerator.CreateCancelRebill().verifyUploadSuccessfullyWithNoError());
         dictionary.put("create cancel rebill - get list of uploaded transactions", () -> cancelRebillGetListTransactions());
         dictionary.put("create cancel rebill - click process button", () -> pageGenerator.CreateCancelRebill().clickProcessButton());
-        dictionary.put("create cancel rebill - do process", () -> pageGenerator.EnterReasonForProcess().doProcess(excelHelper.getCellValue(listParameters.get(0)), excelHelper.getCellValue(listParameters.get(1))));
+        dictionary.put("create cancel rebill - do process", () -> pageGenerator.EnterReasonForProcess().doProcess(getExcelHelper().getCellValue(listParameters.get(0)), getExcelHelper().getCellValue(listParameters.get(1))));
         dictionary.put("create cancel rebill - get created time", () -> getCacelRebillCreatedTime());
 
         dictionary.put("messsage - wait for message dissmisses", () -> pageGenerator.WaitMessageDialog().waitForMessageDismiss());
@@ -84,34 +80,17 @@ public class PortalKeyword extends BaseKeyword {
 
         //Cancel billing
         dictionary.put("execute query", () -> executeQuery(""));
-        dictionary.put("check value", () -> databaseHelper.checkResultByAssert(evaluator.evaluate(listParameters.get(0)).getStringValue(), excelHelper.getCellValue(listParameters.get(1))));
+        dictionary.put("check value", () -> databaseHelper.checkResultByAssert(evaluator.evaluate(listParameters.get(0)).getStringValue(), getExcelHelper().getCellValue(listParameters.get(1))));
 
         if (dictionary.containsKey(keyword.toLowerCase())) {
             if (keyword.toLowerCase().equals("execute query")) {
-                excelHelper.setCellValue(step, 8, databaseHelper.returnQueriedStringField(evaluator.evaluate(listParameters.get(0)).getStringValue()));
+                setReturnedValueToCell(step, FIRST_OUTPUR_ARGUMENT_INDEX, databaseHelper.returnQueriedStringField(evaluator.evaluate(listParameters.get(0)).getStringValue()));
             } else if (keyword.toLowerCase().equals("create cancel rebill")) {
-                excelHelper.setCellValue(step, 8, pageGenerator.CreateCancelRebill().getListTransactionID());
-            } else if (keyword.toLowerCase().equals("create cancel rebill - get created time"))
-                excelHelper.setCellValue(step, 8, pageGenerator.EnterReasonForProcess().getCreatedTime());
+                setReturnedValueToCell(step, FIRST_OUTPUR_ARGUMENT_INDEX, pageGenerator.CreateCancelRebill().getListTransactionID());
+            } else if (keyword.toLowerCase().equals("create cancel rebill - get created time")) {
+                setReturnedValueToCell(step, FIRST_OUTPUR_ARGUMENT_INDEX, pageGenerator.CreateCancelRebill().getListTransactionID());
+            }
             dictionary.get(keyword.toLowerCase()).run();
-        }
-    }
-
-    /**
-     * run test scripts from excel file
-     *
-     * @param
-     * @return Nothing.
-     * @author Vi Nguyen
-     * @see
-     * @since 2019-01-22
-     */
-    public void runTestScripts() throws FileNotFoundException {
-        List<XSSFCell> listCell;
-
-        for (int i = 0; i < excelHelper.getLastRowNum(); i++) {
-            listCell = excelHelper.getExcelScriptsArguments(i + 1);
-            callKeyword(i + 1, excelHelper.getCellValue(i + 1, 2), listCell);
         }
     }
 

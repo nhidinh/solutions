@@ -17,26 +17,29 @@ import java.util.List;
  */
 
 public class SearchResultPage extends BasePage {
-    public SearchResultPage(WebDriver driver){
-        super(driver);
-    }
-
     //ELEMENTS
     @FindBy(xpath = "//table[@id='gvSearchResults']//tr")
     List<WebElement> lstResult;
     @FindBy(xpath = "//select[@class=\"NavigationSelect\"]")
     WebElement EnrollmentView;
 
-    public int getNumberOfResult(){
+    /**
+     * Constructors
+     */
+    public SearchResultPage(WebDriver driver) {
+        super(driver);
+    }
+
+    public int getNumberOfResult() {
         return lstResult.size();
     }
 
-    public  void verifySearchResult(String numberOfLine){
-        Assert.assertEquals(Integer.toString(getNumberOfResult()),numberOfLine );
+    public void verifySearchResult(String numberOfLine) {
+        Assert.assertEquals(Integer.toString(getNumberOfResult()), numberOfLine);
     }
 
     //HUONG:25.01.19: billing transaction interface
-    public void selectViewFromEnrollment(String enrollmentView){
+    public void selectViewFromEnrollment(String enrollmentView) {
         Select selectView = new Select(EnrollmentView);
         waitForPageLoad();
         selectView.selectByVisibleText(enrollmentView);
@@ -45,6 +48,5 @@ public class SearchResultPage extends BasePage {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
     }
 }

@@ -18,16 +18,18 @@ import java.util.List;
 
 
 public class ServiceCenterApprovalDetailsPage extends BasePage {
-    public ServiceCenterApprovalDetailsPage(WebDriver driver) {
-        super(driver);
-    }
-
     //WEB ELEMENTS
     @FindBy(xpath = "//input[@value='Approve']")
     private WebElement btnApprove;
-
     @FindBy(xpath = "//div[@class='columnValue' and contains(@data-bind,'stagingRecord.getStagingRecordDetail')][1]")
     private List<WebElement> lstRequestedRecord;
+
+    /**
+     * Constructors
+     */
+    public ServiceCenterApprovalDetailsPage(WebDriver driver) {
+        super(driver);
+    }
 
     //METHODS
     public ArrayList<String> getListTransactionID() {
