@@ -2,7 +2,7 @@ package com.hansencx.portal.tests;
 
 import com.hansencx.portal.common.DataFilePathHandler;
 import com.hansencx.solutions.logger.Log;
-import com.hansencx.solutions.portal.PortalBaseTest;
+import com.hansencx.portal.tests.core.PortalBaseTest;
 import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.annotations.BeforeMethod;
@@ -12,9 +12,11 @@ import org.testng.annotations.Test;
 import org.testng.internal.BaseTestMethod;
 import utilities.helper.ExcelHelper;
 import utilities.helper.FailureHandling;
+import utilities.helper.SoftAssert;
 
 import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,6 +34,8 @@ public class SearchTests extends PortalBaseTest {
     private ArrayList<String> listOfTestCase = new ArrayList<String>();
     private String testCaseName;
     private int testCaseIndex = 0;
+    private SoftAssert softAssert;
+
 
     @BeforeTest
     public void setUpTestData() throws FileNotFoundException {
@@ -50,7 +54,7 @@ public class SearchTests extends PortalBaseTest {
     }
 
     @BeforeMethod(alwaysRun = true)
-    private void setTestCaseName(ITestResult result) {
+    private void setTestCaseName(ITestResult result, Method method) {
         testCaseName = listOfTestCase.get(testCaseIndex);
         testCaseIndex = testCaseIndex + 1;
 
@@ -62,14 +66,13 @@ public class SearchTests extends PortalBaseTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        softAssert = new SoftAssert(getDriver(), testCaseName);
     }
 
     @Test(description = "Search by Enrollment Number with Data File", dataProvider = "getData")
     public void searchByEnrollmentNumberWithDataFile(String testcaseName, String filterOption, String enrollmentNumberValue, String result) {
         int resultValue = Integer.parseInt(result);
-        String executedTime = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
-        String status;
-        String message = "";
+
         Page.TopNavigation().clickSearchButton();
         if (filterOption.equals("contains")) {
             Page.Search().selectSupplierByName("Talen Energy Electric");
@@ -77,16 +80,8 @@ public class SearchTests extends PortalBaseTest {
         Page.Search().searchByEnrollmentNumberWithFilter(filterOption, enrollmentNumberValue);
         Page.Search().clickSearchButton();
         int numberOfResult = Page.SearchResult().getNumberOfResult();
-        try {
-            Assert.assertEquals(numberOfResult, resultValue);
-            status = "PASSED";
-        } catch (AssertionError e) {
-            status = "FAILED";
-            message = e.getMessage();
-            FailureHandling.continueAtFailedTestCase(e, testcaseName);
-        }
-        String[] resultData = {testcaseName, filterOption, enrollmentNumberValue, result, executedTime, status, message};
-        excelResult.writeExcelValue(resultData);
+        softAssert.assertEquals(numberOfResult, resultValue, "Not matched!");
+        softAssert.assertAll();
         Log.info("Complete Test case: " + testcaseName);
         System.out.println("Compete Test case: " + testcaseName);
     }

@@ -21,6 +21,7 @@ public class Browser {
         driver = driverManager.getDriver();
         context.setAttribute("driver", driver);
     }
+    public static void goToPage(String url){driver.get(url);};
     public static void maximize(){
         driver.manage().window().maximize();
     }

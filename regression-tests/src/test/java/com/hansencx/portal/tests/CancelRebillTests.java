@@ -1,25 +1,22 @@
 package com.hansencx.portal.tests;
 
 
+import com.hansencx.portal.tests.core.PortalBaseTest;
 import com.hansencx.solutions.database.DatabaseHelper;
-import com.hansencx.solutions.portal.PortalBaseTest;
 import com.hansencx.solutions.portal.pages.LoginPage;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-//import org.testng.asserts.SoftAssert;
 import utilities.configuration.InitialData;
 import utilities.helper.SoftAssert;
-
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CancelRebillTests extends PortalBaseTest{
+public class CancelRebillTests extends PortalBaseTest {
 
     private String importedFilePath;
     private static ArrayList<String> listTransactionID = new ArrayList<String>();
@@ -29,20 +26,38 @@ public class CancelRebillTests extends PortalBaseTest{
     private String rebilledTransId = null;
     private ResultSet resultSet;
     String methodname = null;
+    
+    //CREDENTIAL DATA
+    private String qageneric_username;
+    private String qageneric_password;
+
+    private String qaapprover_username;
+    private String qaapprover_password;
+
+    private String qarequester_username;
+    private String qarequester_password;
 
     @BeforeTest
     public void setupDataBeforeTest(){
-
         importedFilePath = InitialData.PARENT_DIR + "\\regression-tests\\src\\test\\java\\com\\hansencx\\portal\\datatest\\Create Cancel Rebill - Filled In Template.xlsx";
         db = new DatabaseHelper();
         db.createConnection("PSOLQ");
-
 
     }
     @BeforeMethod
     public void setupbeforemethod(Method method){
         methodname = method.getName();
         softAssert = new SoftAssert(getDriver(), methodname );
+        //CREDENTIAL DATA
+        qageneric_username = Credential.getPropertyValue("qageneric_username");
+        qageneric_password = Credential.getPropertyValue("qageneric_password");
+
+        qaapprover_username = Credential.getPropertyValue("qaapprover_username");
+        qaapprover_password = Credential.getPropertyValue("qaapprover_password");
+
+        qarequester_username = Credential.getPropertyValue("qarequester_username");
+        qarequester_password = Credential.getPropertyValue("qarequester_password");
+
     }
     @Test
     public void testCreateCancelRebill(){
@@ -92,7 +107,7 @@ public class CancelRebillTests extends PortalBaseTest{
         //STEP 2.o.	User will request another person to go the Approvals screen and approve the pending service center so it is processed.
         Page.TopNavigation().clickLogoutButton();
         Page.Login().goTo();
-        Page.Login().logonWithEncodedCredential("QAAPPROVER", "NC9CDhQVFj8XFgFG");
+        Page.Login().logonWithEncodedCredential(qaapprover_username, qaapprover_password);
 
         //STEP 2.p.i. Use the left navigation menu to go back to service center, and then select Approvals to see the pending information
         Page.LeftNavigation().clickServiceCenterApprovalsMenu();
@@ -112,7 +127,7 @@ public class CancelRebillTests extends PortalBaseTest{
         //STEP 2.s.	View the service center processed successfully by going back to the service center History screen:
         Page.TopNavigation().clickLogoutButton();
         Page.Login().goTo();
-        Page.Login().logonWithEncodedCredential("QAREQUESTER", "NC9CHQEUETUSBxwFXg==");
+        Page.Login().logonWithEncodedCredential(qarequester_username, qarequester_password);
 
         Page.LeftNavigation().clickServiceCenterHistoryMenu();
         Page.WaitMessageDialog().waitForMessageDismiss();
@@ -217,7 +232,7 @@ public class CancelRebillTests extends PortalBaseTest{
 
         //1. log in PORTAL with acc : generic
         LoginPage loginPage = Page.Login().goTo();
-        loginPage.logonWithEncodedCredential("QAGENERIC", "NC9CCAELASIIEEI=");
+        loginPage.logonWithEncodedCredential(qageneric_username, qageneric_password);
 
         //2. Search for ky_enroll
         Page.TopNavigation().clickSearchButton();
@@ -271,8 +286,6 @@ public class CancelRebillTests extends PortalBaseTest{
         String cdStatusCodeOfRebilled = queryStatusCodeOfCancel(kyEnroll,kyPndSeqNumberOfRebilled);
         db.checkResultBySoftAssertWithMsg(cdStatusCodeOfRebilled,"65",
                 "Transaction "+ tranID +" SQL validation: Rebilled's transaction status code ");
-
-
     }
     private void verifyBooleanResultBySoftAssert(boolean checkedValue, boolean expectedValue, String explainMsg){
         softAssert.assertEquals(checkedValue,expectedValue, explainMsg);

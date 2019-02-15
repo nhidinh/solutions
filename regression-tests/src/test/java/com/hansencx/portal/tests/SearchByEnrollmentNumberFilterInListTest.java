@@ -1,6 +1,6 @@
 package com.hansencx.portal.tests;
 
-import com.hansencx.solutions.portal.PortalBaseTest;
+import com.hansencx.portal.tests.core.PortalBaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

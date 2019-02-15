@@ -11,7 +11,7 @@
 
     <test name="Login Test Portal-SearchByEnrollmentNumberInList">
         <classes>
-            <class name="com.hansencx.portal.tests.CancelRebillByExcelScripting">
+            <class name="com.hansencx.portal.tests.excelscripting.CancelRebillByExcelScripting">
                 <methods>
                     <include name="cancelBillingTest"/>
                 </methods>
