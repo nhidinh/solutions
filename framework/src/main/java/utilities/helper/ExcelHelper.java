@@ -1,7 +1,10 @@
 package utilities.helper;
 
 import com.hansencx.solutions.logger.Log;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -323,7 +326,6 @@ public class ExcelHelper {
             cj = 0;
             for (int j = startCol; j < totalCols; j++, cj++) {
                 tabArray[ci][cj] = getCellData(i, j);
-                System.out.println(tabArray[ci][cj]);
             }
         }
         return (tabArray);

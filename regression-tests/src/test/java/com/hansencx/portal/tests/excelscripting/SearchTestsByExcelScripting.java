@@ -1,4 +1,4 @@
-package com.hansencx.portal.tests;
+package com.hansencx.portal.tests.excelscripting;
 
 import com.hansencx.portal.common.DataFilePathHandler;
 import com.hansencx.solutions.core.BaseTest;
@@ -12,7 +12,6 @@ public class SearchTestsByExcelScripting extends BaseTest {
     public void searchTest() {
         try {
             ExcelHelper excelHelper = new ExcelHelper(DataFilePathHandler.SCRIPTS_DIRECTORY_PATH + "SearchTests.xlsx", "Sheet1");
-
             PortalKeyword keyword = new PortalKeyword(getDriver(), excelHelper);
             keyword.runTestScripts();
 

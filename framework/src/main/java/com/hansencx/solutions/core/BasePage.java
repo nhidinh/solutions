@@ -1,27 +1,28 @@
 package com.hansencx.solutions.core;
 
+import com.hansencx.solutions.logger.Log;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-import com.hansencx.solutions.logger.Log;
-import utilities.helper.JavaScriptHelper;
+import utilities.helper.Browser;
 
-import static org.openqa.selenium.support.ui.ExpectedConditions.*;
-//import com.google.common.base.Function;
 import java.util.function.Function;
+
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
+import static utilities.helper.ActionLogger.*;
+
+
 /**
  * BasePage class
  * All Page objects created should inherit this class
  *
- * @author  Vi Nguyen, Nhi Dinh
+ * @author Vi Nguyen, Nhi Dinh
  * @version 1.0
- * @since   2018-12-03
+ * @since 2018-12-03
  */
 public class BasePage {
     private static final int TIMEOUT = 30; //seconds
@@ -30,11 +31,18 @@ public class BasePage {
     protected WebDriver driver;
     private WebDriverWait wait;
 
+    private String value = "";
+    private String tail = "";
+    private String startMessage;
+    private String endMessage_PASS;
+    private String endMessage_FAIL;
+
     /**
      * CONSTRUCTORS
-    */
+     */
 
-    public BasePage(){}
+    public BasePage() {
+    }
 
     public BasePage(WebDriver driver) {
         this.driver = driver;
@@ -42,141 +50,189 @@ public class BasePage {
         PageFactory.initElements(new AjaxElementLocatorFactory(driver, TIMEOUT), this);
     }
 
-    private String getLocatorOfElement(WebElement element){
+    private String getLocatorOfElement(WebElement element) {
         String elementName = element.toString();
         int index = elementName.indexOf("> ") + 2;
-        return "["+ elementName.substring(index);
-    }
-
-    //SET LOG MESSAGE: START ACTION
-    private String setStartMessage(String action, String value, String elementLocator, String tail){
-        if (!value.equals("")){
-            value = "[" + value+"]";
-        }
-        return "Start " + action + value + " element with locator " + elementLocator + " " + tail;
-    }
-    //SET LOG MESSAGE: END ACTION
-    private String setEndMessage(String action, String value, String elementLocator, String tail){
-        if (!value.equals("")){
-            value = "[" + value+"]";
-        }
-        return "End " + action + " " + value + " element with locator " + elementLocator + " " + tail;
+        return "[" + elementName.substring(index);
     }
 
 
-    protected void navigateToPage(String url){
-        Log.info("Navigating to " + url);
-        try{
-            driver.get(url);
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-            Log.error("Failed navigating to " + url);
-            Log.error(e.toString());
+    private String getMethodName() {
+        return Thread.currentThread().getStackTrace()[2].getMethodName();
+    }
+
+    /**
+     * Set Up Start - End Message automatically
+     */
+    private void setUpLoggingMessage(String nameOfMethod, WebElement element, String textValue, String tailValue) {
+        String methodName = nameOfMethod.toLowerCase();
+        String elementLocator = "";
+        if (element != null) {
+            elementLocator = getLocatorOfElement(element);
         }
-        Log.info("End of navigating to " + url + " step");
+        startMessage = setStartMessage(methodName, textValue, elementLocator, tailValue);
+        //SUCCESS END MESSAGE
+        endMessage_PASS = setEndMessageSuccess(methodName, textValue, elementLocator, tailValue);
+        //FAILED END MESSAGE
+        endMessage_FAIL = setEndMessageFail(methodName, textValue, elementLocator, tailValue);
+
+        //Re passing empty value for @value and @tail;
+        value = "";
+        tail = "";
+    }
+
+    protected void navigateToPage(String url) {
+        setUpLoggingMessage(getMethodName(), null, value, tail);
+        Log.info(startMessage);
+        try {
+            Browser.goToPage(url);
+        } catch (Exception e) {
+            Log.error(endMessage_FAIL, e);
+        }
+        Log.info(endMessage_PASS);
     }
 
     //Hover Mouse
-    protected void hoverMouseToElement(WebElement element){
+    protected void hoverMouseToElement(WebElement element) {
+        setUpLoggingMessage(getMethodName(), element, value, tail);
+        Log.info(startMessage);
         Actions action = new Actions(driver);
-        String elementLocator = getLocatorOfElement(element) ;
-        Log.info(setStartMessage("hovering mouse to: ", "",elementLocator,"" ));
-        Log.info("Hovering mouse to element: ");
         try {
-            ((Actions) action).moveToElement(element).perform();
-            Log.info(setEndMessage("hovering mouse to", "", elementLocator, "successfully"));
-        }catch (Exception e){
-            Log.error(setEndMessage("hovering mouse to", "", elementLocator, "FAILED"));
+            action.moveToElement(element).perform();
+        } catch (Exception e) {
+            Log.info(endMessage_FAIL);
         }
+        Log.info(endMessage_PASS);
     }
 
     // Click with Javascript
-    protected void jsClick(WebElement ele) {
-        String elementLocator = getLocatorOfElement(ele) ;
-        Log.info(setStartMessage("clicking (JS) to","", elementLocator,""));
-        JavascriptExecutor executor = (JavascriptExecutor) driver;
-        executor.executeScript("arguments[0].click();", ele);
-        Log.info(setEndMessage("clicking (JS) to", "", elementLocator, ""));
+    protected void jsClick(WebElement element) {
+        setUpLoggingMessage(getMethodName(), element, value, tail);
+        Log.info(startMessage);
+        try {
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            executor.executeScript("arguments[0].click();", element);
+        } catch (Exception e) {
+            Log.error(endMessage_FAIL, e);
+        }
+        Log.info(endMessage_PASS);
     }
 
     /**
      * Click on given element
-     * @author Vi Nguyen
+     *
      * @param element the given web element
      * @return Nothing
+     * @author Vi Nguyen
      * @since 2018-12-03
-     * @see
      */
-    protected void click(WebElement element){
-        String elementLocator = getLocatorOfElement(element);
+    protected void click(WebElement element) {
+        setUpLoggingMessage(getMethodName(), element, value, tail);
+        waitForElementToAppear(element);
+        Log.info(startMessage);
         try {
-            waitForElementToAppear(element);
-            Log.info(setStartMessage("clicking to", "", elementLocator, ""));
             element.click();
-            Log.info(setEndMessage("clicking to", "", elementLocator, ""));
-        }catch (Exception e){
-            Log.error("Unable to click element at: " + elementLocator);
-            Log.error(e.getMessage());
-            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            Log.error(endMessage_FAIL, e);
         }
+        Log.info(endMessage_PASS);
     }
 
     // Set Text
-    protected void setText(WebElement element, String text){
-        String elementLocator = getLocatorOfElement(element) ;
+    protected void setText(WebElement element, String text) {
+        setUpLoggingMessage(getMethodName(), element, text, tail);
         waitForElementToAppear(element);
-        Log.info(setStartMessage("setting text:", text, elementLocator, ""));
-        element.sendKeys(text);
-        Log.info(setEndMessage("setting text:", text, elementLocator, ""));
+        Log.info(startMessage);
+        try {
+            element.sendKeys(text);
+        } catch (Exception e) {
+            Log.error(endMessage_FAIL, e);
+        }
+        Log.info(endMessage_PASS);
     }
 
+    /**
+     * @param element
+     * @return
+     */
     // Get Text
     protected String getText(WebElement element) {
-        String elementLocator = getLocatorOfElement(element) ;
+        String textOfElement;
+        setUpLoggingMessage(getMethodName(), element, value, tail);
         waitForElementToAppear(element);
-        Log.info(setStartMessage("getting text of", "", elementLocator, ""));
-        String text = element.getText();
-        Log.info(setEndMessage("getting text of", "", elementLocator, ""));
-        return text;
+        Log.info(startMessage);
+        try {
+            textOfElement = element.getText();
+        } catch (Exception e) {
+            Log.error(endMessage_FAIL, e);
+            return null;
+        }
+        Log.info(endMessage_PASS);
+        Log.info("Text of Element: [" + textOfElement + "]");
+        return textOfElement;
     }
 
     //Assert Equals Text
     protected void assertText(WebElement element, String expectedText) {
-        String elementLocator = getLocatorOfElement(element) ;
+        setUpLoggingMessage(getMethodName(), element, expectedText, tail);
         waitForElementToAppear(element);
-        Log.info(setStartMessage("asserting text:", expectedText, elementLocator, ""));
-        Assert.assertEquals(getText(element), expectedText);
-        Log.info(setEndMessage("asserting text:", expectedText, elementLocator, ""));
+        Log.info(startMessage);
+        try {
+            Assert.assertEquals(getText(element), expectedText);
+        } catch (Exception e) {
+            Log.error(endMessage_FAIL, e);
+        }
+        Log.info(endMessage_PASS);
     }
 
     //Assert Equals Number
     protected void assertNumber(WebElement element, int expectedNumber) {
-        String elementLocator = getLocatorOfElement(element) ;
+        String expectedNumberS = String.valueOf(expectedNumber);
+        setUpLoggingMessage(getMethodName(), element, expectedNumberS, tail);
         waitForElementToAppear(element);
-        Log.info(setStartMessage("asserting number:"+expectedNumber,"", elementLocator, ""));
-        Assert.assertEquals(Integer.parseInt(getText(element)), expectedNumber);
-        Log.info(setEndMessage("asserting text:"+ expectedNumber,"", elementLocator, ""));
+        Log.info(startMessage);
+        try {
+            Assert.assertEquals(Integer.parseInt(getText(element)), expectedNumber);
+        } catch (Exception e) {
+            Log.error(endMessage_FAIL, e);
+        }
+        Log.info(endMessage_PASS);
     }
 
+    /**
+     * @return title
+     */
     // Get Page Title
-    protected String getPageTitle(){
-        Log.info("Start getting page title");
-        String title = driver.getTitle();
-        Log.info("Return Page Title");
+    protected String getPageTitle() {
+        String title;
+        setUpLoggingMessage(getMethodName(), null, value, tail);
+        Log.info(startMessage);
+        try {
+            title = driver.getTitle();
+        } catch (Exception e) {
+            Log.error(endMessage_FAIL, e);
+            return null;
+        }
+        Log.info(endMessage_PASS);
         return title;
     }
 
     // Back to Previous Page
-    protected void backToPreviousPage(){
-        Log.info("Start backing to previous page");
-        driver.navigate().back();
-        Log.info("End backing to previous page");
+    protected void backToPreviousPage() {
+        setUpLoggingMessage(getMethodName(), null, value, tail);
+        Log.info(startMessage);
+        try {
+            driver.navigate().back();
+        } catch (Exception e) {
+            Log.error(endMessage_FAIL, e);
+        }
+        Log.info(endMessage_PASS);
     }
 
     //Wait for page load
-    protected void waitForPageLoad(){
-        Function<WebDriver, Boolean> functionWaitForPageLoad  = new Function<WebDriver, Boolean>() {
-            public Boolean apply( WebDriver driver) {
+    protected void waitForPageLoad() {
+        Function<WebDriver, Boolean> functionWaitForPageLoad = new Function<WebDriver, Boolean>() {
+            public Boolean apply(WebDriver driver) {
                 return ((JavascriptExecutor) driver).executeScript("return document.readyState").toString().equals("complete");
             }
         };
@@ -191,6 +247,7 @@ public class BasePage {
 
     /**
      * This is the method which waits for the element to exist.
+     *
      * @param locator the locator.
      * @return Nothing.
      */
@@ -206,40 +263,46 @@ public class BasePage {
 
     /**
      * This is the method which waits for the given element to appear.
+     *
      * @param element the Webelement.
      * @return Nothing.
      */
-    protected void waitForElementToAppear(WebElement element){
+    protected void waitForElementToAppear(WebElement element) {
+        setUpLoggingMessage(getMethodName(), element, value, tail);
         Function<WebDriver, Boolean> function = new Function<WebDriver, Boolean>() {
             @Override
             public Boolean apply(WebDriver driver) {
+                Log.info(startMessage);
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    Log.error(e.getMessage());
-
+                    Log.error(endMessage_FAIL, e);
                 }
                 return element.isDisplayed() ? true : null;
             }
         };
         wait.until(function);
-}
+        Log.info(endMessage_PASS);
+    }
 
     /**
      * Waits for the given element to disappear.
+     *
      * @param element the Webelement.
      * @return Nothing.
-     * @since 2018-12-03
      * @see
+     * @since 2018-12-03
      */
-    protected void waitForElementToDisappear(WebElement element){
+    protected void waitForElementToDisappear(WebElement element) {
+        setUpLoggingMessage(getMethodName(), element, value, tail);
         Function<WebDriver, Boolean> invisibility = new Function<WebDriver, Boolean>() {
             @Override
             public Boolean apply(WebDriver driver) {
+                Log.info(startMessage);
                 try {
                     return !element.isDisplayed();
                 } catch (StaleElementReferenceException var2) {
+                    Log.error(endMessage_FAIL);
                     return true;
                 }
             }
@@ -247,79 +310,116 @@ public class BasePage {
         wait.until(invisibility);
     }
 
-    protected void verifyElementPresent(WebElement element){
-        Assert.assertTrue(element.isDisplayed());
+    protected void verifyElementPresent(WebElement element) {
+        setUpLoggingMessage(getMethodName(), null, value, tail);
+        Log.info(startMessage);
+        try {
+            Assert.assertTrue(element.isDisplayed());
+        } catch (Exception e) {
+            Log.error(endMessage_FAIL, e);
+        }
+        Log.info(endMessage_PASS);
     }
 
 
     /**
      * Wait for element is clickable
-     * @author Vi Nguyen
+     *
      * @param element the given web element
      * @return Nothing
-     * @since 2018-12-03
+     * @author Vi Nguyen
      * @see
+     * @since 2018-12-03
      */
-    protected void waitForElementToBeClickable(WebElement element){
-        String elementLocator = getLocatorOfElement(element) ;
-        Log.info(setStartMessage("waiting for","", elementLocator, "is clickable"));
-
+    protected void waitForElementToBeClickable(WebElement element) {
+        setUpLoggingMessage(getMethodName(), null, value, "is clickable");
         Function<WebDriver, Boolean> clickable = new Function<WebDriver, Boolean>() {
             @Override
             public Boolean apply(WebDriver driver) {
                 waitForElementToAppear(element);
+                Log.info(startMessage);
                 try {
                     return element != null && element.isEnabled() ? true : null;
-                } catch (StaleElementReferenceException var4) {
+                } catch (StaleElementReferenceException e) {
+                    Log.error(endMessage_FAIL, e);
+
                     return null;
                 }
             }
         };
         wait.until(visibilityOf(element));
-
-        Log.info(setEndMessage("waiting for","",elementLocator ,"is clickable"));
-
+        Log.info(endMessage_PASS);
     }
 
     /**
-     * @param element
-     * Use to scroll to a visible element
+     * @param element Use to scroll to a visible element
      */
-    protected void scrollToElement(WebElement element){
+    protected void scrollToElement(WebElement element) {
+        setUpLoggingMessage(getMethodName(), null, value, tail);
         waitForElementToAppear(element);
         Actions actions = new Actions(driver);
-        actions.moveToElement(element);
-        actions.perform();
+
+        Log.info(startMessage);
+        try {
+            actions.moveToElement(element);
+            actions.perform();
+        } catch (Exception e) {
+            Log.error(endMessage_FAIL, e);
+        }
+        Log.info(endMessage_PASS);
+
+
     }
 
     /**
-     * @param element
-     * Use to Check a checkbox element
+     * @param element Use to Check a checkbox element
      */
-    protected void check(WebElement element){
-        if(!element.isSelected()){
-            element.click();
-        }else {
-            Log.warning("Element is already checked");
-            System.out.println("Element is already checked");
+    protected void check(WebElement element) {
+        setUpLoggingMessage(getMethodName(), null, value, tail);
+        waitForElementToAppear(element);
+        Log.info(startMessage);
+        try {
+            if (!element.isSelected()) {
+                element.click();
+                Log.info(endMessage_PASS);
+            } else {
+                Log.error("Element is already checked");
+            }
+        } catch (Exception e) {
+            Log.error(endMessage_FAIL, e);
         }
     }
 
     /**
-     * @param element
-     * Use to Check a checkbox element
+     * @param element Use to Check a checkbox element
      */
-    protected void unCheck(WebElement element){
-        if(element.isSelected()){
-            element.click();
-        }else {
-            Log.warning("Element is already unchecked");
-            System.out.println("Element is already unchecked");
+    protected void unCheck(WebElement element) {
+        setUpLoggingMessage(getMethodName(), null, value, tail);
+        waitForElementToAppear(element);
+        Log.info(startMessage);
+        try {
+            if (element.isSelected()) {
+                element.click();
+                Log.info(endMessage_PASS);
+            } else {
+                String message = "Element is already unchecked";
+                Log.error(message);
+            }
+        } catch (Exception e) {
+            Log.error(endMessage_FAIL, e);
         }
     }
 
-    protected void selectOptionByText(WebElement ddlElement, String option){
+    protected void selectOptionByText(WebElement ddlElement, String option) {
+        setUpLoggingMessage(getMethodName(), null, value, tail);
+        waitForElementToAppear(ddlElement);
+        Log.info(startMessage);
         Select selectReason = new Select(ddlElement);
-        selectReason.selectByVisibleText(option);
+        try {
+            selectReason.selectByVisibleText(option);
+            Log.error(endMessage_PASS);
+        } catch (Exception e) {
+            Log.error(endMessage_FAIL, e);
+        }
     }
 }
