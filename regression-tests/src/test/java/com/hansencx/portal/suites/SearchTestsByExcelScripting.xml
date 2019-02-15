@@ -11,7 +11,7 @@
 
     <test name="Login Test Portal-SearchByEnrollmentNumberInList">
         <classes>
-            <class name="com.hansencx.portal.tests.SearchTestsByExcelScripting">
+            <class name="com.hansencx.portal.tests.excelscripting.SearchTestsByExcelScripting">
                 <methods>
                     <include name="searchTest"/>
                 </methods>

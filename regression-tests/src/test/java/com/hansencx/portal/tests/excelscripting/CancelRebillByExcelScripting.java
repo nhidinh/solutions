@@ -1,4 +1,4 @@
-package com.hansencx.portal.tests;
+package com.hansencx.portal.tests.excelscripting;
 
 import com.hansencx.portal.common.DataFilePathHandler;
 import com.hansencx.solutions.core.BaseTest;

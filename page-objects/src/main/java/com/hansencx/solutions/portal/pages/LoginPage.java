@@ -50,8 +50,7 @@ public class LoginPage extends BasePage {
 
     public void logonWithEncodedCredential(String username, String encodedPassword){
         String key = "encodedPassword";
-        String password = StringEncrypt.decryptXOR(encodedPassword, key);
-        logonWithUsername(username, password);
+        logonWithUsername(username, StringEncrypt.decryptXOR(encodedPassword, key));
     }
     public void verifyLogonSuccessfully(){}
 }

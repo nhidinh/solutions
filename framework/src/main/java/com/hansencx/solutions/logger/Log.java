@@ -63,8 +63,15 @@ public class Log {
         log.warn(message);
     }
 
-    public static void error(String message) {
-        log.error(message);
+    public static void error(String message, Exception e){
+        Log.error(message);
+        Log.error(e.getMessage());
+        System.out.println(message);
+        System.out.println(e.getMessage());
+    }
+    public static void error(String message){
+        Log.error(message);
+        System.out.println(message);
     }
 
     public static void fatal(String message) {
