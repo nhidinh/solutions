@@ -4,7 +4,6 @@ import com.hansencx.solutions.core.BasePage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.Select;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -20,10 +19,6 @@ import java.util.TimeZone;
 
 
 public class EnterReasonForProcessDialog extends BasePage {
-    public EnterReasonForProcessDialog(WebDriver driver) {
-        super(driver);
-    }
-
     //ELEMENTS
     @FindBy(id = "ddlserviceCenterWFG")
     WebElement ddlServiceCenterWFG;
@@ -32,16 +27,26 @@ public class EnterReasonForProcessDialog extends BasePage {
     @FindBy(xpath = "//span[text()='Enter reason for Process']//ancestor::div[contains(@role, 'dialog')]//span[text()='Ok']//parent::button")
     WebElement btnOK;
 
-    public void selectReason(String reason){
+    /**
+     * Constructors
+     */
+    public EnterReasonForProcessDialog(WebDriver driver) {
+        super(driver);
+    }
+
+    public void selectReason(String reason) {
         selectOptionByText(ddlServiceCenterWFG, reason);
     }
-    public void setTextComment(String message){
+
+    public void setTextComment(String message) {
         setText(txtComment, message);
     }
-    public void clickOkButton(){
+
+    public void clickOkButton() {
         click(btnOK);
     }
-    public String getCreatedTime(){
+
+    public String getCreatedTime() {
         String formatPattern = "MM/dd/yyyy hh:mm a";
         SimpleDateFormat dateFormater = new SimpleDateFormat(formatPattern);
         Date date = Calendar.getInstance().getTime();
@@ -60,7 +65,7 @@ public class EnterReasonForProcessDialog extends BasePage {
      * @see
      * @since 2019-01-30
      */
-    public void doProcess(String reason, String comment){
+    public void doProcess(String reason, String comment) {
         selectReason(reason);
         setTextComment(comment);
         clickOkButton();

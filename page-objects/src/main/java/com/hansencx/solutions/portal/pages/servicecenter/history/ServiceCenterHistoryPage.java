@@ -15,6 +15,10 @@ import org.openqa.selenium.WebElement;
 
 
 public class ServiceCenterHistoryPage extends BasePage {
+
+    /**
+     * Constructors
+     */
     public ServiceCenterHistoryPage(WebDriver driver) {
         super(driver);
     }
@@ -22,12 +26,12 @@ public class ServiceCenterHistoryPage extends BasePage {
     //ELEMENTS
     private WebElement getLinkQueue(String createdTime) {
         String lnkQueueXpath = "//div[@class='columnValue requestedOn' and @title='" + createdTime + "']//parent::div//div[@class= 'columnValue queue']//a";
-        return driver.findElement(By.xpath(lnkQueueXpath));
+        return getDriver().findElement(By.xpath(lnkQueueXpath));
     }
 
     private WebElement getLinkStatus(String createdTime) {
         String lnkStatusXpath = "//div[@class='columnValue requestedOn' and @title='" + createdTime + "']//parent::div//div[@class= 'columnValue status']";
-        return driver.findElement(By.xpath(lnkStatusXpath));
+        return getDriver().findElement(By.xpath(lnkStatusXpath));
     }
 
     public void selectCreatedRecordByCreatedTime(String createdTime) {

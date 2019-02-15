@@ -28,7 +28,7 @@ public class BasePage {
     private static final int TIMEOUT = 30; //seconds
     private static final int POLLING = 100; //milliseconds
 
-    protected WebDriver driver;
+    private WebDriver driver;
     private WebDriverWait wait;
 
     private String value = "";
@@ -45,9 +45,21 @@ public class BasePage {
     }
 
     public BasePage(WebDriver driver) {
-        this.driver = driver;
+        this.setDriver(driver);
         wait = new WebDriverWait(driver, TIMEOUT, POLLING);
         PageFactory.initElements(new AjaxElementLocatorFactory(driver, TIMEOUT), this);
+    }
+
+    /**
+     * Getters and Setters
+     */
+
+    public WebDriver getDriver() {
+        return driver;
+    }
+
+    public void setDriver(WebDriver driver) {
+        this.driver = driver;
     }
 
     private String getLocatorOfElement(WebElement element) {
@@ -96,7 +108,7 @@ public class BasePage {
     protected void hoverMouseToElement(WebElement element) {
         setUpLoggingMessage(getMethodName(), element, value, tail);
         Log.info(startMessage);
-        Actions action = new Actions(driver);
+        Actions action = new Actions(getDriver());
         try {
             action.moveToElement(element).perform();
         } catch (Exception e) {
@@ -110,7 +122,7 @@ public class BasePage {
         setUpLoggingMessage(getMethodName(), element, value, tail);
         Log.info(startMessage);
         try {
-            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            JavascriptExecutor executor = (JavascriptExecutor) getDriver();
             executor.executeScript("arguments[0].click();", element);
         } catch (Exception e) {
             Log.error(endMessage_FAIL, e);
@@ -208,7 +220,7 @@ public class BasePage {
         setUpLoggingMessage(getMethodName(), null, value, tail);
         Log.info(startMessage);
         try {
-            title = driver.getTitle();
+            title = getDriver().getTitle();
         } catch (Exception e) {
             Log.error(endMessage_FAIL, e);
             return null;
@@ -222,7 +234,7 @@ public class BasePage {
         setUpLoggingMessage(getMethodName(), null, value, tail);
         Log.info(startMessage);
         try {
-            driver.navigate().back();
+            getDriver().navigate().back();
         } catch (Exception e) {
             Log.error(endMessage_FAIL, e);
         }
@@ -357,7 +369,7 @@ public class BasePage {
     protected void scrollToElement(WebElement element) {
         setUpLoggingMessage(getMethodName(), null, value, tail);
         waitForElementToAppear(element);
-        Actions actions = new Actions(driver);
+        Actions actions = new Actions(getDriver());
 
         Log.info(startMessage);
         try {
@@ -422,4 +434,5 @@ public class BasePage {
             Log.error(endMessage_FAIL, e);
         }
     }
+
 }

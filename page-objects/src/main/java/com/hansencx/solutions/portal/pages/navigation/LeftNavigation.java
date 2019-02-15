@@ -6,6 +6,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 public class LeftNavigation extends BasePage {
+
+    /**
+     * Contructors
+     *
+     */
     public LeftNavigation(WebDriver driver) {
         super(driver);
     }
@@ -13,11 +18,6 @@ public class LeftNavigation extends BasePage {
     //ELEMENTS
     @FindBy(id = "menuButton")
     private WebElement btnMenu;
-
-    //METHODS
-    public void clickMenuButton() {
-        click(btnMenu);
-    }
 
     //============================SERVICE CENTER============================//
     //ELEMENT OF SERVICE CENTER MENU:
@@ -29,6 +29,11 @@ public class LeftNavigation extends BasePage {
     private WebElement lnkHistory;
     @FindBy(xpath = "//a[text()='Service Center']//parent::li//a[text()='Approvals']")
     private WebElement lnkApproval;
+
+    //METHODS
+    private void clickMenuButton() {
+        click(btnMenu);
+    }
 
     /////METHODS OF SELECTING SERVICE CENTER MENU
     public void clickServiceCenter() {
@@ -57,6 +62,5 @@ public class LeftNavigation extends BasePage {
         waitForPageLoad();
     }
     //============================SERVICE CENTER============================//
-
 }
 

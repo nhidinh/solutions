@@ -14,10 +14,6 @@ import org.openqa.selenium.support.FindBy;
 
 
 public class AddServiceCenterUpdatePage extends BasePage {
-    public AddServiceCenterUpdatePage(WebDriver driver){
-        super(driver);
-    }
-
     /////WEB ELEMENT
     @FindBy(xpath = "//span[text()='Custpro']")
     WebElement lblCustpro;
@@ -26,15 +22,22 @@ public class AddServiceCenterUpdatePage extends BasePage {
     @FindBy(xpath = "//input[@value='Import']")
     WebElement btnImport;
 
-    public void scrollToCustproArea(){
+    /**
+     * Constructos
+     */
+    public AddServiceCenterUpdatePage(WebDriver driver) {
+        super(driver);
+    }
+
+    public void scrollToCustproArea() {
         scrollToElement(lblCustpro);
     }
 
-    public void checkCreateCancelRebillCheckbox(){
+    public void checkCreateCancelRebillCheckbox() {
         check(chkCreateCancelRebill);
     }
 
-    public void clickImportButton(){
+    public void clickImportButton() {
         click(btnImport);
     }
 

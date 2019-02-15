@@ -15,9 +15,6 @@ import utilities.helper.UploadFileHelper;
 
 
 public class ImportServiceCenterUpdatePage extends BasePage {
-    public ImportServiceCenterUpdatePage(WebDriver driver){
-        super(driver);
-    }
     //WEB ELEMENTS
     @FindBy(xpath = "//div[@class='add']//a[text()='click here']")
     private WebElement lnkDownloadTemplate;
@@ -28,16 +25,26 @@ public class ImportServiceCenterUpdatePage extends BasePage {
     @FindBy(id = "WaitMessageBoxMessage")
     private WebElement boxWaitingMessage;
 
+    /**
+     * Constructors
+     */
+    public ImportServiceCenterUpdatePage(WebDriver driver) {
+        super(driver);
+    }
+
     //METHODS
 
-    public void uploadCancelRebillFile(String filePath){
+    public void uploadCancelRebillFile(String filePath) {
         UploadFileHelper uploadFile = new UploadFileHelper();
         uploadFile.uploadFile(filePath, txt_UploadFile);
     }
 
-    public void clickUploadButton(){
+    public void clickUploadButton() {
         click(btnUpload);
         waitingForUploadMessageDismiss();
     }
-    public void waitingForUploadMessageDismiss(){waitForElementToDisappear(boxWaitingMessage);}
+
+    public void waitingForUploadMessageDismiss() {
+        waitForElementToDisappear(boxWaitingMessage);
+    }
 }

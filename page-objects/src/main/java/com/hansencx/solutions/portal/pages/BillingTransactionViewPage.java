@@ -7,41 +7,38 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import utilities.helper.SoftAssert;
-
 
 public class BillingTransactionViewPage extends BasePage {
 
-    public BillingTransactionViewPage(WebDriver driver){
+    /**
+     * Constructors
+     */
+    public BillingTransactionViewPage(WebDriver driver) {
         super(driver);
     }
 
     @FindBy(id = "_ctl0__ctl0_primary_primary_ucPendingTranInfo_btnValidate")
     private WebElement validateButton;
-
     @FindBy(id = "_ctl0__ctl0_primary_primary_ucBillingAcctInfo_btnBackToPendingTranListing")
     private WebElement backToPendingTranListing;
-
     @FindBy(id = "_ctl0__ctl0_txtComment")
     private WebElement commentAbandon;
-
     @FindBy(xpath = "//*[@id=\"_ctl0__ctl0_BodyMaster\"]/div[8]//span[.='Process']")
     private WebElement processAbandonButton;
 
-
-    public void setCommentAbandonBox(){
-        setText(commentAbandon,"QA Automation Test");
+    public void setCommentAbandonBox() {
+        setText(commentAbandon, "QA Automation Test");
     }
 
-    public void clickOnValidateButton(){
+    public void clickOnValidateButton() {
         click(validateButton);
     }
 
-    public void clickOnBackBillingTransList(){
+    public void clickOnBackBillingTransList() {
         click(backToPendingTranListing);
     }
 
-    public void handlingAbandonBox(){
+    public void handlingAbandonBox() {
         setCommentAbandonBox();
         waitForPageLoad();
         click(processAbandonButton);
@@ -51,9 +48,9 @@ public class BillingTransactionViewPage extends BasePage {
     public boolean validateTransactionIsSuccessful() {
         boolean flag = false;
         By noError = By.xpath("//span[contains(@id,'lblNoErrorsExist')]");
-        try{
-            flag = driver.findElement(noError).isDisplayed();
-        }catch (NoSuchElementException e){
+        try {
+            flag = getDriver().findElement(noError).isDisplayed();
+        } catch (NoSuchElementException e) {
             Log.info("ValidateTransactionIsSuccessful get NoSuchElementException " + e);
         }
         return flag;

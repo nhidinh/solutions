@@ -64,13 +64,13 @@ public class Log {
     }
 
     public static void error(String message, Exception e){
-        Log.error(message);
-        Log.error(e.getMessage());
+        log.error(message);
+        log.error(e.getMessage());
         System.out.println(message);
         System.out.println(e.getMessage());
     }
     public static void error(String message){
-        Log.error(message);
+        log.error(message);
         System.out.println(message);
     }
 

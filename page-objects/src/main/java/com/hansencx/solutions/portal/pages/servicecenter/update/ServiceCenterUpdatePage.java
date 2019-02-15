@@ -4,7 +4,6 @@ import com.hansencx.solutions.core.BasePage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import utilities.helper.UploadFileHelper;
 
 /**
  * @param
@@ -15,14 +14,18 @@ import utilities.helper.UploadFileHelper;
 
 
 public class ServiceCenterUpdatePage extends BasePage {
-    public ServiceCenterUpdatePage(WebDriver driver){
-        super(driver);
-    }
     /////ELEMENTS
     @FindBy(xpath = "//input[@value = 'Add New']")
     WebElement btnAddNew;
 
-    public void clickAddNewButton(){
+    /**
+     * Constructors
+     */
+    public ServiceCenterUpdatePage(WebDriver driver) {
+        super(driver);
+    }
+
+    public void clickAddNewButton() {
         click(btnAddNew);
         waitForPageLoad();
     }

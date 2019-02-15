@@ -17,13 +17,8 @@ import java.util.List;
  */
 
 public class ServiceCenterHistoryDetailsPage extends BasePage {
-    public ServiceCenterHistoryDetailsPage(WebDriver driver) {
-        super(driver);
-    }
-
     //VARIABLE
     String lstRecordXpath = "//div[contains(@class,'row') and not(contains(@data-bind,'stagingRecord'))]";
-
     //ELEMENTS
     @FindBy(xpath = "//*[contains(text(),'Queue #')]//parent::div//following-sibling::div")
     private WebElement lblQueue;
@@ -39,6 +34,13 @@ public class ServiceCenterHistoryDetailsPage extends BasePage {
     private List<WebElement> lstRecord;
     @FindBy(xpath = "//div[contains(@class,'row') and not(contains(@data-bind,'stagingRecord'))]//div[3]//span")
     private List<WebElement> lstTransactionID;
+
+    /**
+     * Constuctors
+     */
+    public ServiceCenterHistoryDetailsPage(WebDriver driver) {
+        super(driver);
+    }
 
     public void verifyQueueNumberIsCorrect(int queueNumber) {
         assertNumber(lblQueue, queueNumber);

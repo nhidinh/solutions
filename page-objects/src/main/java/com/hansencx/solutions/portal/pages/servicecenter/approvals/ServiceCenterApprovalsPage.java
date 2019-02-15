@@ -13,20 +13,24 @@ import org.openqa.selenium.support.FindBy;
  * @since 1/29/2019
  */
 
-
 public class ServiceCenterApprovalsPage extends BasePage {
+
+    /**
+     * Constructors
+     */
     public ServiceCenterApprovalsPage(WebDriver driver) {
         super(driver);
     }
-    //VARIABLES
 
-    //WEB ELEMENT
+    /**
+     * Web elements
+     */
     @FindBy(xpath = "//div[@class='list']")
     WebElement listRequestedRecord;
 
     private WebElement getLinkQueue(String createdTime) {
         String lnkQueueXpath = "//div[@class='columnValue requestedOn' and contains(text(),'" + createdTime + "')]//parent::div//a[@class='columnValue queue']";
-        return driver.findElement(By.xpath(lnkQueueXpath));
+        return getDriver().findElement(By.xpath(lnkQueueXpath));
     }
 
     // METHODS

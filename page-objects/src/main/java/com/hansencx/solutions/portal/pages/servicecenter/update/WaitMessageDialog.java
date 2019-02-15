@@ -14,13 +14,17 @@ import org.openqa.selenium.support.FindBy;
 
 
 public class WaitMessageDialog extends BasePage {
+    @FindBy(id = "PopupWaitMessage")
+    private WebElement boxWaitMessage;
+
+    /**
+     * Constructors
+     */
     public WaitMessageDialog(WebDriver driver) {
         super(driver);
     }
 
-    @FindBy(id = "PopupWaitMessage")
-    private WebElement boxWaitMessage;
-    public void waitForMessageDismiss(){
+    public void waitForMessageDismiss() {
         waitForElementToDisappear(boxWaitMessage);
     }
 }

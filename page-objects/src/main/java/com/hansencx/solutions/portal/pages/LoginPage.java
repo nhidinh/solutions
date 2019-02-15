@@ -8,11 +8,17 @@ import org.openqa.selenium.support.FindBy;
 import utilities.helper.StringEncrypt;
 
 public class LoginPage extends BasePage {
-    public LoginPage(WebDriver driver){
+
+    /**
+     * Constructors
+     */
+    public LoginPage(WebDriver driver) {
         super(driver);
     }
 
-    //WEB ELEMENT
+    /**
+     * Web elements
+     */
     @FindBy(xpath = "//table[contains(@id,'Login')]//input[contains(@id, 'UserName')]")
     WebElement txtUsername;
     @FindBy(xpath = "//table[contains(@id,'Login')]//input[contains(@id, 'Password')]")
@@ -22,35 +28,39 @@ public class LoginPage extends BasePage {
     @FindBy(xpath = "//table[contains(@id,'Login')]//a[contains(text(),'Forgot your password')]")
     WebElement lnkForgotPassword;
 
+
     //MEDTHODS
-    public void setTextUsername(String username){
+    public void setTextUsername(String username) {
         setText(txtUsername, username);
     }
-    public void setTextPassword(String password){
+
+    public void setTextPassword(String password) {
         setText(txtPassword, password);
     }
-    public void clickLogonButton(){
+
+    public void clickLogonButton() {
         click(btnLogon);
     }
-    public void clickForgotPasswordLink(){
+
+    public void clickForgotPasswordLink() {
         click(lnkForgotPassword);
     }
 
     //ACTIONS
-    public LoginPage goTo(){
+    public LoginPage goTo() {
         navigateToPage(Links.URL_LOGIN);
-        return new LoginPage(driver);
+        return new LoginPage(getDriver());
     }
-    public void logonWithUsername(String username, String password){
+
+    public void logonWithUsername(String username, String password) {
         waitForPageLoad();
         setTextUsername(username);
         setTextPassword(password);
         clickLogonButton();
     }
 
-    public void logonWithEncodedCredential(String username, String encodedPassword){
+    public void logonWithEncodedCredential(String username, String encodedPassword) {
         String key = "encodedPassword";
         logonWithUsername(username, StringEncrypt.decryptXOR(encodedPassword, key));
     }
-    public void verifyLogonSuccessfully(){}
 }
