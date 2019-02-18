@@ -87,21 +87,20 @@ public class BasePage {
         endMessage_PASS = setEndMessageSuccess(methodName, textValue, elementLocator, tailValue);
         //FAILED END MESSAGE
         endMessage_FAIL = setEndMessageFail(methodName, textValue, elementLocator, tailValue);
-
         //Re passing empty value for @value and @tail;
         value = "";
         tail = "";
     }
 
     protected void navigateToPage(String url) {
-        setUpLoggingMessage(getMethodName(), null, value, tail);
+        setUpLoggingMessage(getMethodName(), null, url, tail);
         Log.info(startMessage);
         try {
             Browser.goToPage(url);
+            Log.info(endMessage_PASS);
         } catch (Exception e) {
             Log.error(endMessage_FAIL, e);
         }
-        Log.info(endMessage_PASS);
     }
 
     //Hover Mouse
@@ -111,10 +110,10 @@ public class BasePage {
         Actions action = new Actions(getDriver());
         try {
             action.moveToElement(element).perform();
+            Log.info(endMessage_PASS);
         } catch (Exception e) {
             Log.info(endMessage_FAIL);
         }
-        Log.info(endMessage_PASS);
     }
 
     // Click with Javascript
@@ -124,10 +123,10 @@ public class BasePage {
         try {
             JavascriptExecutor executor = (JavascriptExecutor) getDriver();
             executor.executeScript("arguments[0].click();", element);
+            Log.info(endMessage_PASS);
         } catch (Exception e) {
             Log.error(endMessage_FAIL, e);
         }
-        Log.info(endMessage_PASS);
     }
 
     /**
@@ -139,28 +138,28 @@ public class BasePage {
      * @since 2018-12-03
      */
     protected void click(WebElement element) {
-        setUpLoggingMessage(getMethodName(), element, value, tail);
         waitForElementToAppear(element);
+        setUpLoggingMessage(getMethodName(), element, value, tail);
         Log.info(startMessage);
         try {
             element.click();
+            Log.info(endMessage_PASS);
         } catch (Exception e) {
             Log.error(endMessage_FAIL, e);
         }
-        Log.info(endMessage_PASS);
     }
 
     // Set Text
     protected void setText(WebElement element, String text) {
-        setUpLoggingMessage(getMethodName(), element, text, tail);
         waitForElementToAppear(element);
+        setUpLoggingMessage(getMethodName(), element, text, tail);
         Log.info(startMessage);
         try {
             element.sendKeys(text);
+            Log.info(endMessage_PASS);
         } catch (Exception e) {
             Log.error(endMessage_FAIL, e);
         }
-        Log.info(endMessage_PASS);
     }
 
     /**
@@ -169,46 +168,46 @@ public class BasePage {
      */
     // Get Text
     protected String getText(WebElement element) {
+        waitForElementToAppear(element);
         String textOfElement;
         setUpLoggingMessage(getMethodName(), element, value, tail);
-        waitForElementToAppear(element);
         Log.info(startMessage);
         try {
             textOfElement = element.getText();
+            Log.info(endMessage_PASS);
+            Log.info("Text of Element: [" + textOfElement + "]");
         } catch (Exception e) {
             Log.error(endMessage_FAIL, e);
             return null;
         }
-        Log.info(endMessage_PASS);
-        Log.info("Text of Element: [" + textOfElement + "]");
         return textOfElement;
     }
 
     //Assert Equals Text
     protected void assertText(WebElement element, String expectedText) {
-        setUpLoggingMessage(getMethodName(), element, expectedText, tail);
         waitForElementToAppear(element);
+        setUpLoggingMessage(getMethodName(), element, expectedText, tail);
         Log.info(startMessage);
         try {
             Assert.assertEquals(getText(element), expectedText);
+            Log.info(endMessage_PASS);
         } catch (Exception e) {
             Log.error(endMessage_FAIL, e);
         }
-        Log.info(endMessage_PASS);
     }
 
     //Assert Equals Number
     protected void assertNumber(WebElement element, int expectedNumber) {
+        waitForElementToAppear(element);
         String expectedNumberS = String.valueOf(expectedNumber);
         setUpLoggingMessage(getMethodName(), element, expectedNumberS, tail);
-        waitForElementToAppear(element);
         Log.info(startMessage);
         try {
             Assert.assertEquals(Integer.parseInt(getText(element)), expectedNumber);
+            Log.info(endMessage_PASS);
         } catch (Exception e) {
             Log.error(endMessage_FAIL, e);
         }
-        Log.info(endMessage_PASS);
     }
 
     /**
@@ -221,11 +220,11 @@ public class BasePage {
         Log.info(startMessage);
         try {
             title = getDriver().getTitle();
+            Log.info(endMessage_PASS);
         } catch (Exception e) {
             Log.error(endMessage_FAIL, e);
             return null;
         }
-        Log.info(endMessage_PASS);
         return title;
     }
 
@@ -235,14 +234,16 @@ public class BasePage {
         Log.info(startMessage);
         try {
             getDriver().navigate().back();
+            Log.info(endMessage_PASS);
         } catch (Exception e) {
             Log.error(endMessage_FAIL, e);
         }
-        Log.info(endMessage_PASS);
     }
 
     //Wait for page load
     protected void waitForPageLoad() {
+        setUpLoggingMessage(getMethodName(), null, value, tail);
+        Log.info(startMessage);
         Function<WebDriver, Boolean> functionWaitForPageLoad = new Function<WebDriver, Boolean>() {
             public Boolean apply(WebDriver driver) {
                 return ((JavascriptExecutor) driver).executeScript("return document.readyState").toString().equals("complete");
@@ -251,8 +252,9 @@ public class BasePage {
         try {
             Thread.sleep(500);
             wait.until(functionWaitForPageLoad);
+            Log.info(endMessage_PASS);
         } catch (Exception error) {
-            Log.error(error.getMessage());
+            Log.error(endMessage_FAIL, error);
             Assert.fail("Timeout waiting for Page Load Request to complete.");
         }
     }
@@ -281,10 +283,10 @@ public class BasePage {
      */
     protected void waitForElementToAppear(WebElement element) {
         setUpLoggingMessage(getMethodName(), element, value, tail);
+        Log.info(startMessage);
         Function<WebDriver, Boolean> function = new Function<WebDriver, Boolean>() {
             @Override
             public Boolean apply(WebDriver driver) {
-                Log.info(startMessage);
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -294,7 +296,6 @@ public class BasePage {
             }
         };
         wait.until(function);
-        Log.info(endMessage_PASS);
     }
 
     /**
@@ -307,10 +308,10 @@ public class BasePage {
      */
     protected void waitForElementToDisappear(WebElement element) {
         setUpLoggingMessage(getMethodName(), element, value, tail);
+        Log.info(startMessage);
         Function<WebDriver, Boolean> invisibility = new Function<WebDriver, Boolean>() {
             @Override
             public Boolean apply(WebDriver driver) {
-                Log.info(startMessage);
                 try {
                     return !element.isDisplayed();
                 } catch (StaleElementReferenceException var2) {
@@ -327,10 +328,10 @@ public class BasePage {
         Log.info(startMessage);
         try {
             Assert.assertTrue(element.isDisplayed());
+            Log.info(endMessage_PASS);
         } catch (Exception e) {
             Log.error(endMessage_FAIL, e);
         }
-        Log.info(endMessage_PASS);
     }
 
 
@@ -344,11 +345,11 @@ public class BasePage {
      * @since 2018-12-03
      */
     protected void waitForElementToBeClickable(WebElement element) {
-        setUpLoggingMessage(getMethodName(), null, value, "is clickable");
         Function<WebDriver, Boolean> clickable = new Function<WebDriver, Boolean>() {
             @Override
             public Boolean apply(WebDriver driver) {
                 waitForElementToAppear(element);
+                setUpLoggingMessage(getMethodName(), null, value, "is clickable");
                 Log.info(startMessage);
                 try {
                     return element != null && element.isEnabled() ? true : null;
@@ -360,7 +361,6 @@ public class BasePage {
             }
         };
         wait.until(visibilityOf(element));
-        Log.info(endMessage_PASS);
     }
 
     /**
@@ -375,12 +375,10 @@ public class BasePage {
         try {
             actions.moveToElement(element);
             actions.perform();
+            Log.info(endMessage_PASS);
         } catch (Exception e) {
             Log.error(endMessage_FAIL, e);
         }
-        Log.info(endMessage_PASS);
-
-
     }
 
     /**
@@ -406,8 +404,9 @@ public class BasePage {
      * @param element Use to Check a checkbox element
      */
     protected void unCheck(WebElement element) {
-        setUpLoggingMessage(getMethodName(), null, value, tail);
         waitForElementToAppear(element);
+
+        setUpLoggingMessage(getMethodName(), null, value, tail);
         Log.info(startMessage);
         try {
             if (element.isSelected()) {
@@ -423,13 +422,13 @@ public class BasePage {
     }
 
     protected void selectOptionByText(WebElement ddlElement, String option) {
-        setUpLoggingMessage(getMethodName(), null, value, tail);
         waitForElementToAppear(ddlElement);
+        setUpLoggingMessage(getMethodName(), null, value, tail);
         Log.info(startMessage);
         Select selectReason = new Select(ddlElement);
         try {
             selectReason.selectByVisibleText(option);
-            Log.error(endMessage_PASS);
+            Log.info(endMessage_PASS);
         } catch (Exception e) {
             Log.error(endMessage_FAIL, e);
         }

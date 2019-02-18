@@ -37,7 +37,19 @@ public class BaseTest {
         Log.startLog();
         extent = ExtentManager.getInstance();
         String suiteName = iTestContext.getCurrentXmlTest().getSuite().getName();
+        Log.startTestSuite(suiteName);
         ExtentManager.createRootNode(extent, suiteName);
+    }
+
+    @BeforeTest (description = "Set Up Logger Before Test")
+    public void setUpLoggerBeforeTest(ITestContext testContext) {
+        String testCaseName = testContext.getName();
+        Log.startTestCase(testCaseName);
+    }
+    @AfterTest(description = "Set Up Logger After Test")
+    public void setUpLoggerAfterTest(ITestContext testContext) {
+        String testCaseName = testContext.getName();
+        Log.endTestCase(testCaseName);
     }
 
     @Parameters({"browser","mode"})
@@ -56,13 +68,6 @@ public class BaseTest {
         Browser.maximize();
     }
 
-    @BeforeTest (description = "Set Up Logger Before Test")
-    public void setUpLoggerBeforeTest(ITestContext testContext) {
-        String testCaseName = testContext.getName();
-        Log.startLog();
-        Log.startTestCase(testCaseName);
-    }
-
     /**
      * quit driver after running a test suite
      * @author Huong Trinh
@@ -74,8 +79,6 @@ public class BaseTest {
     @AfterMethod (description = "Clean Session")
     public synchronized void clean(ITestContext testContext){
         extent.flush();
-        String testCaseName = testContext.getName();
-        Log.endTestCase(testCaseName);
         Log.info("Closing browser after test");
         Browser.quit();
     }
@@ -85,11 +88,11 @@ public class BaseTest {
      * @Update: update action related to Jira
      */
     @AfterSuite (description = "Ending Log After Suite")
-    public void endingLogAfterSuite() {
+    public void endingLogAfterSuite(ITestContext iTestContext) {
         Log.info("JIRA ISSUE CREATION HANDLING");
 //        String keyIssue = JiraHelper.createJiraIssue(TestListener.failIDList);
 //        JiraHelper.importReportAttachment(keyIssue);
-        Log.info("ENDING SUITE");
-        Log.endLog();
+        String suiteName = iTestContext.getCurrentXmlTest().getSuite().getName();
+        Log.endTestSuite(suiteName);
     }
 }

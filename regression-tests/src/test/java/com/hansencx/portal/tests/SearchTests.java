@@ -1,9 +1,8 @@
 package com.hansencx.portal.tests;
 
 import com.hansencx.portal.common.DataFilePathHandler;
-import com.hansencx.solutions.logger.Log;
 import com.hansencx.portal.tests.core.PortalBaseTest;
-import org.testng.Assert;
+import com.hansencx.solutions.logger.Log;
 import org.testng.ITestResult;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
@@ -11,15 +10,12 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.internal.BaseTestMethod;
 import utilities.helper.ExcelHelper;
-import utilities.helper.FailureHandling;
 import utilities.helper.SoftAssert;
 
 import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 /**
  * @param
@@ -80,7 +76,7 @@ public class SearchTests extends PortalBaseTest {
         Page.Search().searchByEnrollmentNumberWithFilter(filterOption, enrollmentNumberValue);
         Page.Search().clickSearchButton();
         int numberOfResult = Page.SearchResult().getNumberOfResult();
-        softAssert.assertEquals(numberOfResult, resultValue, "Not matched!");
+        softAssert.assertEquals(numberOfResult, resultValue);
         softAssert.assertAll();
         Log.info("Complete Test case: " + testcaseName);
         System.out.println("Compete Test case: " + testcaseName);

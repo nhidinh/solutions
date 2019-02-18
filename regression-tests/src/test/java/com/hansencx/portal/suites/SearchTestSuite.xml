@@ -9,9 +9,9 @@
         <listener class-name="utilities.configuration.TestListener"/>
     </listeners>
 
-    <test name = "Portal-SearchByEnrollmentNumberInList" enabled="false" >
+    <test name = "Portal-SearchByEnrollmentNumberInList" >
        <classes>
-           <class name="com.hansencx.portal.tests.SearchTests">
+           <class name="com.hansencx.portal.tests.SearchByEnrollmentNumberFilterInListTest">
                <methods>
                    <include name="searchByEnrollmentNumberInList"/>
                </methods>

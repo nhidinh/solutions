@@ -44,15 +44,22 @@ public class Log {
     }
 
     public static void endLog() {
-        log.info("End Log...");
+        log.info("End Log./.");
     }
 
     public static void startTestCase(String sTestCaseName) {
-        log.info("********************* START TESTCASE: " + sTestCaseName + "*********************");
+        log.info("********************* START TEST CASE: " + sTestCaseName + "*********************");
     }
 
     public static void endTestCase(String sTestCaseName) {
         log.info("********************* END OF TEST CASE: " + sTestCaseName + "*********************");
+    }
+    public static void startTestSuite(String sTestSuiteName) {
+        log.info("********************* START TEST SUITE: " + sTestSuiteName + "*********************");
+    }
+
+    public static void endTestSuite(String sTestSuiteName) {
+        log.info("********************* END OF TEST SUITE: " + sTestSuiteName + "*********************");
     }
 
     public static void info(String message) {

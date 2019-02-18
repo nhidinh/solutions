@@ -12,24 +12,32 @@ import com.hansencx.solutions.logger.Log;
 
 public class ActionLogger extends Log {
     //SET LOG MESSAGE: START ACTION
-    public static String setStartMessage(String action, String textValue, String elementLocator, String tail){
-        if (!textValue.equals("")){
-            textValue = "[" + textValue+"]";
+    private static String actionObject="";
+    private static String dataTextValue;
+
+    private static void checkValue(String text,String elementLocator){
+        if(!elementLocator.equals("")){
+            actionObject = " element with locator ";
         }
-        return "Start " + action + textValue + " element with locator " + elementLocator + " " + tail;
+        if (!text.equals("")){
+            dataTextValue = " [" + text+"]";
+        }else{
+            dataTextValue="";
+        }
+    }
+
+    public static String setStartMessage(String action, String textValue, String elementLocator, String tail){
+        checkValue(textValue, elementLocator);
+        return "Start action " + action  + dataTextValue + actionObject + elementLocator + " " + tail;
     }
     //SET LOG MESSAGE: END ACTION Successfully
     public static String setEndMessageSuccess(String action, String textValue, String elementLocator, String tail){
-        if (!textValue.equals("")){
-            textValue = "[" + textValue+"]";
-        }
-        return "Success-End " + action + " " + textValue + " element with locator " + elementLocator + " " + tail;
+        checkValue(textValue, elementLocator);
+        return "Success-End action " + action + dataTextValue + actionObject + elementLocator + " " + tail;
     }
     //SET LOG MESSAGE: END ACTION FAILED
     public static String setEndMessageFail(String action, String textValue, String elementLocator, String tail){
-        if (!textValue.equals("")){
-            textValue = "[" + textValue+"]";
-        }
-        return "Failed-End " + action + " " + textValue + " element with locator " + elementLocator + " " + tail;
+        checkValue(textValue, elementLocator);
+        return "Failed-End action " + action + dataTextValue + actionObject + elementLocator + " " + tail;
     }
 }
