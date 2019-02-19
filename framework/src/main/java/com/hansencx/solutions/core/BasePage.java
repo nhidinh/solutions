@@ -31,8 +31,7 @@ public class BasePage {
     private WebDriver driver;
     private WebDriverWait wait;
 
-    private String value = "";
-    private String tail = "";
+    private String emptyValue = "";
     private String startMessage;
     private String endMessage_PASS;
     private String endMessage_FAIL;
@@ -62,13 +61,6 @@ public class BasePage {
         this.driver = driver;
     }
 
-    private String getLocatorOfElement(WebElement element) {
-        String elementName = element.toString();
-        int index = elementName.indexOf("> ") + 2;
-        return "[" + elementName.substring(index);
-    }
-
-
     private String getMethodName() {
         return Thread.currentThread().getStackTrace()[2].getMethodName();
     }
@@ -76,24 +68,20 @@ public class BasePage {
     /**
      * Set Up Start - End Message automatically
      */
-    private void setUpLoggingMessage(String nameOfMethod, WebElement element, String textValue, String tailValue) {
+    private void setUpLoggingMessage(String nameOfMethod, WebElement element, String textValue) {
         String methodName = nameOfMethod.toLowerCase();
-        String elementLocator = "";
-        if (element != null) {
-            elementLocator = getLocatorOfElement(element);
-        }
-        startMessage = setStartMessage(methodName, textValue, elementLocator, tailValue);
+        setActionLoggerMessages(methodName,textValue, element);
+        startMessage = getStartMessage();
         //SUCCESS END MESSAGE
-        endMessage_PASS = setEndMessageSuccess(methodName, textValue, elementLocator, tailValue);
+        endMessage_PASS = getEndMessage_PASSED();
         //FAILED END MESSAGE
-        endMessage_FAIL = setEndMessageFail(methodName, textValue, elementLocator, tailValue);
-        //Re passing empty value for @value and @tail;
-        value = "";
-        tail = "";
+        endMessage_FAIL = getEndMessage_FAILED();
+
     }
 
+
     protected void navigateToPage(String url) {
-        setUpLoggingMessage(getMethodName(), null, url, tail);
+        setUpLoggingMessage(getMethodName(), null, url);
         Log.info(startMessage);
         try {
             Browser.goToPage(url);
@@ -105,7 +93,7 @@ public class BasePage {
 
     //Hover Mouse
     protected void hoverMouseToElement(WebElement element) {
-        setUpLoggingMessage(getMethodName(), element, value, tail);
+        setUpLoggingMessage(getMethodName(), element, emptyValue);
         Log.info(startMessage);
         Actions action = new Actions(getDriver());
         try {
@@ -118,7 +106,7 @@ public class BasePage {
 
     // Click with Javascript
     protected void jsClick(WebElement element) {
-        setUpLoggingMessage(getMethodName(), element, value, tail);
+        setUpLoggingMessage(getMethodName(), element, emptyValue);
         Log.info(startMessage);
         try {
             JavascriptExecutor executor = (JavascriptExecutor) getDriver();
@@ -139,7 +127,7 @@ public class BasePage {
      */
     protected void click(WebElement element) {
         waitForElementToAppear(element);
-        setUpLoggingMessage(getMethodName(), element, value, tail);
+        setUpLoggingMessage(getMethodName(), element, emptyValue);
         Log.info(startMessage);
         try {
             element.click();
@@ -152,7 +140,7 @@ public class BasePage {
     // Set Text
     protected void setText(WebElement element, String text) {
         waitForElementToAppear(element);
-        setUpLoggingMessage(getMethodName(), element, text, tail);
+        setUpLoggingMessage(getMethodName(), element, text);
         Log.info(startMessage);
         try {
             element.sendKeys(text);
@@ -170,7 +158,7 @@ public class BasePage {
     protected String getText(WebElement element) {
         waitForElementToAppear(element);
         String textOfElement;
-        setUpLoggingMessage(getMethodName(), element, value, tail);
+        setUpLoggingMessage(getMethodName(), element, emptyValue);
         Log.info(startMessage);
         try {
             textOfElement = element.getText();
@@ -186,7 +174,7 @@ public class BasePage {
     //Assert Equals Text
     protected void assertText(WebElement element, String expectedText) {
         waitForElementToAppear(element);
-        setUpLoggingMessage(getMethodName(), element, expectedText, tail);
+        setUpLoggingMessage(getMethodName(), element, expectedText);
         Log.info(startMessage);
         try {
             Assert.assertEquals(getText(element), expectedText);
@@ -200,7 +188,7 @@ public class BasePage {
     protected void assertNumber(WebElement element, int expectedNumber) {
         waitForElementToAppear(element);
         String expectedNumberS = String.valueOf(expectedNumber);
-        setUpLoggingMessage(getMethodName(), element, expectedNumberS, tail);
+        setUpLoggingMessage(getMethodName(), element, expectedNumberS);
         Log.info(startMessage);
         try {
             Assert.assertEquals(Integer.parseInt(getText(element)), expectedNumber);
@@ -216,7 +204,7 @@ public class BasePage {
     // Get Page Title
     protected String getPageTitle() {
         String title;
-        setUpLoggingMessage(getMethodName(), null, value, tail);
+        setUpLoggingMessage(getMethodName(), null, emptyValue);
         Log.info(startMessage);
         try {
             title = getDriver().getTitle();
@@ -230,7 +218,7 @@ public class BasePage {
 
     // Back to Previous Page
     protected void backToPreviousPage() {
-        setUpLoggingMessage(getMethodName(), null, value, tail);
+        setUpLoggingMessage(getMethodName(), null, emptyValue);
         Log.info(startMessage);
         try {
             getDriver().navigate().back();
@@ -242,7 +230,7 @@ public class BasePage {
 
     //Wait for page load
     protected void waitForPageLoad() {
-        setUpLoggingMessage(getMethodName(), null, value, tail);
+        setUpLoggingMessage(getMethodName(), null, emptyValue);
         Log.info(startMessage);
         Function<WebDriver, Boolean> functionWaitForPageLoad = new Function<WebDriver, Boolean>() {
             public Boolean apply(WebDriver driver) {
@@ -282,7 +270,7 @@ public class BasePage {
      * @return Nothing.
      */
     protected void waitForElementToAppear(WebElement element) {
-        setUpLoggingMessage(getMethodName(), element, value, tail);
+        setUpLoggingMessage(getMethodName(), element, emptyValue);
         Log.info(startMessage);
         Function<WebDriver, Boolean> function = new Function<WebDriver, Boolean>() {
             @Override
@@ -307,7 +295,7 @@ public class BasePage {
      * @since 2018-12-03
      */
     protected void waitForElementToDisappear(WebElement element) {
-        setUpLoggingMessage(getMethodName(), element, value, tail);
+        setUpLoggingMessage(getMethodName(), element, emptyValue);
         Log.info(startMessage);
         Function<WebDriver, Boolean> invisibility = new Function<WebDriver, Boolean>() {
             @Override
@@ -324,7 +312,7 @@ public class BasePage {
     }
 
     protected void verifyElementPresent(WebElement element) {
-        setUpLoggingMessage(getMethodName(), null, value, tail);
+        setUpLoggingMessage(getMethodName(), null, emptyValue);
         Log.info(startMessage);
         try {
             Assert.assertTrue(element.isDisplayed());
@@ -349,7 +337,7 @@ public class BasePage {
             @Override
             public Boolean apply(WebDriver driver) {
                 waitForElementToAppear(element);
-                setUpLoggingMessage(getMethodName(), null, value, "is clickable");
+                setUpLoggingMessage(getMethodName(), null, emptyValue);
                 Log.info(startMessage);
                 try {
                     return element != null && element.isEnabled() ? true : null;
@@ -367,7 +355,7 @@ public class BasePage {
      * @param element Use to scroll to a visible element
      */
     protected void scrollToElement(WebElement element) {
-        setUpLoggingMessage(getMethodName(), null, value, tail);
+        setUpLoggingMessage(getMethodName(), null, emptyValue);
         waitForElementToAppear(element);
         Actions actions = new Actions(getDriver());
 
@@ -385,7 +373,7 @@ public class BasePage {
      * @param element Use to Check a checkbox element
      */
     protected void check(WebElement element) {
-        setUpLoggingMessage(getMethodName(), null, value, tail);
+        setUpLoggingMessage(getMethodName(), null, emptyValue);
         waitForElementToAppear(element);
         Log.info(startMessage);
         try {
@@ -406,7 +394,7 @@ public class BasePage {
     protected void unCheck(WebElement element) {
         waitForElementToAppear(element);
 
-        setUpLoggingMessage(getMethodName(), null, value, tail);
+        setUpLoggingMessage(getMethodName(), null, emptyValue);
         Log.info(startMessage);
         try {
             if (element.isSelected()) {
@@ -423,7 +411,7 @@ public class BasePage {
 
     protected void selectOptionByText(WebElement ddlElement, String option) {
         waitForElementToAppear(ddlElement);
-        setUpLoggingMessage(getMethodName(), null, value, tail);
+        setUpLoggingMessage(getMethodName(), null, emptyValue);
         Log.info(startMessage);
         Select selectReason = new Select(ddlElement);
         try {
